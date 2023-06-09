@@ -1,0 +1,39 @@
+
+<div class="container">
+
+    <h1>Asia’s leading digital investment platform</h1>
+    <h2>Invest effortlessly — with expert-advised portfolios and low, 
+            fair fees. Get started now.</h2>
+    <br>
+    <h2>Please Login</h2>
+
+    <form [formGroup]="form" (submit)="login()">
+
+    <table>
+        <tr>
+        <td>Username:&nbsp;&nbsp;</td>
+        <td>
+            <input type="text" size="30" formControlName="username" placeholder="Email address">
+        </td>
+        </tr>
+    <br>
+        <tr>
+        <td>Password:</td>
+        <td>
+            <input type="text" size="30" formControlName="password" placeholder="Password">
+        </td>
+        </tr>
+    <br>
+        <tr>
+        <td></td>
+        <td>
+            <button type="submit" [disabled]="form.invalid">
+            Login
+            </button>
+        </td>
+        </tr>
+    </table>
+
+    </form>
+
+</div>

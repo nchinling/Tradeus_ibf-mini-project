@@ -1,0 +1,50 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container">
+
+    <button class="navbar-toggler btn btn-outline-primary d-lg-none" type="button" [ngClass]="{'d-none': !isCollapsed}" 
+    data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation" 
+    (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed" aria-controls="navbarTogglerDemo02">
+    <span class="navbar-toggler-icon"></span>
+    </button>
+
+
+    
+    <a class="navbar-brand" href="#">  
+      <span class="brand-text-1">Trade</span><span class="brand-text-2">us</span>
+    </a>
+
+
+  <div class="collapse navbar-collapse" id="navbarTogglerDemo02" [ngbCollapse]="isCollapsed">
+    <ul class="navbar-nav mt-2 mt-lg-0">
+      <li class="nav-item active">
+        <a class="nav-link" routerLink="/home">Getting Started</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/about">Learn</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/contact">About</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="['/login']">Log In</a>
+      </li>
+      <li class="nav-item">
+        <button class="btn btn-primary" [routerLink]="['/register']">Register</button>
+      </li>
+    </ul>
+  </div>
+
+
+        
+
+  </div>
+
+</nav>
+
+
+
+        <!-- search bar -->
+    <!-- <form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="search" placeholder="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form> -->
