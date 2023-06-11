@@ -1,0 +1,82 @@
+<div class = "container">
+
+    <h1>Asia’s leading digital investment platform</h1>
+    <h2>Invest effortlessly — with expert-advised portfolios and low, 
+            fair fees. Get started now.</h2>
+    <br>
+    <h2>Register an Account</h2>
+
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+
+    <div *ngIf="(errorMessage$ | async) as errorMessage" class="error-message">
+        <p>{{errorMessage}}</p>
+    </div>
+
+    <br>
+    <form [formGroup]="registerForm" (submit)="registerAccount()">
+        <table>
+            <tr>
+                <td>Name:&nbsp;&nbsp;</td>
+                <td>
+                    <input type="text" size="30" formControlName="name" placeholder="Name">
+                </td>
+            </tr>
+            <br>
+          
+            <tr>
+                <td>Password:&nbsp;&nbsp;</td>
+                <td>
+                    <input type="password" size="30" formControlName="password" placeholder="Password">
+                </td>
+            </tr>
+            <br>
+          <tr>
+            <td>Email:&nbsp;&nbsp;</td>
+            <td>
+                <input type="email" size="30" formControlName="username" placeholder="Email address (used as username)">
+            </td>
+          </tr>
+          <br>
+          <tr>
+            <td>Address:&nbsp;&nbsp;</td>
+            <td>
+                <input type="text" size="30" formControlName="address" placeholder="Address">
+            </td>
+          </tr>
+          <br>
+          <tr>
+            <td>Mobile number:&nbsp;&nbsp;</td>
+            <td>
+                <input type="text" size="30" formControlName="mobile_no" placeholder="Mobile number">
+            </td>
+          </tr>
+          <br>
+          <tr>
+            <td>Nationality:&nbsp;&nbsp;</td>
+            <td>
+                <input type="text" size="30" formControlName="nationality" placeholder="Nationality">
+            </td>
+          </tr>
+          <br>
+          <tr>
+            <td>Date of Birth:&nbsp;&nbsp;</td>
+            <td>
+                <input type="date" size="30" formControlName="date_of_birth" placeholder="Date of birth">
+            </td>
+          </tr>
+          <br>
+          <tr>
+            <td></td>
+            <td>
+              <button class="btn btn-primary" type="submit">Register</button>
+
+            </td>
+          </tr>
+          <br>
+        </table>
+      
+      </form>
+</div>
+

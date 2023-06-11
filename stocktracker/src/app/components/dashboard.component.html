@@ -1,1 +1,28 @@
-<p>dashboard works!</p>
+<div class = "container">
+
+    <h1>Welcome to Dashboard!</h1>
+
+    <!-- <code>{{ loginResponse$ | async }}</code>
+    
+    <code>{{ registerResponse$ | async }}</code> -->
+    
+    <!-- Displaying loginResponse$ fields -->
+    <ng-container *ngIf="(loginResponse$ | async) as loginResponse">
+        <p>Username: {{ loginResponse.username }}</p>
+        <p>Timestamp: {{ loginResponse.timestamp }}</p>
+    </ng-container>
+    
+      <!-- Displaying registerResponse$ fields -->
+    <div *ngIf="(registerResponse$ | async) as registerResponse">
+        <p>Username: {{ registerResponse.username }}</p>
+        <p>Account Id: {{ registerResponse.account_id }}</p>   
+        <!-- <p>{{ registerResponse.error }}</p>    -->
+    </div>
+
+    <div *ngIf="(errorMessage$ | async) as errorMessage">
+        <p>{{ errorMessage }}</p>
+        <p>Please register again.</p>
+        <button class="btn btn-primary" [routerLink]="['/register']">Register</button>
+    </div>
+
+</div>

@@ -12,13 +12,15 @@ import { OrderComponent } from './components/order.component';
 import { DashboardComponent } from './components/dashboard.component';
 import { HttpClientModule } from '@angular/common/http'
 import { ReactiveFormsModule } from '@angular/forms';
-import { LoginService } from './login.service';
+import { AccountService } from './account.service';
 import { NavbarComponent } from './components/navbar.component';
 import { NgbCollapse, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { RegisterComponent } from './components/register.component';
 
 const appRoutes: Routes = [
   { path: '', component: MainComponent, title: 'Main' },
   { path: 'login', component: LoginComponent, title: 'Log In' },
+  { path: 'register', component: RegisterComponent, title: 'Register' },
   // { path: 'dashboard/:userId', component: DashboardComponent, canActivate: [ loginGuard ] },
   // { path: 'dashboard', component: DashboardComponent, canActivate: [ loginGuard ] },
   { path: 'dashboard/:parsedUsername', component: DashboardComponent, title: 'DashBoard', canActivate: [ loginGuard ]},
@@ -36,7 +38,7 @@ const appRoutes: Routes = [
     MainComponent,
     ListComponent,
     DashboardComponent, 
-    OrderComponent, NavbarComponent,
+    OrderComponent, NavbarComponent, RegisterComponent,
   ],
   imports: [
     BrowserModule, ReactiveFormsModule, HttpClientModule,
@@ -45,7 +47,7 @@ const appRoutes: Routes = [
     RouterModule.forRoot(appRoutes, { useHash: true}),
     NgbModule
   ],
-  providers: [LoginService],
+  providers: [AccountService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

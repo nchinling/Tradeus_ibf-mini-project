@@ -1,6 +1,6 @@
 import { inject } from "@angular/core";
 import { CanActivateFn, CanDeactivateFn, Router } from "@angular/router";
-import { LoginService } from "./login.service";
+import { AccountService } from "./account.service";
 
 export interface LeaveComponent {
   canExit(): boolean
@@ -11,11 +11,11 @@ export interface LeaveComponent {
 export const loginGuard: CanActivateFn = (route, state) => {
 
     const router = inject(Router)
-    const loginSvc = inject(LoginService)
+    const accountSvc = inject(AccountService)
 
-    if (loginSvc.hasLogin())
+    if (accountSvc.hasLogin())
         return true
-    console.info('>>>>>hasLogin is >>>>>' +loginSvc.hasLogin())
+    console.info('>>>>>hasLogin is >>>>>' +accountSvc.hasLogin())
     return router.createUrlTree(['/'])
 }
 

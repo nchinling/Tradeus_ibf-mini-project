@@ -7,13 +7,16 @@
     <br>
     <h2>Please Login</h2>
 
-    <form [formGroup]="form" (submit)="login()">
+    <form [formGroup]="loginForm" (submit)="login()">
 
     <table>
         <tr>
         <td>Username:&nbsp;&nbsp;</td>
         <td>
-            <input type="text" size="30" formControlName="username" placeholder="Email address">
+            <input type="email" size="30" formControlName="username" placeholder="Email address">
+            <span *ngIf="invalidField('username')">
+                Please enter a valid email address
+            </span>
         </td>
         </tr>
     <br>
@@ -21,13 +24,16 @@
         <td>Password:</td>
         <td>
             <input type="text" size="30" formControlName="password" placeholder="Password">
+            <span *ngIf="invalidField('password')">
+                Please enter a valid password
+            </span>
         </td>
         </tr>
     <br>
         <tr>
         <td></td>
         <td>
-            <button type="submit" [disabled]="form.invalid">
+            <button class="btn btn-primary" type="submit" [disabled]="loginForm.invalid">
             Login
             </button>
         </td>
