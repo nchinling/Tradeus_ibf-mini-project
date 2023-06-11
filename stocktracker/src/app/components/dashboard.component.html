@@ -2,10 +2,15 @@
 
     <h1>Welcome to Dashboard!</h1>
 
-    <!-- <code>{{ loginResponse$ | async }}</code>
+    <h2>Welcome, {{username}}. ({{accountId}})</h2>
+
     
-    <code>{{ registerResponse$ | async }}</code> -->
-    
+
+
+
+
+
+
     <!-- Displaying loginResponse$ fields -->
     <ng-container *ngIf="(loginResponse$ | async) as loginResponse">
         <p>Username: {{ loginResponse.username }}</p>

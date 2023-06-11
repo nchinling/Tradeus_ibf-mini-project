@@ -76,11 +76,19 @@ export class RegisterComponent {
     this.register$.then((response) => {
       console.log('status:', response.status);
       console.log('timestamp:', response.timestamp);
-      console.log('account id:', response.account_id);
-     
-      // this.registerForm.reset
-  
-      // this.router.navigate(['/dashboard', parsedUsername])
+      console.log('account_id:', response.account_id);
+      console.log('response:', response);
+
+      const queryParams = {
+        status: response.status,
+        timestamp: response.timestamp,
+        account_id: response.account_id,
+        username: response.username
+      };
+
+      this.registerForm.reset
+
+      this.router.navigate(['/dashboard', parsedUsername], { queryParams: queryParams })
     }).catch((error)=>{
   
       this.errorMessage = error.error;
@@ -89,16 +97,6 @@ export class RegisterComponent {
       // this.registerForm.reset();
     });
 
-    // this.register$=firstValueFrom(this.accountSvc.registerAccount(registerData))
-    // this.register$.then((response) => {
-    //   console.log('status:', response.status);
-    //   console.log('timestamp:', response.timestamp);
-    //   console.log('account id:', response.account_id);
-    // });
-
-    this.registerForm.reset
-  
-    this.router.navigate(['/dashboard', parsedUsername])
 
   }
 }

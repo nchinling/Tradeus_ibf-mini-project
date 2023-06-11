@@ -8,5 +8,7 @@ public class DBQueries {
                         values (?, ?, ?, ? ,?, ?,?,?);
 
     """;
+
+     public static final String SELECT_ACCOUNT_BY_USERNAME ="select * from accounts where username = ?";
             
 }

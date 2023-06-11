@@ -7,6 +7,10 @@
     <br>
     <h2>Please Login</h2>
 
+    <div *ngIf="(errorMessage$ | async) as errorMessage" class="error-message">
+        <p>{{errorMessage}}</p>
+    </div>
+    
     <form [formGroup]="loginForm" (submit)="login()">
 
     <table>

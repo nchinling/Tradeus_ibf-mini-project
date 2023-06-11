@@ -15,12 +15,15 @@ export class LoginComponent implements OnInit {
 
   login$!: Promise<LoginResponse>
   loginForm!: FormGroup
+  errorMessage$!: Observable<string>
+  errorMessage!: string;
 
   fb = inject(FormBuilder)
   router = inject(Router)
   accountSvc = inject(AccountService)
 
   ngOnInit(): void {
+    this.errorMessage$ = this.accountSvc.onErrorMessage;
     this.loginForm = this.fb.group({
       // username: this.fb.control<string>('', [ Validators.required, Validators.minLength(5) ]),
       username: this.fb.control<string>('', [Validators.required, Validators.pattern('[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}')]),
@@ -50,11 +53,25 @@ export class LoginComponent implements OnInit {
     this.login$=firstValueFrom(this.accountSvc.login(username, password))
     this.login$.then((response) => {
       console.log('timestamp:', response.timestamp);
+      console.log('username:', response.username);
+      const queryParams = {
+        account_id: response.account_id,
+        username: response.username,
+        timestamp: response.timestamp
+      };
+
+      this.loginForm.reset
+      // localStorage.setItem('loginForm', JSON.stringify(this.loginForm))
+      this.router.navigate(['/dashboard', parsedUsername], { queryParams: queryParams })
+    }).catch((error)=>{
+  
+      this.errorMessage = error.error;
+      console.info('this.errorMessage is ' + this.errorMessage)
+      // this.errorMessage$ = this.accountSvc.onErrorMessage;
+      // this.registerForm.reset();
     });
 
-    this.loginForm.reset
-    // localStorage.setItem('loginForm', JSON.stringify(this.loginForm))
-    this.router.navigate(['/dashboard', parsedUsername])
+
   }
 
 }

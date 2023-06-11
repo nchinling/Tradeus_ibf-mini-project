@@ -50,21 +50,14 @@ export class AccountService {
         console.error(errorMessage);
         
         if (error instanceof HttpErrorResponse && error.status === 500) {
-          const serverError = error.error.error; // Access the error message sent by the server
-          errorMessage = 'Server error: ' + serverError;
+          const serverError = error.error.error; 
+          errorMessage = '>>>Server error: ' + serverError;
         }
         
         this.onErrorMessage.next(errorMessage);
         return throwError(() => ({ error: errorMessage }));
       }),
-      // catchError(error => {
-      //   const errorMessage = 'An error occurred during registrations: ' + error.message;
-      //   console.error('error message:'+errorMessage);
-      //   this.onErrorMessage.next(errorMessage);
-      //   // this.router.navigate(['/register']);
-      //   // this.onErrorMessage.next(errorMessage);
-      //   return throwError(() => ({ error: errorMessage })); 
-      // }),
+
       filter((response) => response !== null), // Filter out null responses
       //the fired onRequest.next is received in dashboard component's ngOnit 
       tap(response => this.onRegisterRequest.next(response))
@@ -86,6 +79,18 @@ export class AccountService {
       .set("Content-Type", "application/x-www-form-urlencoded")
 
     return  this.http.post<LoginResponse>(`${URL_API_TRADE_SERVER}/login`, form.toString(), {headers}).pipe(
+      catchError(error => {
+        let errorMessage = 'An error occurred during login: ' + error.message;
+        console.error(errorMessage);
+        
+        if (error instanceof HttpErrorResponse && error.status === 500) {
+          const serverError = error.error.error; 
+          errorMessage = '>>>Server error: ' + serverError;
+        }
+        
+        this.onErrorMessage.next(errorMessage);
+        return throwError(() => ({ error: errorMessage }));
+      }),
       filter((response) => response !== null), // Filter out null responses
       //the fired onRequest.next is received in dashboard component's ngOnit 
       tap(response => this.onLoginRequest.next(response))

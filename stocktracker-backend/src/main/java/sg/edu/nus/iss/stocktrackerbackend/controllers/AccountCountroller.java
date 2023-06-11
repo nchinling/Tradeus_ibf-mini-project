@@ -1,8 +1,11 @@
 package sg.edu.nus.iss.stocktrackerbackend.controllers;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+
+import javax.security.auth.login.AccountNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,16 +42,32 @@ public class AccountCountroller {
 
         System.out.printf(">>> I am inside Controller Login >>>>>\n");
         JsonObject resp = null;
-        
-        resp = Json.createObjectBuilder()
-        .add("username", username)
-        .add("password", password)
-        .add("timestamp", (new Date()).toString())
-        .build();
+
+            Account loggedInAccount;
+            try {
+                loggedInAccount = accSvc.loginAccount(username, password);
+                resp = Json.createObjectBuilder()
+                .add("account_id", loggedInAccount.getAccountId())
+                .add("username", loggedInAccount.getUsername())
+                .add("timestamp", (new Date()).toString())
+                .build();
+            } catch (AccountNotFoundException | IOException e) {
+                String errorMessage = e.getMessage();
+                System.out.printf(">>>Account Exception occured>>>>>\n");   
+                resp = Json.createObjectBuilder()
+                .add("error", errorMessage)
+                .build();
+
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(resp.toString());
+            } 
+
+        System.out.printf(">>>Successfully logged in>>>>>\n");   
 
         return ResponseEntity.ok(resp.toString());
 
     }
+
 
     @PostMapping(path="/register", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 	@ResponseBody

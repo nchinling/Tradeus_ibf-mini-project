@@ -11,8 +11,8 @@ export interface RegisterData {
 }
 
 export interface LoginResponse {
+    account_id: string
     username: string
-    password: string
     timestamp: string
 }
 
