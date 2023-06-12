@@ -14,18 +14,39 @@ export class AccountService {
   onRegisterRequest = new Subject<RegisterResponse>()
   onErrorResponse = new Subject<ErrorResponse>()
   onErrorMessage = new Subject<string>()
+  isLoggedInChanged = new Subject<boolean>()
 
   http=inject(HttpClient)
   router = inject(Router)
 
   username = "";
   password = "";
+  parsedUsername = "";
+  queryParams: any;
+  account_id = ""
+  KEY = "username"
 
 
   hasLogin(): boolean {
-    return !!(this.username&&this.password)
-   
+    if(this.username&&this.password)
+      localStorage.setItem(this.KEY, this.username)
+      const isLoggedIn = !!(this.username && this.password);
+      this.isLoggedInChanged.next(isLoggedIn);
+    return isLoggedIn;
+ 
   }
+
+
+  logout(): void {
+    // Clear the stored credentials from local storage
+    localStorage.removeItem(this.KEY);
+  }
+
+  isAuthenticated(): boolean {
+    // Check if there are stored credentials in local storage
+    return localStorage.getItem(this.KEY) !== null;
+  }
+
 
 
   registerAccount(data: RegisterData ): Observable<RegisterResponse> {

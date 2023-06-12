@@ -46,6 +46,11 @@ export class RegisterComponent {
     })
   }
 
+  canExit(): boolean {
+    //return true if it's clean form
+    return !this.registerForm.dirty
+  }
+
 
   invalidField(ctrlName:string): boolean{
     return !!(this.registerForm.get(ctrlName)?.invalid && 
@@ -80,11 +85,16 @@ export class RegisterComponent {
       console.log('response:', response);
 
       const queryParams = {
-        status: response.status,
-        timestamp: response.timestamp,
+        // status: response.status,
+        // timestamp: response.timestamp,
         account_id: response.account_id,
         username: response.username
       };
+
+      // const dashboardUrl = `#/dashboard/${parsedUsername}?account_id=${response.account_id}&username=${response.username}`;
+
+      // // Store the dashboard URL in localStorage
+      // localStorage.setItem('dashboardUrl', dashboardUrl);
 
       this.registerForm.reset
 

@@ -4,6 +4,7 @@ import { AccountService } from '../account.service';
 import { LoginResponse, RegisterResponse } from '../models';
 import { RegisterComponent } from './register.component';
 import { ActivatedRoute } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,7 +15,7 @@ export class DashboardComponent implements OnInit {
 
   accountSvc = inject(AccountService)
   activatedRoute = inject(ActivatedRoute)
-
+  title = inject(Title)
 
   loginResponse$!: Observable<LoginResponse>
   registerResponse$!: Observable<RegisterResponse>
@@ -31,24 +32,38 @@ export class DashboardComponent implements OnInit {
     this.errorMessage$ = this.accountSvc.onErrorMessage
 
 
-  // Access the query parameters
-  const queryParams = this.activatedRoute.snapshot.queryParams;
-  
-  // Example: Access specific query parameters
-  this.status = queryParams['status'];
-  this.timestamp = queryParams['timestamp'];
-  this.accountId = queryParams['account_id'];
-  this.username = queryParams['username'];
+        // Access the query parameters
+        const queryParams = this.activatedRoute.snapshot.queryParams;
+        
+        // Example: Access specific query parameters
+        this.status = queryParams['status'];
+        this.timestamp = queryParams['timestamp'];
+        this.accountId = queryParams['account_id'];
+        this.username = queryParams['username'];
 
-  console.log('Status:', this.status);
-  console.log('Timestamp:', this.timestamp);
-  console.log('Account ID:', this.accountId);
-  console.log('Username:', this.username);
+        this.title.setTitle(`Account: ${this.accountSvc.username}`)
+
+        console.log('Status:', this.status);
+        console.log('Timestamp:', this.timestamp);
+        console.log('Account ID:', this.accountId);
+        console.log('Username:', this.username);
+
+        if(localStorage.getItem('username')){
+          this.username = this.accountSvc.username
+          this.accountId = this.accountSvc.account_id
+          
+        } else{
+
+        }
+    
+
   }
 
   ngAfterViewInit():void{
     this.loginResponse$ = this.accountSvc.onLoginRequest
     this.registerResponse$ = this.accountSvc.onRegisterRequest
+
+
  
   }
 

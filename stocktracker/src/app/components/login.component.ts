@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AccountService } from '../account.service';
-import { Observable, firstValueFrom } from 'rxjs';
+import { Observable, Subject, firstValueFrom } from 'rxjs';
 import { LoginResponse } from '../models';
 
 
@@ -16,7 +16,9 @@ export class LoginComponent implements OnInit {
   login$!: Promise<LoginResponse>
   loginForm!: FormGroup
   errorMessage$!: Observable<string>
+  // isLoggedInChanged = new Subject<boolean>()
   errorMessage!: string;
+  KEY = "username"
 
   fb = inject(FormBuilder)
   router = inject(Router)
@@ -46,8 +48,10 @@ export class LoginComponent implements OnInit {
     //the username and password are passed to loginSvc for loginGuard
     this.accountSvc.username = username
     this.accountSvc.password = password
+    this.accountSvc.parsedUsername = parsedUsername
     console.info('username: ', username)
     console.info('password: ', password)
+
 
     //Using promise
     this.login$=firstValueFrom(this.accountSvc.login(username, password))
@@ -57,10 +61,18 @@ export class LoginComponent implements OnInit {
       const queryParams = {
         account_id: response.account_id,
         username: response.username,
-        timestamp: response.timestamp
+        // timestamp: response.timestamp
       };
 
-      this.loginForm.reset
+      this.accountSvc.queryParams = queryParams;
+      this.accountSvc.account_id = response.account_id
+
+
+      // const dashboardUrl = `#/dashboard/${parsedUsername}?account_id=${response.account_id}&username=${response.username}`;
+
+      // // Store the dashboard URL in localStorage
+      // localStorage.setItem('dashboardUrl', dashboardUrl);
+
       // localStorage.setItem('loginForm', JSON.stringify(this.loginForm))
       this.router.navigate(['/dashboard', parsedUsername], { queryParams: queryParams })
     }).catch((error)=>{

@@ -13,9 +13,10 @@ export const loginGuard: CanActivateFn = (route, state) => {
     const router = inject(Router)
     const accountSvc = inject(AccountService)
 
-    if (accountSvc.hasLogin())
+    if (accountSvc.hasLogin() || accountSvc.isAuthenticated())
         return true
     console.info('>>>>>hasLogin is >>>>>' +accountSvc.hasLogin())
+    console.info('>>>>>isAuthenticated is >>>>>' +accountSvc.isAuthenticated())
     return router.createUrlTree(['/'])
 }
 

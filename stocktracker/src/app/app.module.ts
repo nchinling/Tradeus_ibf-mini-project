@@ -16,9 +16,15 @@ import { AccountService } from './account.service';
 import { NavbarComponent } from './components/navbar.component';
 import { NgbCollapse, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { RegisterComponent } from './components/register.component';
+import { LearnComponent } from './components/main/learn.component';
+import { AboutComponent } from './components/main/about.component';
+import { TutorialComponent } from './components/main/tutorial.component';
 
 const appRoutes: Routes = [
   { path: '', component: MainComponent, title: 'Main' },
+  { path: 'main/learn', component: LearnComponent, title: 'Learn' },
+  { path: 'main/tutorial', component: TutorialComponent, title: 'Getting Started' },
+  { path: 'main/about', component: AboutComponent, title: 'About Us' },
   { path: 'login', component: LoginComponent, title: 'Log In' },
   { path: 'register', component: RegisterComponent, title: 'Register' },
   // { path: 'dashboard/:userId', component: DashboardComponent, canActivate: [ loginGuard ] },
@@ -38,7 +44,8 @@ const appRoutes: Routes = [
     MainComponent,
     ListComponent,
     DashboardComponent, 
-    OrderComponent, NavbarComponent, RegisterComponent,
+    OrderComponent, NavbarComponent, RegisterComponent, 
+    LearnComponent, AboutComponent, TutorialComponent,
   ],
   imports: [
     BrowserModule, ReactiveFormsModule, HttpClientModule,

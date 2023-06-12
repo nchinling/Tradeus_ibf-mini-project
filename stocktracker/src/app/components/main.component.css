@@ -1,0 +1,14 @@
+.background-image {
+    background-image: url("../../assets/static/images/background1new.jpg");
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+}
+
+.brand-text-1 {
+    color: #1363DF; 
+  }
+  
+  .brand-text-2 {
+    color: lightslategray; 
+  }
