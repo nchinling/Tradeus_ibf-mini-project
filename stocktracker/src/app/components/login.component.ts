@@ -28,8 +28,8 @@ export class LoginComponent implements OnInit {
     this.errorMessage$ = this.accountSvc.onErrorMessage;
     this.loginForm = this.fb.group({
       // username: this.fb.control<string>('', [ Validators.required, Validators.minLength(5) ]),
-      username: this.fb.control<string>('', [Validators.required, Validators.pattern('[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}')]),
-      password: this.fb.control<string>('', [ Validators.required, Validators.minLength(5) ])
+      username: this.fb.control<string>('ncl@gmail.com', [Validators.required, Validators.pattern('[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}')]),
+      password: this.fb.control<string>('88888', [ Validators.required, Validators.minLength(5) ])
     })
   }
 

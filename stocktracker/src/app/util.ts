@@ -1,5 +1,5 @@
-import { inject } from "@angular/core";
-import { CanActivateFn, CanDeactivateFn, Router } from "@angular/router";
+import { Injectable, inject } from "@angular/core";
+import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, CanActivateFn, CanDeactivateFn, Router, RouterStateSnapshot } from "@angular/router";
 import { AccountService } from "./account.service";
 
 export interface LeaveComponent {
@@ -26,3 +26,5 @@ export const leaveComp: CanDeactivateFn<LeaveComponent> = (comp, currRoute, curr
 
   return confirm(comp.getMessage())
 }
+
+

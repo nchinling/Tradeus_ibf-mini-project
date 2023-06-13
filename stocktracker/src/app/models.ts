@@ -26,7 +26,14 @@ export interface RegisterResponse {
 }
 
 export interface ErrorResponse {
-
     error: string; 
+}
+
+export interface Stock{
+    symbol: string
+    name: string
+    exchange: string
+    currency: string
 
 }
+

@@ -1,10 +1,13 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, HostListener, OnInit, inject } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
 import { AccountService } from '../account.service';
-import { LoginResponse, RegisterResponse } from '../models';
+import { LoginResponse, RegisterResponse, Stock } from '../models';
 import { RegisterComponent } from './register.component';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { StockService } from '../stock.service';
+
 
 @Component({
   selector: 'app-dashboard',
@@ -13,9 +16,12 @@ import { Title } from '@angular/platform-browser';
 })
 export class DashboardComponent implements OnInit {
 
+
+  stockSvc = inject(StockService)
   accountSvc = inject(AccountService)
   activatedRoute = inject(ActivatedRoute)
   title = inject(Title)
+  fb = inject(FormBuilder)
 
   loginResponse$!: Observable<LoginResponse>
   registerResponse$!: Observable<RegisterResponse>
@@ -24,6 +30,10 @@ export class DashboardComponent implements OnInit {
   status!: string
   timestamp!: string
   accountId!: string
+
+  //stock variables
+  stock$!: Promise<Stock>
+  stockDataForm!: FormGroup
 
   ngOnInit(): void {
     // this.loginResponse$ = this.accountSvc.onLoginRequest
@@ -51,20 +61,36 @@ export class DashboardComponent implements OnInit {
         if(localStorage.getItem('username')){
           this.username = this.accountSvc.username
           this.accountId = this.accountSvc.account_id
-          
         } else{
-
         }
-    
 
+      this.stockDataForm = this.createStockDataForm()
+    
   }
 
   ngAfterViewInit():void{
     this.loginResponse$ = this.accountSvc.onLoginRequest
     this.registerResponse$ = this.accountSvc.onRegisterRequest
+  }
 
 
- 
+  getStockData() {
+    //get form control field
+    const symbol = this.stockDataForm.get('symbol')?.value
+    const interval = this.stockDataForm.get('interval')?.value
+    if (symbol && interval) {
+      //get field value
+      console.info('>> symbol: ', symbol);
+      console.info('>> interval: ', interval);
+      this.stock$ = this.stockSvc.getStockData(symbol, interval);
+    }
+  }
+
+  private createStockDataForm(): FormGroup {
+    return this.fb.group({
+      symbol: this.fb.control<string>('AMZN', [ Validators.required ]),
+      interval: this.fb.control<string>('1day', [ Validators.required ])
+    })
   }
 
 }

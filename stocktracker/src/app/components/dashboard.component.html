@@ -5,6 +5,40 @@
     <p>Welcome, {{username}} ({{accountId}})</p>
 
     
+<h2>Get Stock Data Quote</h2>
+
+<form [formGroup]="stockDataForm" (submit)="getStockData()">
+  <table>
+    <tr>
+      <td>Stock Symbol</td>
+      <td>
+        <input type="text"  formControlName="symbol">
+      </td>
+    </tr>
+    <tr>
+        <td>Interval</td>
+        <td>
+          <input type="text"  formControlName="interval">
+        </td>
+    </tr>
+    <tr>
+      <td></td>
+      <td> <button type="submit">Submit</button></td>
+    </tr>
+  </table>
+</form>
+
+<ul>
+    <li *ngIf="(stock$ | async) as stock">Symbol: {{ stock.symbol }}</li>
+    <li *ngIf="(stock$ | async) as stock">Name: {{ stock.name }}</li>
+    <li *ngIf="(stock$ | async) as stock">Exchange: {{ stock.exchange }} </li>
+    <li *ngIf="(stock$ | async) as stock">Currency: {{ stock.currency }} </li>  
+</ul>
+
+
+
+
+    
 
 
 

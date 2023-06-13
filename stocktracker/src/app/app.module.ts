@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login.component';
 
-import { leaveComp, loginGuard } from './util';
+import { leaveComp, loginGuard} from './util';
 import { RouterModule, Routes } from '@angular/router';
 import { ListComponent } from './components/list.component';
 import { MainComponent } from './components/main.component';
@@ -19,9 +19,10 @@ import { RegisterComponent } from './components/register.component';
 import { LearnComponent } from './components/main/learn.component';
 import { AboutComponent } from './components/main/about.component';
 import { TutorialComponent } from './components/main/tutorial.component';
+import { StockService } from './stock.service';
 
 const appRoutes: Routes = [
-  { path: '', component: MainComponent, title: 'Main' },
+  { path: '', component: MainComponent, title: 'Welcome to Tradeus' },
   { path: 'main/learn', component: LearnComponent, title: 'Learn' },
   { path: 'main/tutorial', component: TutorialComponent, title: 'Getting Started' },
   { path: 'main/about', component: AboutComponent, title: 'About Us' },
@@ -29,10 +30,10 @@ const appRoutes: Routes = [
   { path: 'register', component: RegisterComponent, title: 'Register' },
   // { path: 'dashboard/:userId', component: DashboardComponent, canActivate: [ loginGuard ] },
   // { path: 'dashboard', component: DashboardComponent, canActivate: [ loginGuard ] },
-  { path: 'dashboard/:parsedUsername', component: DashboardComponent, title: 'DashBoard', canActivate: [ loginGuard ]},
-  { path: 'list', component: ListComponent, title: 'Stock List', canActivate: [ loginGuard ] },
+  { path: 'dashboard/:parsedUsername', component: DashboardComponent, title: 'DashBoard', canActivate: [loginGuard]},
+  { path: 'list', component: ListComponent, title: 'Stock List', canActivate: [ loginGuard] },
   { path: 'order', component: OrderComponent, title: 'Order'
-      , canActivate: [ loginGuard ], canDeactivate: [ leaveComp ] },
+      , canActivate: [ loginGuard], canDeactivate: [ leaveComp ] },
   { path: '**', redirectTo: '/', pathMatch: 'full' }
 ]
 
@@ -54,7 +55,7 @@ const appRoutes: Routes = [
     RouterModule.forRoot(appRoutes, { useHash: true}),
     NgbModule
   ],
-  providers: [AccountService],
+  providers: [AccountService, StockService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
