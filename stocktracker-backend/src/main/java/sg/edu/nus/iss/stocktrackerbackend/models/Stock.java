@@ -161,7 +161,19 @@ public class Stock {
             s.setName(o.getString("name"));
             s.setExchange(o.getString("exchange"));
             s.setCurrency(o.getString("currency"));
-           
+            s.setOpen(Double.parseDouble(o.getString("open")));
+            s.setHigh(Double.parseDouble(o.getString("high")));
+            s.setLow(Double.parseDouble(o.getString("low")));
+            s.setClose(Double.parseDouble(o.getString("close")));
+            s.setVolume(Long.parseLong(o.getString("volume")));
+            s.setChange(Double.parseDouble(o.getString("change")));
+            s.setPercentChange(Double.parseDouble(o.getString("percent_change")));
+            s.setDatetime(o.getString("datetime"));
+
+                // .add("volume", stock.getVolume())
+                // .add("change", stock.getChange())
+                // .add("percent_change", stock.getPercentChange())
+                // .add("date", stock.getDatetime())
             
         }
         return s;

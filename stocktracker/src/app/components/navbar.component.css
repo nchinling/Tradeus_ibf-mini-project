@@ -7,7 +7,8 @@
     color: black
 
   }
-  
+
+
   .navbar {
     
     /* background-color: #1363DF; */
@@ -43,6 +44,10 @@
     padding: 0 30px;
     list-style: none; 
     justify-content: flex-end;
+  }
+
+  .collapse.navbar-collapse {
+    margin: 20px; /* Adjust the value as needed */
   }
 
 

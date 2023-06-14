@@ -1,0 +1,44 @@
+.row {
+    display: flex;
+    justify-content: space-between; 
+    /* min-height: 250px */
+  }
+  
+.box {
+flex: 1;
+font-family: "Arial Black", Arial, sans-serif;
+/* font-weight: bold; */
+color: white;
+padding: 10px;
+
+}
+
+
+.negative {
+background-color: red;
+}
+
+.positive {
+background-color: green;
+}
+
+.triangle {
+    color: white;
+}
+
+.stock-form{
+    padding: 10px;
+}
+
+.data-row td {
+    padding-left: 10px;
+    padding-right: 10px; /* Adjust the padding value to your preference */
+}
+  
+.arrow-up{
+    color:green;
+}
+
+.arrow-down{
+    color:red;
+}

@@ -37,9 +37,6 @@ public class AccountCountroller {
     @Autowired
     private AccountService accSvc;
 
-    @Autowired
-    private StockService stockSvc;
-
 	@PostMapping(path="/login", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 	@ResponseBody
 	public ResponseEntity<String> login(@RequestBody MultiValueMap<String, String> form) {

@@ -35,5 +35,30 @@ export interface Stock{
     exchange: string
     currency: string
 
+    open: number
+    high: number
+    low: number
+    close: number
+    volume: number
+    previous_close: number
+    change: number
+    percent_change: number
+    //use datePipe for datetime
+    // <p>DateTime: {{ stockData.datetime | date:'yyyy-MM-dd HH:mm:ss' }}</p>
+    datetime: Date
 }
+
+export interface MarketIndex{
+    symbol: string
+    name: string
+    datetime: Date
+    close: number
+    change: number
+    percentage_change: number
+}
+
+export interface Market {
+    symbol: string;
+    interval: string;
+  }
 

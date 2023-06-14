@@ -1,44 +1,131 @@
 <div class = "container">
 
-    <!-- <h1>Welcome to Dashboard!</h1> -->
+  <h4>Welcome, {{username}} ({{accountId}})</h4>
 
-    <p>Welcome, {{username}} ({{accountId}})</p>
+  <div class="row">
+    <div class="box" *ngFor="let index of [0, 1, 2, 3, 4]">
+      <div *ngIf="(marketIndex$ | async) as marketIndex">
+        <ul [ngClass]="{ 'negative': marketIndex[index].change < 0, 
+                        'positive': marketIndex[index].change > 0 }">
+          <p>{{marketIndex[index].name}} ({{marketIndex[index].symbol}})</p>
+          <p>{{ marketIndex[index].close | number: '1.2-2' }}</p>
+          <p><span class="triangle" *ngIf="marketIndex[index].change > 0">&#9650; &nbsp;+</span>
+            <span class="triangle" *ngIf="marketIndex[index].change < 0">&#9660;</span>
+            {{ marketIndex[index].change | number: '1.2-2' }}&nbsp;   {{ marketIndex[index].percentage_change | number: '1.2-2' }} % </p>
+          <!-- <p>{{ marketIndex[index].percentage_change | number: '1.2-2' }} %</p> -->
+        </ul>
+      </div>
+    </div>
+  </div>
+  
+</div>
 
-    
-<h2>Get Stock Data Quote</h2>
 
-<form [formGroup]="stockDataForm" (submit)="getStockData()">
+<div class = "container">
+  <h3>Get Stock Data Quote</h3>
+
   <table>
     <tr>
-      <td>Stock Symbol</td>
-      <td>
-        <input type="text"  formControlName="symbol">
+      <td class="stock-form">
+        <form [formGroup]="stockDataForm" (submit)="getStockData()">
+          <table>
+            <tr>
+              <td>Stock Symbol:&nbsp;</td>
+              <td>
+                <input type="text"  formControlName="symbol">
+              </td>
+            </tr>
+            <br>
+            <tr>
+                <td>Interval:</td>
+                <td>
+                  <select formControlName="interval">
+                      <option value="1min">1 minute</option>
+                      <option value="5min">5 minute</option>
+                      <option value="15min">15 minute</option>
+                      <option value="1h">1 hour</option>
+                      <option value="1day">1 day</option>
+                  </select>
+              </td>
+            </tr>
+            <br>
+            <tr>
+              <td></td>
+              <td> <button type="submit">Submit</button></td>
+            </tr>
+          </table>
+        </form>
       </td>
-    </tr>
-    <tr>
-        <td>Interval</td>
-        <td>
-          <input type="text"  formControlName="interval">
-        </td>
-    </tr>
-    <tr>
-      <td></td>
-      <td> <button type="submit">Submit</button></td>
-    </tr>
-  </table>
-</form>
 
-<ul>
-    <li *ngIf="(stock$ | async) as stock">Symbol: {{ stock.symbol }}</li>
-    <li *ngIf="(stock$ | async) as stock">Name: {{ stock.name }}</li>
-    <li *ngIf="(stock$ | async) as stock">Exchange: {{ stock.exchange }} </li>
-    <li *ngIf="(stock$ | async) as stock">Currency: {{ stock.currency }} </li>  
-</ul>
+      <!-- Table data for stock info (Right-hand column) -->
+      <div *ngIf="(stock$ | async) as stock">
+      <td>
+        <!-- <div *ngIf="(stock$ | async) as stock"> -->
+          <table>
+            <tr class="data-row">
+              <td>Symbol:</td>
+              <td>{{ stock.symbol }}</td>
+              <td>Name:</td>
+              <td>{{ stock.name }}</td>
+            </tr>
+            <tr class="data-row">
+              <td>Exchange:</td>
+              <td>{{ stock.exchange }}</td>
+              <td>Currency:</td>
+              <td>{{ stock.currency }}</td>
+            </tr>
+            <tr class="data-row">
+              <td>Open:</td>
+              <td>{{ stock.open }}</td>
+              <td>High:</td>
+              <td>{{ stock.high }}</td>
+            </tr>
+            <tr class="data-row">
+              <td>Low:</td>
+              <td>{{ stock.low }}</td>
+              <td>Close:</td>
+              <td>{{ stock.close }}</td>
+            </tr>
+            <tr class="data-row">
+              <td>Volume:</td>
+              <td>{{ stock.volume }}</td>
+              <td>Change:</td>
+              <td><span class="arrow-up" *ngIf="stock.change > 0">&#9650; &nbsp;+{{ stock.change }}</span>
+                <span class="arrow-down" *ngIf="stock.change < 0">&#9660; &nbsp;{{ stock.change }}</span></td>
+            </tr>
+            <!-- <p><span class="triangle" *ngIf="marketIndex[index].change > 0">&#9650; &nbsp;+</span>
+              <span class="triangle" *ngIf="marketIndex[index].change < 0">&#9660;</span> -->
+            <tr class="data-row">
+              <td>% Change:</td>
+              <td><span class="arrow-up" *ngIf="stock.percent_change > 0">&#9650; &nbsp;+{{ stock.percent_change }}%</span>
+                <span class="arrow-down" *ngIf="stock.percent_change < 0">&#9660; &nbsp;{{ stock.percent_change }}%</span></td>
+              <td>Last:</td>
+              <td>{{ stock.datetime | date:'dd-MM-yyyy HH:mm:ss' }}</td>
+            </tr>
+          </table>
+        <!-- </div> -->
+      </td>
+      <td>
+        <button class="btn btn-info">Add</button>
+    </td>
+    </div>
+  
+    </tr>
+  
+  </table>
+  
+  <br>
+
+</div>
+
+
+
 
 
 
 
     
+
 
 
 
@@ -64,4 +151,3 @@
         <button class="btn btn-primary" [routerLink]="['/register']">Register</button>
     </div>
 
-</div>

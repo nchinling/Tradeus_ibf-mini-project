@@ -1,7 +1,7 @@
 import { Component, HostListener, OnInit, inject } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscription, interval } from 'rxjs';
 import { AccountService } from '../account.service';
-import { LoginResponse, RegisterResponse, Stock } from '../models';
+import { LoginResponse, MarketIndex, RegisterResponse, Stock, Market } from '../models';
 import { RegisterComponent } from './register.component';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
@@ -33,6 +33,19 @@ export class DashboardComponent implements OnInit {
 
   //stock variables
   stock$!: Promise<Stock>
+  // marketIndex$!: Promise<MarketIndex>
+
+  markets: Market[] = [
+    { symbol: "SPX", interval: "1day" },
+    { symbol: "VIX", interval: "1day" },
+    { symbol: "IXIC", interval: "1day" },
+    { symbol: "DJI", interval: "1day" },
+    { symbol: "RUT", interval: "1day" }
+  ];
+
+  marketIndex$!: Promise<MarketIndex[]>
+ 
+
   stockDataForm!: FormGroup
 
   ngOnInit(): void {
@@ -64,6 +77,11 @@ export class DashboardComponent implements OnInit {
         } else{
         }
 
+      //load market data
+      // this.marketIndex$ = this.stockSvc.getMarketData('SPX', '1day');
+      this.marketIndex$ = this.stockSvc.getMarketData(this.markets);
+
+      //load get stock data form
       this.stockDataForm = this.createStockDataForm()
     
   }
@@ -88,8 +106,8 @@ export class DashboardComponent implements OnInit {
 
   private createStockDataForm(): FormGroup {
     return this.fb.group({
-      symbol: this.fb.control<string>('AMZN', [ Validators.required ]),
-      interval: this.fb.control<string>('1day', [ Validators.required ])
+      symbol: this.fb.control<string>('AAPL', [ Validators.required ]),
+      interval: this.fb.control<string>('1min', [ Validators.required ])
     })
   }
 
