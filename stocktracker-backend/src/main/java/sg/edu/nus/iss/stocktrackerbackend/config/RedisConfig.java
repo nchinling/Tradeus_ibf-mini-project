@@ -30,7 +30,36 @@ public class RedisConfig {
 
     @Bean("marketbean")
     @Scope("singleton")
-    public RedisTemplate<String, String> redisTemplate(){
+    public RedisTemplate<String, String> marketRedisTemplate(){
+        final RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
+        config.setHostName(redisHost);
+        config.setPort(redisPort.get());
+
+        if(!redisUsername.isEmpty() && !redisPassword.isEmpty()){
+            config.setUsername(redisUsername);
+            config.setPassword(redisPassword);
+        }
+        config.setDatabase(0);
+        final JedisClientConfiguration jedisClient =  JedisClientConfiguration
+                                .builder()
+                                .build();
+
+        final JedisConnectionFactory jedisFac = new JedisConnectionFactory(config, jedisClient);
+        jedisFac.afterPropertiesSet();
+        
+        RedisTemplate<String, String> r = new RedisTemplate<String,String>();
+        r.setConnectionFactory(jedisFac);
+        r.setKeySerializer(new StringRedisSerializer());
+        r.setValueSerializer(new StringRedisSerializer());
+        
+        System.out.println("redisHost > " + redisHost);
+        return r;
+    }
+
+    
+    @Bean("stockbean")
+    @Scope("singleton")
+    public RedisTemplate<String, String> stockRedisTemplate(){
         final RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
         config.setHostName(redisHost);
         config.setPort(redisPort.get());

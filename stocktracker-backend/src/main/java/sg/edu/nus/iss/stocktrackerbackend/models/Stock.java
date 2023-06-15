@@ -3,6 +3,7 @@ package sg.edu.nus.iss.stocktrackerbackend.models;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
 
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
@@ -169,15 +170,58 @@ public class Stock {
             s.setChange(Double.parseDouble(o.getString("change")));
             s.setPercentChange(Double.parseDouble(o.getString("percent_change")));
             s.setDatetime(o.getString("datetime"));
-
-                // .add("volume", stock.getVolume())
-                // .add("change", stock.getChange())
-                // .add("percent_change", stock.getPercentChange())
-                // .add("date", stock.getDatetime())
-            
         }
         return s;
     }
+
+    public JsonObject toJSON(){
+    
+        return Json.createObjectBuilder()
+            .add("symbol", this.getSymbol())
+            .add("name", this.getName())
+            .add("exchange", this.getExchange())
+            .add("currency", this.getCurrency())
+            .add("open", this.getOpen())
+            .add("high", this.getHigh())
+            .add("low", this.getLow())
+            .add("close", this.getClose())
+            .add("volume", this.getVolume())
+            .add("change", this.getChange())
+            .add("percent_change", this.getPercentChange())
+            .add("datetime", this.getDatetime())
+            .build();
+
+            
+    }
+
+
+    public static Stock createUserObjectFromRedis(String jsonStr) throws IOException{
+    Stock s = new Stock();
+        try(InputStream is = new ByteArrayInputStream(jsonStr.getBytes())) {
+            JsonObject o = toJSON(jsonStr);
+             s.setSymbol(o.getString("symbol"));
+            s.setName(o.getString("name"));
+            s.setExchange(o.getString("exchange"));
+            s.setCurrency(o.getString("currency"));
+            s.setOpen(o.getJsonNumber("open").doubleValue());
+            s.setHigh(o.getJsonNumber("high").doubleValue());
+            s.setLow(o.getJsonNumber("low").doubleValue());
+            s.setClose(o.getJsonNumber("close").doubleValue());
+            s.setVolume(o.getJsonNumber("volume").longValue());
+            s.setChange(o.getJsonNumber("change").doubleValue());
+            s.setPercentChange(o.getJsonNumber("percent_change").doubleValue());
+            s.setDatetime(o.getString("datetime"));
+
+        }
+        return s;
+    }
+
+    public static JsonObject toJSON(String json){
+        JsonReader r = Json.createReader(new StringReader(json));
+        return r.readObject();
+    }
+
+    
 
     
 }

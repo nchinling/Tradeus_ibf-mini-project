@@ -1,6 +1,7 @@
 package sg.edu.nus.iss.stocktrackerbackend.controllers;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +16,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.json.Json;
+import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonObject;
 import sg.edu.nus.iss.stocktrackerbackend.models.Market;
 import sg.edu.nus.iss.stocktrackerbackend.models.Stock;
+import sg.edu.nus.iss.stocktrackerbackend.models.StockInfo;
 import sg.edu.nus.iss.stocktrackerbackend.services.StockService;
 
 @Controller
@@ -38,43 +41,42 @@ public class StockController {
         System.out.println(">>>>>>>>Symbol in controller>>>>>" + symbol);
         System.out.println(">>>>>>>>Interval in controller>>>>>" + interval);
         
-        // Optional<Weather> wr = weatherSvc.getWeatherFromRedis(city);
-        // if (wr.isPresent()){
-        //     Weather weather = wr.get();
-        //     System.out.println("Obtained weather data from Redis");
-        //     //no need to save
-        //     // weatherSvc.save(weather);
-
-        //     String sunriseTime = DateTimeConverter(weather.getSunrise());
-        //     String sunsetTime = DateTimeConverter(weather.getSunset());
-        //     JsonObject resp = Json.createObjectBuilder()
-        //         .add("city", weather.getCity())
-        //         .add("temperature", weather.getTemperature())
-        //         .add("visibility",weather.getVisibility() )
-        //         .add("sunrise", sunriseTime)
-        //         .add("sunset", sunsetTime)
-        //         .add("description", weather.getWeathercondition().get(0).getDescription())
-        //         .add("mainWeather", weather.getWeathercondition().get(0).getMain())
-        //         .build();
-        //         System.out.println(">>>FromRedisresp: " + resp);
+        //Obtain from redis cache
+        Optional<Stock> stk = stockSvc.getStockFromRedis(symbol, interval);
+        if (stk.isPresent()){
+            Stock stock = stk.get();
+          
+            System.out.println("Obtained stock data from Redis");
+     
+            JsonObject resp = Json.createObjectBuilder()
+                .add("symbol", stock.getSymbol())
+                .add("name", stock.getName())
+                .add("exchange",stock.getExchange() )
+                .add("currency", stock.getCurrency())
+                .add("open", stock.getOpen())
+                .add("high", stock.getHigh())
+                .add("low", stock.getLow())
+                .add("close", stock.getClose())
+                .add("volume", stock.getVolume())
+                .add("change", stock.getChange())
+                .add("percent_change", stock.getPercentChange())
+                .add("datetime", stock.getDatetime())
+                .build();
+                System.out.println(">>>resp: " + resp);
             
-        //     return ResponseEntity.ok(resp.toString());
-        // }
+            return ResponseEntity.ok(resp.toString());
+        }
         
+        //Obtain from api
         Optional<Stock> s = stockSvc.getStockData(symbol, interval);
         if (s.isPresent()) {
             Stock stock = s.get();
-            //to save stock data in redis/mongo for quick retrieval
-            // stockSvc.save(stock);
+
+            //save stock data in redis/mongo for quick retrieval
+            stockSvc.saveStockData(stock, interval);
 
             System.out.println("Obtained stock data from API");
-            // String sunriseTime = DateTimeConverter(weather.getSunrise());
-            // String sunsetTime = DateTimeConverter(weather.getSunset());
 
-            // <p>Volume: {{stock.volume}}</p>
-            // <p>Change: {{stock.change}}</p>
-            // <p>Percentage change: {{stock.percent_change}}</p>
-            // <p>Date: {{stock.datetime}}</p>
             JsonObject resp = Json.createObjectBuilder()
                 .add("symbol", stock.getSymbol())
                 .add("name", stock.getName())
@@ -101,7 +103,6 @@ public class StockController {
     }
 
 
-    
     @GetMapping(path="/quote/market", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<String> getMarketData(@RequestParam(required=true) String symbol,
@@ -111,7 +112,6 @@ public class StockController {
         System.out.println(">>>>>>>>Symbol in controller>>>>>" + symbol);
         System.out.println(">>>>>>>>Interval in controller>>>>>" + interval);
 
-           
         Optional<Market> mkt = stockSvc.getMarketFromRedis(symbol);
         if (mkt.isPresent()){
             Market market = mkt.get();
@@ -136,7 +136,7 @@ public class StockController {
         if (m.isPresent()) {
             Market market = m.get();
 
-            //to save stock data in redis/mongo for quick retrieval
+            //to save market data in redis/mongo for quick retrieval
             stockSvc.saveMarketData(market);
 
             System.out.println("Obtained stock data from API");
@@ -158,9 +158,37 @@ public class StockController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
         .body("Market information not available");
         
-        
     }
 
 
+    @GetMapping(path="/stocklist", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+	public ResponseEntity<String> getStocks(
+            @RequestParam(defaultValue = "") String exchange,
+			@RequestParam(defaultValue = "") String filter,
+			@RequestParam(defaultValue = "10") int limit,
+			@RequestParam(defaultValue = "0") int skip) {
+    
+
+		JsonArrayBuilder arrBuilder = Json.createArrayBuilder();
+        System.out.println(">>>The exchange in controller is >>> " + exchange);
+		List<StockInfo> stockInfoList = stockSvc.getStocksList(exchange,filter, skip, limit);
+		stockInfoList.stream()
+			.map(stockinfo -> Json.createObjectBuilder()
+						.add("name", stockinfo.name())
+						.add("symbol", stockinfo.symbol())
+                        .add("currency", stockinfo.currency())
+						.add("exchange", stockinfo.exchange())
+                        .add("country", stockinfo.country())
+						.add("type", stockinfo.type())
+						.build()
+			)
+			.forEach(json -> arrBuilder.add(json));
+
+		return ResponseEntity.ok(arrBuilder.build().toString());
+	}
 }
+
+
+
 

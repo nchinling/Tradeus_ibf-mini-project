@@ -1,9 +1,9 @@
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
-import { Subject, lastValueFrom, tap, map, interval } from "rxjs";
-import { Market, MarketIndex, Stock } from "./models";
+import { Subject, lastValueFrom, tap, map, interval, firstValueFrom } from "rxjs";
+import { Market, MarketIndex, Stock, StockInfo } from "./models";
 
-const URL_API_TRADE_SERVER = 'http://localhost:8080/api/quote'
+const URL_API_TRADE_SERVER = 'http://localhost:8080/api'
 
 @Injectable()
 export class StockService {
@@ -20,7 +20,7 @@ export class StockService {
             .set('interval', interval)
         console.info('>>>>>>sending to Stock server...')
         return lastValueFrom(
-          this.http.get<Stock>(`${URL_API_TRADE_SERVER}/stock`, { params: queryParams })
+          this.http.get<Stock>(`${URL_API_TRADE_SERVER}/quote/stock`, { params: queryParams })
             .pipe(
               tap(resp => this.onStockRequest.next(resp)),
               map(resp => ({ symbol: resp.symbol, name: resp.name, 
@@ -60,7 +60,7 @@ export class StockService {
             .set('symbol', market.symbol)
             .set('interval', market.interval);
       
-          const request=lastValueFrom(this.http.get<MarketIndex>(`${URL_API_TRADE_SERVER}/market`, { params: queryParams })
+          const request=lastValueFrom(this.http.get<MarketIndex>(`${URL_API_TRADE_SERVER}/quote/market`, { params: queryParams })
             .pipe(
               tap(resp => this.onMarketRequest.next(resp)),
               map(resp => ({
@@ -81,6 +81,18 @@ export class StockService {
         // return Promise.all(marketRequests);
         return Promise.all(marketRequests);
 
+      }
+
+
+      getStocksList(exchange = "NYSE", filter = "", limit = 10, skip = 0): Promise<StockInfo[]> {
+        const params = new HttpParams()
+            .set("exchange", exchange)
+            .set("filter", filter)
+            .set("limit", limit)
+            .set("skip", skip)
+        return firstValueFrom(
+          this.http.get<StockInfo[]>(`${URL_API_TRADE_SERVER}/stocklist`, { params })
+        )
       }
 
 }

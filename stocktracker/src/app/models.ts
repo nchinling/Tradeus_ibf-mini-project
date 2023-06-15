@@ -60,5 +60,16 @@ export interface MarketIndex{
 export interface Market {
     symbol: string;
     interval: string;
-  }
+}
+
+export interface StockInfo {
+
+    symbol: string
+    name: string
+    currency: string
+    exchange: string 
+    country: string
+    type: string
+
+}
 

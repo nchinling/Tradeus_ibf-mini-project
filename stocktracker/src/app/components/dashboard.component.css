@@ -42,3 +42,8 @@ background-color: green;
 .arrow-down{
     color:red;
 }
+
+.stock-item:hover {
+    color: lightgray;
+    cursor: pointer;
+  }

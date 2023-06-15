@@ -1,7 +1,7 @@
-import { Component, HostListener, OnInit, inject } from '@angular/core';
+import { Component, HostListener, Input, OnInit, inject } from '@angular/core';
 import { Observable, Subscription, interval } from 'rxjs';
 import { AccountService } from '../account.service';
-import { LoginResponse, MarketIndex, RegisterResponse, Stock, Market } from '../models';
+import { LoginResponse, MarketIndex, RegisterResponse, Stock, Market, StockInfo } from '../models';
 import { RegisterComponent } from './register.component';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
@@ -44,9 +44,26 @@ export class DashboardComponent implements OnInit {
   ];
 
   marketIndex$!: Promise<MarketIndex[]>
+
+  //for stocks list
+  @Input()
+  limit = 10
+
+  @Input()
+  skip = 0
+
+  @Input()
+  filter = ""
+
+  @Input()
+  exchange = "nyse"
+
+  stockInfoList$!: Promise<StockInfo[]>
  
 
   stockDataForm!: FormGroup
+  loadStock: string = 'VOO'
+  loadInterval: string = '1min'
 
   ngOnInit(): void {
     // this.loginResponse$ = this.accountSvc.onLoginRequest
@@ -80,9 +97,12 @@ export class DashboardComponent implements OnInit {
       //load market data
       // this.marketIndex$ = this.stockSvc.getMarketData('SPX', '1day');
       this.marketIndex$ = this.stockSvc.getMarketData(this.markets);
+      // this.stockList$ = this.stockSvc.getStockList()
 
       //load get stock data form
       this.stockDataForm = this.createStockDataForm()
+      this.stockInfoList$ = this.stockSvc.getStocksList(this.exchange, this.filter, this.limit, this.skip)
+      this.stock$ = this.stockSvc.getStockData(this.loadStock, this.loadInterval);
     
   }
 
@@ -92,12 +112,27 @@ export class DashboardComponent implements OnInit {
   }
 
 
-  getStockData() {
-    //get form control field
-    const symbol = this.stockDataForm.get('symbol')?.value
-    const interval = this.stockDataForm.get('interval')?.value
+  // getStockData() {
+  //   //get form control field
+  //   const symbol = this.stockDataForm.get('symbol')?.value
+  //   const interval = this.stockDataForm.get('interval')?.value
+  //   if (symbol && interval) {
+  //     //get field value
+  //     console.info('>> symbol: ', symbol);
+  //     console.info('>> interval: ', interval);
+  //     this.stock$ = this.stockSvc.getStockData(symbol, interval);
+  //   }
+  // }
+
+  getStockData(symbol?: string) {
+    let interval = '1min'
+
+    if (!symbol) {
+      symbol = this.stockDataForm.get('symbol')?.value;
+      interval = this.stockDataForm.get('interval')?.value
+    }
+  
     if (symbol && interval) {
-      //get field value
       console.info('>> symbol: ', symbol);
       console.info('>> interval: ', interval);
       this.stock$ = this.stockSvc.getStockData(symbol, interval);
@@ -106,9 +141,37 @@ export class DashboardComponent implements OnInit {
 
   private createStockDataForm(): FormGroup {
     return this.fb.group({
-      symbol: this.fb.control<string>('AAPL', [ Validators.required ]),
-      interval: this.fb.control<string>('1min', [ Validators.required ])
+      symbol: this.fb.control<string>('', [ Validators.required ]),
+      interval: this.fb.control<string>(this.loadInterval, [ Validators.required ])
     })
   }
+
+
+  //for displaying stocks list
+  fetchChanges(limit: string) {
+    this.limit = +limit
+    this.stockInfoList$= this.stockSvc.getStocksList(this.exchange, this.filter, this.limit, this.skip)
+  }
+
+  fetchExchange(exchange: string) {
+    this.exchange = exchange
+    this.stockInfoList$= this.stockSvc.getStocksList(this.exchange, this.filter, this.limit, this.skip)
+  }
+
+  filtering(text: string) {
+    this.filter = text
+    this.stockInfoList$= this.stockSvc.getStocksList(this.exchange, this.filter, this.limit, this.skip)
+  }
+
+  page(d: number) {
+    if (d >= 0)
+      this.skip += this.limit
+    else
+      this.skip = Math.max(0, this.skip - this.limit)
+
+    this.stockInfoList$ = this.stockSvc.getStocksList(this.exchange, this.filter, this.limit, this.skip)
+  }
+
+
 
 }

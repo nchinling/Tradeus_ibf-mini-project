@@ -1,7 +1,7 @@
 package sg.edu.nus.iss.stocktrackerbackend.services;
 
 import java.io.IOException;
-
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +15,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import sg.edu.nus.iss.stocktrackerbackend.models.Market;
 import sg.edu.nus.iss.stocktrackerbackend.models.Stock;
+import sg.edu.nus.iss.stocktrackerbackend.models.StockInfo;
 import sg.edu.nus.iss.stocktrackerbackend.repositories.StockRepository;
 
 @Service
@@ -117,9 +118,24 @@ public class StockService {
         stockRepo.saveMarketData(market);
     }
 
+    public void saveStockData(Stock stock, String interval){
+        stockRepo.saveStockData(stock, interval);
+    }
+
     public Optional<Market> getMarketFromRedis(String symbol) throws IOException{
         System.out.println(">>>>>>>> I am in Redis service>>>>>>");
         return stockRepo.getMarketFromRedis(symbol);
+    }
+
+    public Optional<Stock> getStockFromRedis(String symbol, String interval) throws IOException{
+        System.out.println(">>>>>>>> I am in Redis service for stocks>>>>>>");
+        return stockRepo.getStockFromRedis(symbol, interval);
+    }
+    
+    
+    public List<StockInfo> getStocksList(String exchange, String filter, int limit, int skip) {
+    System.out.println(">>>>>>>> I am in Service >>> getStocksList");
+    return stockRepo.getStocksList(exchange, filter, limit, skip);
     }  
 
 }

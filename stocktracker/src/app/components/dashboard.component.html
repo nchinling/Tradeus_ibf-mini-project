@@ -32,7 +32,7 @@
             <tr>
               <td>Stock Symbol:&nbsp;</td>
               <td>
-                <input type="text"  formControlName="symbol">
+                <input type="text"  formControlName="symbol" placeholder="Provide Stock Symbol">
               </td>
             </tr>
             <br>
@@ -120,6 +120,56 @@
 
 
 
+<div class="container">
+  <h3>Stock Search</h3>
+  <div style="display: flex; justify-content: flex-start;">
+    <div style="margin-right: 10px;">
+      <label for="perPage">Stocks per page:&nbsp;</label>
+      <select (change)="fetchChanges(perPage.value)" #perPage>
+        <option value="10"></option>
+        <option value="5">5</option>
+        <option value="10">10</option>
+        <option value="15">15</option>
+        <option value="20">20</option>
+      </select>
+    </div>
+    
+    <div style="margin-right: 10px;">
+      <label for="exchange">Exchange:&nbsp;</label>
+      <select (change)="fetchExchange(exchange.value)" #exchange>
+        <option value="nyse">NYSE</option>
+        <option value="nasdaq">NASDAQ</option>
+      </select>
+    </div>
+    
+    <div>
+      <label for="filter">Search:&nbsp;</label>
+      <input type="text" id="filter" size="20" placeholder="Stock Name"
+        (keyup)="filtering(inputFilter.value)" #inputFilter>
+    </div>
+  </div>
+  
+
+  <br>
+    <div *ngIf="stockInfoList$ | async as stockslist; else blank">
+      <div *ngFor="let s of stockslist">
+        <p (click)="getStockData(s.symbol)" class="stock-item">{{ s.name }} ({{ s.symbol }})</p>
+      </div>
+    </div>
+    
+    <div style="margin-top: 10px;">
+      <button type="button" class="btn btn-success" (click)="page(-1)">Prev</button>&nbsp;
+      <button type="button" class="btn btn-success" (click)="page(1)">Next</button>
+    </div>
+    <br>
+    <ng-template #blank></ng-template>
+  
+
+</div>
+
+
+
+
 
 
 
@@ -133,21 +183,20 @@
 
 
     <!-- Displaying loginResponse$ fields -->
-    <ng-container *ngIf="(loginResponse$ | async) as loginResponse">
+    <!-- <ng-container *ngIf="(loginResponse$ | async) as loginResponse">
         <p>Username: {{ loginResponse.username }}</p>
         <p>Timestamp: {{ loginResponse.timestamp }}</p>
-    </ng-container>
+    </ng-container> -->
     
       <!-- Displaying registerResponse$ fields -->
-    <div *ngIf="(registerResponse$ | async) as registerResponse">
+    <!-- <div *ngIf="(registerResponse$ | async) as registerResponse">
         <p>Username: {{ registerResponse.username }}</p>
         <p>Account Id: {{ registerResponse.account_id }}</p>   
-        <!-- <p>{{ registerResponse.error }}</p>    -->
-    </div>
+    </div> -->
 
-    <div *ngIf="(errorMessage$ | async) as errorMessage">
+    <!-- <div *ngIf="(errorMessage$ | async) as errorMessage">
         <p>{{ errorMessage }}</p>
         <p>Please register again.</p>
         <button class="btn btn-primary" [routerLink]="['/register']">Register</button>
-    </div>
+    </div> -->
 
