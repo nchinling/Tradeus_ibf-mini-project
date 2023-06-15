@@ -7,6 +7,7 @@ import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { StockService } from '../stock.service';
+import { ResearchComponent } from './research.component';
 
 
 @Component({
@@ -14,14 +15,13 @@ import { StockService } from '../stock.service';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit{
 
 
   stockSvc = inject(StockService)
   accountSvc = inject(AccountService)
   activatedRoute = inject(ActivatedRoute)
   title = inject(Title)
-  fb = inject(FormBuilder)
 
   loginResponse$!: Observable<LoginResponse>
   registerResponse$!: Observable<RegisterResponse>
@@ -30,10 +30,6 @@ export class DashboardComponent implements OnInit {
   status!: string
   timestamp!: string
   accountId!: string
-
-  //stock variables
-  stock$!: Promise<Stock>
-  // marketIndex$!: Promise<MarketIndex>
 
   markets: Market[] = [
     { symbol: "SPX", interval: "1day" },
@@ -45,25 +41,13 @@ export class DashboardComponent implements OnInit {
 
   marketIndex$!: Promise<MarketIndex[]>
 
-  //for stocks list
-  @Input()
-  limit = 10
+  //for watchlist
+  stockSymbol$!: Observable<string>
+  symbols!:string[]
+  symbol!:string
+  watchList$!: Promise<Stock[]>
 
-  @Input()
-  skip = 0
 
-  @Input()
-  filter = ""
-
-  @Input()
-  exchange = "nyse"
-
-  stockInfoList$!: Promise<StockInfo[]>
- 
-
-  stockDataForm!: FormGroup
-  loadStock: string = 'VOO'
-  loadInterval: string = '1min'
 
   ngOnInit(): void {
     // this.loginResponse$ = this.accountSvc.onLoginRequest
@@ -97,79 +81,26 @@ export class DashboardComponent implements OnInit {
       //load market data
       // this.marketIndex$ = this.stockSvc.getMarketData('SPX', '1day');
       this.marketIndex$ = this.stockSvc.getMarketData(this.markets);
-      // this.stockList$ = this.stockSvc.getStockList()
+      this.stockSymbol$ = this.stockSvc.onStockSelection
+      console.info('I am in dashboard')
+      this.symbol=this.stockSvc.symbol
+      this.symbols = this.stockSvc.symbols
+      this.watchList$ = this.stockSvc.getWatchlist(this.symbols);
+      // this.stockSymbol$.subscribe(symbol => {
+      // console.info('Symbol ' + symbol + ' is at dashboard')
+      // this.symbols.push(symbol);
+      // });
 
-      //load get stock data form
-      this.stockDataForm = this.createStockDataForm()
-      this.stockInfoList$ = this.stockSvc.getStocksList(this.exchange, this.filter, this.limit, this.skip)
-      this.stock$ = this.stockSvc.getStockData(this.loadStock, this.loadInterval);
-    
   }
 
   ngAfterViewInit():void{
     this.loginResponse$ = this.accountSvc.onLoginRequest
     this.registerResponse$ = this.accountSvc.onRegisterRequest
-  }
-
-
-  // getStockData() {
-  //   //get form control field
-  //   const symbol = this.stockDataForm.get('symbol')?.value
-  //   const interval = this.stockDataForm.get('interval')?.value
-  //   if (symbol && interval) {
-  //     //get field value
-  //     console.info('>> symbol: ', symbol);
-  //     console.info('>> interval: ', interval);
-  //     this.stock$ = this.stockSvc.getStockData(symbol, interval);
-  //   }
-  // }
-
-  getStockData(symbol?: string) {
-    let interval = '1min'
-
-    if (!symbol) {
-      symbol = this.stockDataForm.get('symbol')?.value;
-      interval = this.stockDataForm.get('interval')?.value
-    }
-  
-    if (symbol && interval) {
-      console.info('>> symbol: ', symbol);
-      console.info('>> interval: ', interval);
-      this.stock$ = this.stockSvc.getStockData(symbol, interval);
-    }
-  }
-
-  private createStockDataForm(): FormGroup {
-    return this.fb.group({
-      symbol: this.fb.control<string>('', [ Validators.required ]),
-      interval: this.fb.control<string>(this.loadInterval, [ Validators.required ])
-    })
-  }
-
-
-  //for displaying stocks list
-  fetchChanges(limit: string) {
-    this.limit = +limit
-    this.stockInfoList$= this.stockSvc.getStocksList(this.exchange, this.filter, this.limit, this.skip)
-  }
-
-  fetchExchange(exchange: string) {
-    this.exchange = exchange
-    this.stockInfoList$= this.stockSvc.getStocksList(this.exchange, this.filter, this.limit, this.skip)
-  }
-
-  filtering(text: string) {
-    this.filter = text
-    this.stockInfoList$= this.stockSvc.getStocksList(this.exchange, this.filter, this.limit, this.skip)
-  }
-
-  page(d: number) {
-    if (d >= 0)
-      this.skip += this.limit
-    else
-      this.skip = Math.max(0, this.skip - this.limit)
-
-    this.stockInfoList$ = this.stockSvc.getStocksList(this.exchange, this.filter, this.limit, this.skip)
+    // this.stockSymbol$ = this.stockSvc.onStockSelection
+    // this.stockSymbol$.subscribe(symbol => {
+    // console.info('Symbol ' + symbol + 'is at dashboard')
+    // this.symbols.push(symbol);
+    // });
   }
 
 

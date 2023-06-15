@@ -6,7 +6,6 @@ import { LoginComponent } from './components/login.component';
 
 import { leaveComp, loginGuard} from './util';
 import { RouterModule, Routes } from '@angular/router';
-import { ListComponent } from './components/list.component';
 import { MainComponent } from './components/main.component';
 import { OrderComponent } from './components/order.component';
 import { DashboardComponent } from './components/dashboard.component';
@@ -20,6 +19,7 @@ import { LearnComponent } from './components/main/learn.component';
 import { AboutComponent } from './components/main/about.component';
 import { TutorialComponent } from './components/main/tutorial.component';
 import { StockService } from './stock.service';
+import { ResearchComponent } from './components/research.component';
 
 const appRoutes: Routes = [
   { path: '', component: MainComponent, title: 'Welcome to Tradeus' },
@@ -31,7 +31,7 @@ const appRoutes: Routes = [
   // { path: 'dashboard/:userId', component: DashboardComponent, canActivate: [ loginGuard ] },
   // { path: 'dashboard', component: DashboardComponent, canActivate: [ loginGuard ] },
   { path: 'dashboard/:parsedUsername', component: DashboardComponent, title: 'DashBoard', canActivate: [loginGuard]},
-  { path: 'list', component: ListComponent, title: 'Stock List', canActivate: [ loginGuard] },
+  { path: 'research', component: ResearchComponent, title: 'Research', canActivate: [ loginGuard] },
   { path: 'order', component: OrderComponent, title: 'Order'
       , canActivate: [ loginGuard], canDeactivate: [ leaveComp ] },
   { path: '**', redirectTo: '/', pathMatch: 'full' }
@@ -43,10 +43,9 @@ const appRoutes: Routes = [
     AppComponent,
     LoginComponent,
     MainComponent,
-    ListComponent,
     DashboardComponent, 
     OrderComponent, NavbarComponent, RegisterComponent, 
-    LearnComponent, AboutComponent, TutorialComponent,
+    LearnComponent, AboutComponent, TutorialComponent, ResearchComponent,
   ],
   imports: [
     BrowserModule, ReactiveFormsModule, HttpClientModule,

@@ -47,31 +47,3 @@ background-color: green;
     color: lightgray;
     cursor: pointer;
   }
-
-/* for watchlist */
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  th, td {
-    padding: 10px;
-    text-align: center;
-  }
-  
-  th {
-    background-color: #f2f2f2;
-    font-weight: bold;
-  }
-  
-  td {
-    border: 1px solid #ddd;
-  }
-  
-  tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
-  
-  tr:hover {
-    background-color: #ebebeb;
-  }
