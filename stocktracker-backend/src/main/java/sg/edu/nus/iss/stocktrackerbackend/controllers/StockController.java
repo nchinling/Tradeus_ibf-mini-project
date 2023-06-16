@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,6 +23,7 @@ import jakarta.json.JsonObject;
 import sg.edu.nus.iss.stocktrackerbackend.models.Market;
 import sg.edu.nus.iss.stocktrackerbackend.models.Stock;
 import sg.edu.nus.iss.stocktrackerbackend.models.StockInfo;
+import sg.edu.nus.iss.stocktrackerbackend.models.Watchlist;
 import sg.edu.nus.iss.stocktrackerbackend.services.StockService;
 
 @Controller
@@ -35,7 +38,8 @@ public class StockController {
     @GetMapping(path="/quote/stock")
     @ResponseBody
     public ResponseEntity<String> getStockData(@RequestParam(required=true) String symbol,
-    @RequestParam(defaultValue = "1day",required=false) String interval) throws IOException{
+    @RequestParam(defaultValue = "1day",required=false) String interval,
+    @RequestParam(required=false) String username) throws IOException{
         // Integer num = weatherSvc.getWeather(city);
         System.out.println("I am in getStockData server");
         System.out.println(">>>>>>>>Symbol in controller>>>>>" + symbol);
@@ -57,6 +61,7 @@ public class StockController {
                 .add("high", stock.getHigh())
                 .add("low", stock.getLow())
                 .add("close", stock.getClose())
+                .add("previous_close", stock.getPreviousClose())
                 .add("volume", stock.getVolume())
                 .add("change", stock.getChange())
                 .add("percent_change", stock.getPercentChange())
@@ -86,6 +91,7 @@ public class StockController {
                 .add("high", stock.getHigh())
                 .add("low", stock.getLow())
                 .add("close", stock.getClose())
+                .add("previous_close", stock.getPreviousClose())
                 .add("volume", stock.getVolume())
                 .add("change", stock.getChange())
                 .add("percent_change", stock.getPercentChange())
@@ -161,6 +167,100 @@ public class StockController {
     }
 
 
+    @GetMapping(path="quote/watchlist", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<String> getWatchlistData(@RequestParam(required=true) String symbol,
+    @RequestParam(defaultValue = "1day",required=false) String interval) throws IOException{
+        // Integer num = weatherSvc.getWeather(city);
+        System.out.println("I am in getStockData server");
+        System.out.println(">>>>>>>>Symbol in controller>>>>>" + symbol);
+        System.out.println(">>>>>>>>Interval in controller>>>>>" + interval);
+          
+        //Obtain from redis cache
+        Optional<Stock> stk = stockSvc.getStockFromRedis(symbol, interval);
+        if (stk.isPresent()){
+            Stock stock = stk.get();
+          
+            System.out.println("Obtained stock data from Redis");
+     
+            JsonObject resp = Json.createObjectBuilder()
+                .add("symbol", stock.getSymbol())
+                .add("name", stock.getName())
+                .add("exchange",stock.getExchange() )
+                .add("currency", stock.getCurrency())
+                .add("open", stock.getOpen())
+                .add("high", stock.getHigh())
+                .add("low", stock.getLow())
+                .add("close", stock.getClose())
+                .add("previous_close", stock.getPreviousClose())
+                .add("volume", stock.getVolume())
+                .add("change", stock.getChange())
+                .add("percent_change", stock.getPercentChange())
+                .add("datetime", stock.getDatetime())
+                .build();
+                System.out.println(">>>resp: " + resp);
+            
+            return ResponseEntity.ok(resp.toString());
+        }
+        
+        //Obtain from api
+        Optional<Stock> s = stockSvc.getStockData(symbol, interval);
+        if (s.isPresent()) {
+            Stock stock = s.get();
+
+            //save stock data in redis/mongo for quick retrieval
+            stockSvc.saveStockData(stock, interval);
+
+            System.out.println("Obtained stock data from API");
+
+            JsonObject resp = Json.createObjectBuilder()
+                .add("symbol", stock.getSymbol())
+                .add("name", stock.getName())
+                .add("exchange",stock.getExchange() )
+                .add("currency", stock.getCurrency())
+                .add("open", stock.getOpen())
+                .add("high", stock.getHigh())
+                .add("low", stock.getLow())
+                .add("close", stock.getClose())
+                .add("previous_close", stock.getPreviousClose())
+                .add("volume", stock.getVolume())
+                .add("change", stock.getChange())
+                .add("percent_change", stock.getPercentChange())
+                .add("datetime", stock.getDatetime())
+                .build();
+                System.out.println(">>>resp: " + resp);
+            
+            return ResponseEntity.ok(resp.toString());
+        } 
+        // Handle the case when the Optional is empty
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+        .body("Stock information not available for the provided symbol.");
+        
+    }
+
+
+    @GetMapping(path="/watchlist", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<String> getWatchlist(@RequestParam(required=true) String username) throws IOException{
+        // Integer num = weatherSvc.getWeather(city);
+        System.out.println("I am in getWatchlist server");
+        System.out.println(">>>>>>>>username in controller>>>>>" + username);
+       
+        JsonArrayBuilder arrBuilder = Json.createArrayBuilder();
+		List<String> userWatchlist = stockSvc.getUserWatchlist(username);
+		userWatchlist.stream()
+			.map(each -> Json.createObjectBuilder()
+						.add("symbol", each)
+
+						.build()
+			)
+			.forEach(json -> arrBuilder.add(json));
+
+		return ResponseEntity.ok(arrBuilder.build().toString());
+       
+    }
+
+
     @GetMapping(path="/stocklist", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
 	public ResponseEntity<String> getStocks(
@@ -186,6 +286,40 @@ public class StockController {
 			.forEach(json -> arrBuilder.add(json));
 
 		return ResponseEntity.ok(arrBuilder.build().toString());
+	}
+
+
+    @PostMapping(path="/watchlist", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    // public ResponseEntity<String> saveWatchlist(@RequestBody String[] symbols) {
+        public ResponseEntity<String> saveWatchlist(@RequestBody Watchlist request) {
+        String[] symbols = request.getSymbols();
+        String username = request.getUsername();
+        // String [] symbols = watchlist.getSymbols();
+        System.out.println(">>>> I am in stock server watchlist >>>>>>>>>>>>");
+        //   System.out.println(payload);
+        // JsonReader reader = Json.createReader(new StringReader(payload));
+        // JsonObject req = reader.readObject();
+
+        System.out.println(">>>>>> username is >>>>> " +username);
+        
+        // String[] symbols = String symbols;
+        for (String symbol : symbols) {
+            System.out.println(symbol);
+        }
+
+        JsonObject resp = null;
+
+            List<String> symbolsList = stockSvc.saveWatchlist(symbols, username);
+            JsonArrayBuilder arrBuilder = Json.createArrayBuilder(symbolsList);
+    
+            resp = Json.createObjectBuilder()
+                .add("numbers", arrBuilder.build())
+                .build();
+    
+            return ResponseEntity.ok(resp.toString());
+
+
 	}
 }
 

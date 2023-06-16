@@ -1,18 +1,8 @@
 package sg.edu.nus.iss.stocktrackerbackend.models;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 public class Account {
-
-//     account_id VARCHAR(10) NOT NULL PRIMARY KEY,
-// name VARCHAR(50) NOT NULL,
-// username VARCHAR(50) NOT NULL,
-// password VARCHAR(50) NOT NULL,
-// mobile_no VARCHAR(20) NOT NULL,
-// nationality VARCHAR(40) NOT NULL,
-// date_of_birth DATE, 
-// address VARCHAR(50)
 
     private String accountId;
     private String name;

@@ -27,26 +27,26 @@
     <table>
       <thead>
         <tr>
-          <th>Symbol</th>
+          <th>Exch</th>
+          <th>Sym</th>
           <th>Name</th>
-          <th>Exchange</th>
-          <th>Currency</th>
+          <th>Curr</th>
           <th>Open</th>
           <th>High</th>
           <th>Low</th>
           <th>Close</th>
-          <th>Volume</th>
-          <th>Previous Close</th>
-          <th>Change</th>
-          <th>Percent Change</th>
+          <th>Vol.</th>
+          <th>Prev. Close</th>
+          <th>Chg</th>
+          <th>Chg%</th>
           <th>Date/Time</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let stock of watchList$ | async">
+          <td>{{ stock.exchange }}</td>
           <td>{{ stock.symbol }}</td>
           <td>{{ stock.name }}</td>
-          <td>{{ stock.exchange }}</td>
           <td>{{ stock.currency }}</td>
           <td>{{ stock.open | number: '1.2-2' }}</td>
           <td>{{ stock.high | number: '1.2-2' }}</td>
@@ -54,10 +54,11 @@
           <td>{{ stock.close | number: '1.2-2' }}</td>
           <td>{{ stock.volume }}</td>
           <td>{{ stock.previous_close | number: '1.2-2' }}</td>
-          <td [ngClass]="{ 'negative': stock.change < 0, 
-          'positive': stock.change > 0 }">{{ stock.change | number: '1.2-2' }}</td>
-          <td>{{ stock.percent_change | number: '1.2-2' }}%</td>
-          <td>{{ stock.datetime | date:'yyyy-MM-dd HH:mm:ss' }}</td>
+          <td [ngClass]="{ 'red': stock.change < 0, 
+          'green': stock.change > 0 }">{{ stock.change | number: '1.2-2' }}</td>
+          <td [ngClass]="{ 'red': stock.percent_change < 0, 
+            'green': stock.percent_change > 0 }">{{ stock.percent_change | number: '1.2-2' }}%</td>
+          <td>{{ stock.datetime | date:'dd-MM-YYYY HH:mm' }}</td>
         </tr>
       </tbody>
     </table>
@@ -66,3 +67,5 @@
 
 
 </div>
+
+

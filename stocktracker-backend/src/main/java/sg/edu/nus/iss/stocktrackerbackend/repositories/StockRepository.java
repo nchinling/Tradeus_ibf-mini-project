@@ -2,6 +2,7 @@ package sg.edu.nus.iss.stocktrackerbackend.repositories;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -112,6 +113,42 @@ public class StockRepository {
 			.toList();
 	}
 
+      /*
+	 * db.watchlist.insert({
+	 * 	username: "username",
+	 * 	symbols: ["symbol1", "symbol2", "symbol3"]
+	 * })
+	 */
+  public void saveWatchlist(String username, String[] symbols) {
+      Query query = new Query(Criteria.where("username").is(username));
+      Document existingUser = mongoTemplate.findOne(query, Document.class, "watchlist");
+
+      if (existingUser != null) {
+          existingUser.put("symbols", symbols);
+          mongoTemplate.save(existingUser, "watchlist");
+          System.out.println(">>>>> Updating existing watchlist >>>>>>");
+      } else {
+          Document doc = new Document();
+          doc.put("username", username);
+          doc.put("symbols", symbols);
+          mongoTemplate.insert(doc, "watchlist");
+          System.out.println(">>>>> New watchlist created >>>>>>");
+      }
+  }
+
+    public List<String> getUserWatchlist(String username) {
+    Query query = new Query(Criteria.where("username").is(username));
+    Document result = mongoTemplate.findOne(query, Document.class, "watchlist");
+
+    if (result != null) {
+        List<String> symbols = (List<String>) result.get("symbols");
+        return symbols;
+    }
+
+    return Collections.emptyList(); 
+}
+
+
   private Integer convertIntervalToMinutes(String interval){
     int cookieTime = 0;
     switch (interval) {
@@ -119,7 +156,7 @@ public class StockRepository {
               cookieTime = 1 * 60;
               break;
           case "1day":
-              cookieTime = cookieTime * 60 * 24;
+              cookieTime = 1 * 60 * 24;
               break;
           case "1min":
               cookieTime = 1;

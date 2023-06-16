@@ -106,7 +106,12 @@
           <!-- </div> -->
         </td>
         <td>
-          <button class="btn btn-primary" (click)="addWatchlist(stock.symbol)">Add</button>
+          <button class="btn btn-primary" (click)="modifyWatchlist(stock.symbol)">Follow</button>
+          <ng-container *ngIf="isButtonClicked">
+            <span class="modifylist-message" *ngIf="isFollowed">Already in watchlist</span>
+            <span class="modifylist-message" *ngIf="!isFollowed">Added to watchlist</span>
+          </ng-container>
+
       </td>
       </div>
     
@@ -162,8 +167,7 @@
       </div>
       <br>
       <ng-template #blank></ng-template>
-    
-  
+
   </div>
   
   

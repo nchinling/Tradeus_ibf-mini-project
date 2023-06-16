@@ -43,13 +43,14 @@ export class DashboardComponent implements OnInit{
 
   //for watchlist
   stockSymbol$!: Observable<string>
+  symbols$!:Promise<string[]>
   symbols!:string[]
   symbol!:string
   watchList$!: Promise<Stock[]>
 
 
 
-  ngOnInit(): void {
+ ngOnInit():void{
     // this.loginResponse$ = this.accountSvc.onLoginRequest
     this.registerResponse$ = this.accountSvc.onRegisterRequest
     this.loginResponse$ = this.accountSvc.onLoginRequest
@@ -85,22 +86,26 @@ export class DashboardComponent implements OnInit{
       console.info('I am in dashboard')
       this.symbol=this.stockSvc.symbol
       this.symbols = this.stockSvc.symbols
-      this.watchList$ = this.stockSvc.getWatchlist(this.symbols);
-      // this.stockSymbol$.subscribe(symbol => {
-      // console.info('Symbol ' + symbol + ' is at dashboard')
-      // this.symbols.push(symbol);
-      // });
+      console.info('this.symbols in ngOnInit are:' + this.symbols)
+      this.symbols$ = this.stockSvc.getWatchlist(this.username)
+      console.info('this.symbols$ is' + this.symbols$)
+      // this.watchList$ = this.stockSvc.getWatchlistData(this.symbols);
+      // this.symbols$ = this.stockSvc.getWatchlist(this.username);
+
+      this.symbols$.then((symbol: string[]) => {
+        console.info('Symbols:', symbol);
+        this.watchList$ = this.stockSvc.getWatchlistData(symbol);
+      }).catch((error) => {
+        console.error(error);
+      });
+      
 
   }
 
   ngAfterViewInit():void{
     this.loginResponse$ = this.accountSvc.onLoginRequest
     this.registerResponse$ = this.accountSvc.onRegisterRequest
-    // this.stockSymbol$ = this.stockSvc.onStockSelection
-    // this.stockSymbol$.subscribe(symbol => {
-    // console.info('Symbol ' + symbol + 'is at dashboard')
-    // this.symbols.push(symbol);
-    // });
+
   }
 
 

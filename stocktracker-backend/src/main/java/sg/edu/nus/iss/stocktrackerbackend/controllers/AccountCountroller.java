@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
-import java.util.Optional;
 
 import javax.security.auth.login.AccountNotFoundException;
 
@@ -18,16 +17,14 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import sg.edu.nus.iss.stocktrackerbackend.models.Account;
-import sg.edu.nus.iss.stocktrackerbackend.models.Stock;
 import sg.edu.nus.iss.stocktrackerbackend.services.AccountException;
 import sg.edu.nus.iss.stocktrackerbackend.services.AccountService;
-import sg.edu.nus.iss.stocktrackerbackend.services.StockService;
+
 
 @Controller
 @RequestMapping(path="/api")

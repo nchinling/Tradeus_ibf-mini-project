@@ -84,12 +84,15 @@ export class RegisterComponent {
       console.log('account_id:', response.account_id);
       console.log('response:', response);
 
+      // this.accountSvc.account_id = account_id
       const queryParams = {
         // status: response.status,
         // timestamp: response.timestamp,
         account_id: response.account_id,
         username: response.username
       };
+
+      this.accountSvc.account_id = response.account_id
 
       // const dashboardUrl = `#/dashboard/${parsedUsername}?account_id=${response.account_id}&username=${response.username}`;
 

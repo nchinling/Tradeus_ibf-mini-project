@@ -46,4 +46,9 @@ background-color: green;
 .stock-item:hover {
     color: lightgray;
     cursor: pointer;
-  }
+}
+
+.modifylist-message {
+    margin-left: 10px;
+    color: grey;
+}

@@ -166,6 +166,7 @@ public class Stock {
             s.setHigh(Double.parseDouble(o.getString("high")));
             s.setLow(Double.parseDouble(o.getString("low")));
             s.setClose(Double.parseDouble(o.getString("close")));
+            s.setPreviousClose(Double.parseDouble(o.getString("previous_close")));
             s.setVolume(Long.parseLong(o.getString("volume")));
             s.setChange(Double.parseDouble(o.getString("change")));
             s.setPercentChange(Double.parseDouble(o.getString("percent_change")));
@@ -185,6 +186,7 @@ public class Stock {
             .add("high", this.getHigh())
             .add("low", this.getLow())
             .add("close", this.getClose())
+            .add("previous_close", this.getPreviousClose())
             .add("volume", this.getVolume())
             .add("change", this.getChange())
             .add("percent_change", this.getPercentChange())
@@ -207,6 +209,7 @@ public class Stock {
             s.setHigh(o.getJsonNumber("high").doubleValue());
             s.setLow(o.getJsonNumber("low").doubleValue());
             s.setClose(o.getJsonNumber("close").doubleValue());
+            s.setPreviousClose(o.getJsonNumber("previous_close").doubleValue());
             s.setVolume(o.getJsonNumber("volume").longValue());
             s.setChange(o.getJsonNumber("change").doubleValue());
             s.setPercentChange(o.getJsonNumber("percent_change").doubleValue());

@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
 import { Subject, lastValueFrom, tap, map, interval, firstValueFrom } from "rxjs";
 import { Market, MarketIndex, Stock, StockInfo } from "./models";
@@ -38,23 +38,7 @@ export class StockService {
         )
     }
 
-    // getMarketData(symbol:string, interval:string): Promise<MarketIndex> {
 
-    //     const queryParams = new HttpParams()
-    //         .set('symbol', symbol)
-    //         .set('interval', interval)
-    //     console.info('>>>>>>sending to Stock server...')
-    //     return lastValueFrom(
-    //       this.http.get<MarketIndex>(`${URL_API_TRADE_SERVER}/market`, { params: queryParams })
-    //         .pipe(
-    //           tap(resp => this.onMarketRequest.next(resp)),
-    //           map(resp => ({ symbol: resp.symbol, name: resp.name, close:resp.close, 
-    //                       percentage_change:resp.percentage_change, 
-    //                       change:resp.change, datetime:resp.datetime
-    //                       }))
-    //         )
-    //     )
-    // }
 
     getMarketData(markets: Market[]): Promise<MarketIndex[]> {
         const marketRequests: Promise<MarketIndex>[] = [];
@@ -98,24 +82,48 @@ export class StockService {
         )
       }
 
-      addWatchlist(symbol:string){
-        this.symbol=symbol
-        this.symbols.push(symbol)
-        // this.onStockSelection.next(symbol)
+      modifyWatchlist(symbol:string, username: string){
+        //prevent duplicates
+        if (!this.symbols.includes(symbol)) {
+          this.symbols.push(symbol);
+        }
+        console.log(this.symbols)
+        console.info('>>>>>>sending watchlist to Stock server...');
+
+        const payload = {
+          symbols: this.symbols,
+          username: username
+        };
+
+        const headers = new HttpHeaders().set('Content-Type', 'application/json');
+
+        return firstValueFrom(
+          this.http.post<string[]>(`${URL_API_TRADE_SERVER}/watchlist`, payload, { headers })
+        );
+      
       }
 
+      async getWatchlist(username: string): Promise<string[]> {
+        return firstValueFrom(
+          this.http.get<any[]>(`${URL_API_TRADE_SERVER}/watchlist?username=${username}`)
+        ).then((response: any[]) => {
+          this.symbols = response.map((item) => item.symbol);
+          return this.symbols;
+        });
+      }
 
-      getWatchlist(watchlist: string[]): Promise<Stock[]> {
+      getWatchlistData(watchlist: string[]): Promise<Stock[]> {
         const watchlistRequests: Promise<Stock>[] = [];
         const interval = '5min'
-      
+
         for (const symbol of watchlist) {
           const queryParams = new HttpParams()
             .set('symbol', symbol)
-            .set('interval', interval);
+            .set('interval', interval)
+            console.info('the symbol in getWatchlistData is ' + symbol)
       
             const request =  lastValueFrom(
-              this.http.get<Stock>(`${URL_API_TRADE_SERVER}/quote/stock`, { params: queryParams })
+              this.http.get<Stock>(`${URL_API_TRADE_SERVER}/quote/watchlist`, { params: queryParams })
                 .pipe(
                   tap(resp => this.onStockRequest.next(resp)),
                   map(resp => ({ symbol: resp.symbol, name: resp.name, 

@@ -34,6 +34,10 @@ export class ResearchComponent  {
 
   //for watchlist
   symbol!:string
+  watchlist: string[] = []
+  isFollowed!:boolean 
+  isButtonClicked:boolean = false;
+
 
 
   markets: Market[] = [
@@ -64,6 +68,7 @@ export class ResearchComponent  {
   stockDataForm!: FormGroup
   loadStock: string = 'VOO'
   loadInterval: string = '1min'
+ 
 
   ngOnInit(): void {
     // this.loginResponse$ = this.accountSvc.onLoginRequest
@@ -112,20 +117,9 @@ export class ResearchComponent  {
   }
 
 
-  // getStockData() {
-  //   //get form control field
-  //   const symbol = this.stockDataForm.get('symbol')?.value
-  //   const interval = this.stockDataForm.get('interval')?.value
-  //   if (symbol && interval) {
-  //     //get field value
-  //     console.info('>> symbol: ', symbol);
-  //     console.info('>> interval: ', interval);
-  //     this.stock$ = this.stockSvc.getStockData(symbol, interval);
-  //   }
-  // }
 
   getStockData(symbol?: string) {
-    let interval = '1min'
+    let interval = '5min'
 
     if (!symbol) {
       symbol = this.stockDataForm.get('symbol')?.value;
@@ -146,15 +140,40 @@ export class ResearchComponent  {
     })
   }
 
-  addWatchlist(symbol: string) {
+  modifyWatchlist(symbol: string) {
+
+    this.isButtonClicked = true
+    this.watchlist = this.stockSvc.symbols
     this.symbol = symbol
-    // this.symbols.push(symbol)
+  
+    const index = this.watchlist.indexOf(symbol);
+    this.isFollowed = this.watchlist.includes(symbol);
+
+    setTimeout(() => {
+      this.isButtonClicked = false;
+    }, 3000); // Adjust the delay as per your requirements
+
+
+    if (index !== -1) {
+      // Symbol exists in the list, so remove it
+      console.info("Already added to watchlist" + symbol)
+    } else {
+      // Symbol doesn't exist in the list, so add it
+      console.info("Added to watchlist" + symbol)
+    }
+  
     console.info('added this symbol: ' + this.symbol)
-    this.stockSvc.addWatchlist(this.symbol);
+    this.stockSvc.modifyWatchlist(this.symbol, this.username);
     console.info('I have sent this to dashboard: ' + symbol)
   }
 
 
+  // isFollowed(symbol: string): boolean {
+  //   return this.watchlist.includes(symbol);
+  // }
+
+
+  
   //for displaying stocks list
   fetchChanges(limit: string) {
     this.limit = +limit
