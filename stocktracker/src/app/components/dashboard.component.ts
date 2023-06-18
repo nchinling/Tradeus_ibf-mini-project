@@ -1,4 +1,4 @@
-import { Component, HostListener, Input, OnInit, inject } from '@angular/core';
+import { Component, HostListener, Input, OnChanges, OnInit, inject } from '@angular/core';
 import { Observable, Subscription, interval } from 'rxjs';
 import { AccountService } from '../account.service';
 import { LoginResponse, MarketIndex, RegisterResponse, Stock, Market, StockInfo } from '../models';
@@ -14,7 +14,7 @@ import { StockService } from '../stock.service';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
 })
-export class DashboardComponent implements OnInit{
+export class DashboardComponent implements OnInit, OnChanges{
 
 
   stockSvc = inject(StockService)
@@ -117,10 +117,64 @@ export class DashboardComponent implements OnInit{
   }
 
   ngAfterViewInit():void{
-    this.loginResponse$ = this.accountSvc.onLoginRequest
-    this.registerResponse$ = this.accountSvc.onRegisterRequest
+
 
   }
+
+  ngOnChanges(): void{
+    this.symbols$ = this.stockSvc.getWatchlist(this.username)
+    console.info('this.symbols$ is' + this.symbols$)
+    // this.watchList$ = this.stockSvc.getWatchlistData(this.symbols);
+    // this.symbols$ = this.stockSvc.getWatchlist(this.username);
+
+    this.symbols$.then((symbol: string[]) => {
+      console.info('Symbols:', symbol);
+      this.watchList$ = this.stockSvc.getStocklistData(symbol);
+    }).catch((error) => {
+      console.error(error);
+    });
+
+  }
+
+
+  removeFromWatchlist(index: number) {
+    const symbolToRemove: string = this.stockSvc.symbols[index];
+    console.info('To remove symbol: ' + symbolToRemove);
+  
+    this.stockSvc.removeFromWatchlist(index, this.username)
+      .then(() => {
+        console.info('Symbol removed successfully');
+        return this.stockSvc.getWatchlist(this.username);
+      })
+      .then((symbol: string[]) => {
+        console.info('The updated list of Symbols after removal are:', symbol);
+        this.symbols$ = Promise.resolve(symbol);
+        return this.stockSvc.getStocklistData(symbol);
+      })
+      .then((stocks: Stock[]) => {
+        this.watchList$ = Promise.resolve(stocks);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+  
+
+  // removeFromWatchlist(index: number){
+  //   const symbolToRemove:string = this.stockSvc.symbols[index];
+  //   console.info('To remove symbol:' + symbolToRemove)
+  //   // this.stockSvc.symbols.splice(index, 1);
+  //   // this.username
+  //   this.stockSvc.removeFromWatchlist(index, this.username)
+  //   this.symbols$ = this.stockSvc.getWatchlist(this.username)
+  //   this.symbols$.then((symbol: string[]) => {
+  //     console.info('The updated list of Symbols after removal are:', symbol);
+  //     this.watchList$ = this.stockSvc.getStocklistData(symbol);
+  //   }).catch((error) => {
+  //     console.error(error);
+  //   });
+ 
+  // }
 
 
 

@@ -228,6 +228,7 @@ public class StockService {
     public List<String> saveWatchlist(String[] symbols, String username){
         System.out.println(">>>>>>>> I am in Service >>> saveWatchList");
         stockRepo.saveWatchlist(username, symbols);
+        // return stockRepo.getUserWatchlist(username);
         List<String> symbolList = Arrays.asList(symbols);
         return symbolList;
     }

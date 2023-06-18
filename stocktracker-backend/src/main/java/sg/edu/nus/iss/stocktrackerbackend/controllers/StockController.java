@@ -363,6 +363,10 @@ public class StockController {
     // public ResponseEntity<String> saveWatchlist(@RequestBody String[] symbols) {
         public ResponseEntity<String> saveWatchlist(@RequestBody Watchlist request) {
         String[] symbols = request.getSymbols();
+        for (String symbol: symbols){
+            System.out.println(">>>>The symbol received is>>>" + symbol);
+        }
+
         String username = request.getUsername();
         // String [] symbols = watchlist.getSymbols();
         System.out.println(">>>> I am in stock server watchlist >>>>>>>>>>>>");
@@ -372,18 +376,18 @@ public class StockController {
 
         System.out.println(">>>>>> username is >>>>> " +username);
         
-        // String[] symbols = String symbols;
-        for (String symbol : symbols) {
-            System.out.println(symbol);
-        }
 
         JsonObject resp = null;
 
             List<String> symbolsList = stockSvc.saveWatchlist(symbols, username);
+            for (String symbol : symbolsList) {
+                System.out.println(">>>>>>>>>Sending back to client after deletion<<<<<<<<<" +symbol);
+            }
+
             JsonArrayBuilder arrBuilder = Json.createArrayBuilder(symbolsList);
     
             resp = Json.createObjectBuilder()
-                .add("numbers", arrBuilder.build())
+                .add("symbols", arrBuilder.build())
                 .build();
     
             return ResponseEntity.ok(resp.toString());

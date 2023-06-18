@@ -13,7 +13,6 @@
           <p><span class="triangle" *ngIf="marketIndex[index].change > 0">&#9650; &nbsp;+</span>
             <span class="triangle" *ngIf="marketIndex[index].change < 0">&#9660;</span>
             {{ marketIndex[index].change | number: '1.2-2' }}&nbsp;   {{ marketIndex[index].percentage_change | number: '1.2-2' }} % </p>
-          <!-- <p>{{ marketIndex[index].percentage_change | number: '1.2-2' }} %</p> -->
         </ul>
       </div>
     </div>
@@ -35,7 +34,7 @@
       <thead>
         <tr>
           <th>#</th><th>Exch</th><th>Sym</th><th>Name</th><th>Curr</th><th>Open</th><th>High</th><th>Low</th>
-          <th>Close</th><th>Vol.</th><th>Prev. Close</th><th>Chg</th><th>Chg%</th><th>Date/Time</th>
+          <th>Close</th><th>Vol.</th><th>Prev. Close</th><th>Chg</th><th>Chg%</th><th>Date/Time</th><th>Action</th>
         </tr>
       </thead>
       <tbody>
@@ -56,6 +55,7 @@
           <td [ngClass]="{ 'red': stock.percent_change < 0, 
             'green': stock.percent_change > 0 }">{{ stock.percent_change | number: '1.2-2' }}%</td>
           <td>{{ stock.datetime | date:'dd-MM-YYYY HH:mm' }}</td>
+          <td><button class="btn btn-warning btn-sm" type="button" (click)="removeFromWatchlist(i)">Remove</button></td>
         </tr>
       </tbody>
     </table>
@@ -158,16 +158,5 @@
 <br>
 
 
-<!-- <nav>
-  <div class="nav nav-tabs" id="nav-tab" role="tablist">
-    <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Home</a>
-    <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Profile</a>
-    <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Contact</a>
-  </div>
-</nav>
-<div class="tab-content" id="nav-tabContent">
-  <div class="tab-pane fade" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab"><p>Nice to meet you</p></div>
-  <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab"><p>Nice to meet yous</p></div>
-  <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab"><p>Nice to meet you tooz</p></div>
-</div> -->
+
 

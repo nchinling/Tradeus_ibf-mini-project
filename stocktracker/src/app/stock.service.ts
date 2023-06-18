@@ -127,6 +127,7 @@ export class StockService {
           this.http.get<any[]>(`${URL_API_TRADE_SERVER}/watchlist?username=${username}`)
         ).then((response: any[]) => {
           this.symbols = response.map((item) => item.symbol);
+          console.info('the symbols returned from getWatchlist are'+this.symbols)
           return this.symbols;
         });
       }
@@ -134,6 +135,7 @@ export class StockService {
       getStocklistData(watchlist: string[]): Promise<Stock[]> {
         const watchlistRequests: Promise<Stock>[] = [];
         const interval = '5min'
+        console.info('array passed to getStocklistData is ' + watchlist)
 
         for (const symbol of watchlist) {
           const queryParams = new HttpParams()
@@ -162,6 +164,25 @@ export class StockService {
         console.info('>>>>>>sending to Stock server...');
         // return Promise.all(marketRequests);
         return Promise.all(watchlistRequests);
+
+      }
+    
+  removeFromWatchlist(index: number, username: string){
+      
+      this.symbols.splice(index, 1)
+      console.log('the symbols after removal are' + this.symbols)
+      console.info('sending watchlist to Stock server with' + this.symbols);
+      const payload = {
+        symbols: this.symbols,
+        username: username
+      };
+
+      const headers = new HttpHeaders().set('Content-Type', 'application/json');
+
+      return firstValueFrom(
+        this.http.post<string[]>(`${URL_API_TRADE_SERVER}/watchlist`, payload, { headers })
+      );
+    
 
   }
 
