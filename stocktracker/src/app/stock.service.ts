@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
-import { Subject, lastValueFrom, tap, map, interval, firstValueFrom } from "rxjs";
-import { Market, MarketIndex, Stock, StockInfo } from "./models";
+import { Subject, lastValueFrom, tap, map, interval, firstValueFrom, debounceTime } from "rxjs";
+import { Market, MarketIndex, Stock, StockInfo, StockProfile } from "./models";
 
 const URL_API_TRADE_SERVER = 'http://localhost:8080/api'
 
@@ -11,6 +11,7 @@ export class StockService {
     http = inject(HttpClient)
 
     onStockRequest = new Subject<Stock>()
+    onStockProfileRequest = new Subject<StockProfile>()
     onMarketRequest = new Subject<MarketIndex>()
 
     onStockSelection = new Subject<string>();
@@ -38,8 +39,25 @@ export class StockService {
         )
     }
 
+    
+    getStockProfile(symbol:string): Promise<StockProfile> {
 
+      console.info('>>>>>>sending to Stock server...')
 
+      return lastValueFrom(
+        this.http.get<StockProfile>(`${URL_API_TRADE_SERVER}/stock/profile/${symbol}`)
+          .pipe(
+            tap(resp => this.onStockProfileRequest.next(resp)),
+            map(resp => ({ symbol: resp.symbol, name: resp.name, 
+                        sector: resp.sector, industry: resp.industry,
+                        ceo:resp.ceo, employees:resp.employees, website:resp.website,
+                        description:resp.description, logoUrl: resp.logoUrl
+                        }))
+          )
+      )
+  } 
+
+  
     getMarketData(markets: Market[]): Promise<MarketIndex[]> {
         const marketRequests: Promise<MarketIndex>[] = [];
       
@@ -79,6 +97,7 @@ export class StockService {
             .set("skip", skip)
         return firstValueFrom(
           this.http.get<StockInfo[]>(`${URL_API_TRADE_SERVER}/stocklist`, { params })
+          .pipe(debounceTime(1000)) 
         )
       }
 
@@ -112,7 +131,7 @@ export class StockService {
         });
       }
 
-      getWatchlistData(watchlist: string[]): Promise<Stock[]> {
+      getStocklistData(watchlist: string[]): Promise<Stock[]> {
         const watchlistRequests: Promise<Stock>[] = [];
         const interval = '5min'
 
@@ -145,6 +164,8 @@ export class StockService {
         return Promise.all(watchlistRequests);
 
   }
+
+  
 
 }
 

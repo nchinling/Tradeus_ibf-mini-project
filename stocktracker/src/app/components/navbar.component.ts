@@ -1,7 +1,7 @@
-import { AfterViewInit, Component, OnChanges, OnInit, inject } from '@angular/core';
+import { AfterViewInit, Component, OnInit, inject } from '@angular/core';
 import { NgbCollapse } from '@ng-bootstrap/ng-bootstrap';
 import { AccountService } from '../account.service';
-import { Observable, Subscription, of, startWith } from 'rxjs';
+import { Observable, Subscription, of } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Component({
@@ -12,6 +12,10 @@ import { Router } from '@angular/router';
 })
 export class NavbarComponent implements OnInit{
   isCollapsed = true;
+  collapsed = true;
+  toggleCollapsed(): void {
+    this.collapsed = !this.collapsed;
+  }
   // isLoggedIn = false;
   isLoggedIn$!: Observable<boolean>
 

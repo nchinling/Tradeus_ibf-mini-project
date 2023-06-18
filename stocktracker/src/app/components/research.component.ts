@@ -4,7 +4,7 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 import { AccountService } from '../account.service';
-import { LoginResponse, RegisterResponse, Stock, Market, MarketIndex, StockInfo } from '../models';
+import { LoginResponse, RegisterResponse, Stock, Market, MarketIndex, StockInfo, StockProfile } from '../models';
 import { StockService } from '../stock.service';
 
 
@@ -31,6 +31,8 @@ export class ResearchComponent  {
   
   //stock variables
   stock$!: Promise<Stock>
+  stockProfile$!: Promise<StockProfile>
+  
 
   //for watchlist
   symbol!:string
@@ -130,6 +132,7 @@ export class ResearchComponent  {
       console.info('>> symbol: ', symbol);
       console.info('>> interval: ', interval);
       this.stock$ = this.stockSvc.getStockData(symbol, interval);
+      this.stockProfile$ = this.stockSvc.getStockProfile(symbol); 
     }
   }
 
@@ -139,6 +142,8 @@ export class ResearchComponent  {
       interval: this.fb.control<string>(this.loadInterval, [ Validators.required ])
     })
   }
+
+
 
   modifyWatchlist(symbol: string) {
 
@@ -167,12 +172,6 @@ export class ResearchComponent  {
     console.info('I have sent this to dashboard: ' + symbol)
   }
 
-
-  // isFollowed(symbol: string): boolean {
-  //   return this.watchlist.includes(symbol);
-  // }
-
-
   
   //for displaying stocks list
   fetchChanges(limit: string) {
@@ -198,6 +197,25 @@ export class ResearchComponent  {
 
     this.stockInfoList$ = this.stockSvc.getStocksList(this.exchange, this.filter, this.limit, this.skip)
   }
+
+  hasPreviousPage(): boolean {
+    return this.skip >= this.limit;
+  }
+  
+  // async hasNextPage(): Promise<boolean> {
+  //   const stockInfoList = await this.stockInfoList$;
+  //   return stockInfoList && stockInfoList.length === this.limit;
+  // }
+
+  // hasPreviousPage(): boolean {
+  //   return this.skip - this.limit >= 0;
+  // }
+  
+  // async hasNextPage(): Promise<boolean> {
+  //   const stockInfoList = await this.stockInfoList$;
+  //   return stockInfoList && stockInfoList.length === this.limit;
+  // }
+
 
 
 

@@ -31,8 +31,8 @@ background-color: green;
 }
 
 .data-row td {
-    padding-left: 10px;
-    padding-right: 10px; /* Adjust the padding value to your preference */
+    padding-left: 20px; 
+    padding-right: 30px; 
 }
   
 .arrow-up{

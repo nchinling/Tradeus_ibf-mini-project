@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.http.MediaType;
@@ -23,6 +24,7 @@ import jakarta.json.JsonObject;
 import sg.edu.nus.iss.stocktrackerbackend.models.Market;
 import sg.edu.nus.iss.stocktrackerbackend.models.Stock;
 import sg.edu.nus.iss.stocktrackerbackend.models.StockInfo;
+import sg.edu.nus.iss.stocktrackerbackend.models.StockProfile;
 import sg.edu.nus.iss.stocktrackerbackend.models.Watchlist;
 import sg.edu.nus.iss.stocktrackerbackend.services.StockService;
 
@@ -32,7 +34,7 @@ import sg.edu.nus.iss.stocktrackerbackend.services.StockService;
 // @CrossOrigin(origins = "http://localhost:4200")
 public class StockController {
     
-      @Autowired
+    @Autowired
     private StockService stockSvc;
 
     @GetMapping(path="/quote/stock")
@@ -107,6 +109,73 @@ public class StockController {
         
         
     }
+
+    
+    @GetMapping(path="/stock/profile/{symbol}")
+    @ResponseBody
+    public ResponseEntity<String> getStockProfile(@PathVariable String symbol) throws IOException{
+
+        System.out.println(">>>>>>>>Symbol in StockProfile>>>>>" + symbol);
+    
+        //Obtain from redis cache
+        Optional<StockProfile> osp = stockSvc.getStockProfileFromRedis(symbol);
+        if (osp.isPresent()){
+            System.out.println(">>>>>>>>Retrieved StockProfile from redi>>>>>" + symbol);
+            StockProfile stockProfile = osp.get();
+          
+            System.out.println("Obtained stock data from Redis");
+     
+            JsonObject resp = Json.createObjectBuilder()
+                .add("symbol", stockProfile.getSymbol())
+                .add("name", stockProfile.getName())
+                .add("sector", stockProfile.getSector())
+                .add("industry", stockProfile.getIndustry())
+                .add("ceo", stockProfile.getCeo())
+                .add("employees", stockProfile.getEmployees())
+                .add("website", stockProfile.getWebsite())
+                .add("description", stockProfile.getDescription())
+                .add("logoUrl", stockProfile.getLogoUrl())
+                .build();
+                System.out.println(">>>built the stock profile>>>> " + resp);
+            
+            return ResponseEntity.ok(resp.toString());
+        }
+        
+        //Obtain from api
+        Optional<StockProfile> sp = stockSvc.getStockProfile(symbol);
+        Optional<StockProfile> spl = stockSvc.getStockLogo(symbol);
+        if (sp.isPresent()) {
+            StockProfile stockProfile = sp.get();
+        
+            StockProfile stockLogo = spl.get();
+            stockProfile.setLogoUrl(stockLogo.getLogoUrl());
+
+            //save stock data in redis/mongo for quick retrieval
+            stockSvc.saveStockProfile(stockProfile);
+
+            System.out.println("Obtained stock data from API");
+
+            JsonObject resp = Json.createObjectBuilder()
+                .add("symbol", stockProfile.getSymbol())
+                .add("name", stockProfile.getName())
+                .add("sector", stockProfile.getSector())
+                .add("industry", stockProfile.getIndustry())
+                .add("ceo", stockProfile.getCeo())
+                .add("employees", stockProfile.getEmployees())
+                .add("website", stockProfile.getWebsite())
+                .add("description", stockProfile.getDescription())
+                .add("logoUrl", stockProfile.getLogoUrl())
+                .build();
+                System.out.println(">>>built the stock profile>>>> " + resp);
+            
+            return ResponseEntity.ok(resp.toString());
+        } 
+        // Handle the case when the Optional is empty
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+        .body("Stock Profile not available for the provided symbol.");
+        
+    }
+
 
 
     @GetMapping(path="/quote/market", produces = MediaType.APPLICATION_JSON_VALUE)

@@ -17,6 +17,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import sg.edu.nus.iss.stocktrackerbackend.models.Market;
 import sg.edu.nus.iss.stocktrackerbackend.models.Stock;
 import sg.edu.nus.iss.stocktrackerbackend.models.StockInfo;
+import sg.edu.nus.iss.stocktrackerbackend.models.StockProfile;
 import sg.edu.nus.iss.stocktrackerbackend.repositories.StockRepository;
 
 @Service
@@ -42,7 +43,7 @@ public class StockService {
        System.out.println("twelveDataApiHost: " + twelveDataApiHost);
    
        String stockUrl = UriComponentsBuilder
-                           .fromUriString(twelveDataUrl)
+                           .fromUriString(twelveDataUrl+"/quote")
                            .queryParam("symbol", symbol)
                            .queryParam("interval", interval)
                            .toUriString();
@@ -75,6 +76,82 @@ public class StockService {
 
    }
 
+    //function to get info from an external server using API.
+   public Optional<StockProfile> getStockProfile(String symbol)
+   throws IOException{
+       System.out.println("twelveDataUrl: " + twelveDataUrl);
+       System.out.println("twelveDataApiKey: " + twelveDataApiKey);
+       System.out.println("twelveDataApiHost: " + twelveDataApiHost);
+   
+       String stockUrl = UriComponentsBuilder
+                           .fromUriString(twelveDataUrl+"/profile")
+                           .queryParam("symbol", symbol)
+                           .toUriString();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("X-RapidAPI-Key", twelveDataApiKey);
+        headers.set("X-RapidAPI-Host", twelveDataApiHost);
+
+
+        RequestEntity req = RequestEntity.get(stockUrl)
+                    .headers(headers)
+                    .build();
+
+       RestTemplate template= new RestTemplate();
+        ResponseEntity<String> r  = template.exchange(req, 
+        String.class);
+
+
+       //r.getBody is a string response from api.
+        System.out.println(">>>managed to exchange: >>>>" + r.getBody());
+       StockProfile sp = StockProfile.createUserObject(r.getBody());
+
+       //for debugging
+       String apiSymbol = sp.getSymbol();
+       String name = sp.getName();
+       System.out.println(">>>apiSymbol: " + apiSymbol);
+       System.out.println(">>>name: " + name);
+
+       return Optional.of(sp);
+
+   }
+
+      public Optional<StockProfile> getStockLogo(String symbol) throws IOException{
+       System.out.println("twelveDataUrl: " + twelveDataUrl);
+       System.out.println("twelveDataApiKey: " + twelveDataApiKey);
+       System.out.println("twelveDataApiHost: " + twelveDataApiHost);
+   
+       String stockUrl = UriComponentsBuilder
+                           .fromUriString(twelveDataUrl+"/logo")
+                           .queryParam("symbol", symbol)
+                           .toUriString();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("X-RapidAPI-Key", twelveDataApiKey);
+        headers.set("X-RapidAPI-Host", twelveDataApiHost);
+
+
+        RequestEntity req = RequestEntity.get(stockUrl)
+                    .headers(headers)
+                    .build();
+
+       RestTemplate template= new RestTemplate();
+        ResponseEntity<String> r  = template.exchange(req, 
+        String.class);
+
+
+       //r.getBody is a string response from api.
+        System.out.println(">>>managed to exchange logo: >>>>" + r.getBody());
+       StockProfile spl = StockProfile.createLogo(r.getBody());
+
+       //for debugging
+       String stockLogo = spl.getLogoUrl();
+       System.out.println(">>>stockLogo: " + stockLogo);
+
+       return Optional.of(spl);
+
+   }
+
 
     public Optional<Market> getMarketData(String symbol, String interval)
     throws IOException{
@@ -83,7 +160,7 @@ public class StockService {
        System.out.println("twelveDataApiHost: " + twelveDataApiHost);
    
        String marketUrl = UriComponentsBuilder
-                           .fromUriString(twelveDataUrl)
+                           .fromUriString(twelveDataUrl+"/quote")
                            .queryParam("symbol", symbol)
                            .queryParam("interval", interval)
                            .toUriString();
@@ -123,6 +200,10 @@ public class StockService {
         stockRepo.saveStockData(stock, interval);
     }
 
+    public void saveStockProfile(StockProfile stockProfile){
+        stockRepo.saveStockProfile(stockProfile);
+    }
+
     public Optional<Market> getMarketFromRedis(String symbol) throws IOException{
         System.out.println(">>>>>>>> I am in Redis service>>>>>>");
         return stockRepo.getMarketFromRedis(symbol);
@@ -131,6 +212,11 @@ public class StockService {
     public Optional<Stock> getStockFromRedis(String symbol, String interval) throws IOException{
         System.out.println(">>>>>>>> I am in Redis service for stocks>>>>>>");
         return stockRepo.getStockFromRedis(symbol, interval);
+    }
+
+    public Optional<StockProfile> getStockProfileFromRedis(String symbol) throws IOException{
+        System.out.println(">>>>>>>> I am in Redis service for stocksProfile>>>>>>");
+        return stockRepo.getStockProfileFromRedis(symbol);
     }
     
     

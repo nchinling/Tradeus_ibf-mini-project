@@ -191,9 +191,7 @@ public class Stock {
             .add("change", this.getChange())
             .add("percent_change", this.getPercentChange())
             .add("datetime", this.getDatetime())
-            .build();
-
-            
+            .build();            
     }
 
 

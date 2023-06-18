@@ -2,18 +2,17 @@ import { Component, HostListener, Input, OnInit, inject } from '@angular/core';
 import { Observable, Subscription, interval } from 'rxjs';
 import { AccountService } from '../account.service';
 import { LoginResponse, MarketIndex, RegisterResponse, Stock, Market, StockInfo } from '../models';
-import { RegisterComponent } from './register.component';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { StockService } from '../stock.service';
-import { ResearchComponent } from './research.component';
+
 
 
 @Component({
-  selector: 'app-dashboard',
+  selector: 'app-dashboard', 
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+  styleUrls: ['./dashboard.component.css'],
 })
 export class DashboardComponent implements OnInit{
 
@@ -39,6 +38,14 @@ export class DashboardComponent implements OnInit{
     { symbol: "RUT", interval: "1day" }
   ];
 
+  snp500: string[ ] = [
+    'AAPL', 'MSFT', 'AMZN', 'NVDA' , 'GOOGL', 'TSLA', 'GOOG', 'META', 'BRK.B', 'XOM'
+  ];
+
+  nasdaq: string[] = [
+    'MSFT', 'AAPL', 'NVDA', 'AMZN', 'TSLA', 'META', 'GOOGL', 'GOOG', 'AVGO', 'PEP'
+  ];
+
   marketIndex$!: Promise<MarketIndex[]>
 
   //for watchlist
@@ -47,6 +54,11 @@ export class DashboardComponent implements OnInit{
   symbols!:string[]
   symbol!:string
   watchList$!: Promise<Stock[]>
+  indexSnP$!: Promise<Stock[]>
+  indexNasdaq$!: Promise<Stock[]>
+
+  //for ng-bootstrap nav
+  active = 1;
 
 
 
@@ -81,7 +93,9 @@ export class DashboardComponent implements OnInit{
 
       //load market data
       // this.marketIndex$ = this.stockSvc.getMarketData('SPX', '1day');
-      this.marketIndex$ = this.stockSvc.getMarketData(this.markets);
+      this.marketIndex$ = this.stockSvc.getMarketData(this.markets)
+      this.indexSnP$ = this.stockSvc.getStocklistData(this.snp500)
+      this.indexNasdaq$ = this.stockSvc.getStocklistData(this.nasdaq)
       this.stockSymbol$ = this.stockSvc.onStockSelection
       console.info('I am in dashboard')
       this.symbol=this.stockSvc.symbol
@@ -94,7 +108,7 @@ export class DashboardComponent implements OnInit{
 
       this.symbols$.then((symbol: string[]) => {
         console.info('Symbols:', symbol);
-        this.watchList$ = this.stockSvc.getWatchlistData(symbol);
+        this.watchList$ = this.stockSvc.getStocklistData(symbol);
       }).catch((error) => {
         console.error(error);
       });

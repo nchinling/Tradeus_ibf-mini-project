@@ -13,7 +13,7 @@ import { HttpClientModule } from '@angular/common/http'
 import { ReactiveFormsModule } from '@angular/forms';
 import { AccountService } from './account.service';
 import { NavbarComponent } from './components/navbar.component';
-import { NgbCollapse, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCollapse, NgbModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { RegisterComponent } from './components/register.component';
 import { LearnComponent } from './components/main/learn.component';
 import { AboutComponent } from './components/main/about.component';
@@ -46,13 +46,14 @@ const appRoutes: Routes = [
     DashboardComponent, 
     OrderComponent, NavbarComponent, RegisterComponent, 
     LearnComponent, AboutComponent, TutorialComponent, ResearchComponent,
+    
   ],
   imports: [
     BrowserModule, ReactiveFormsModule, HttpClientModule,
     // bindToComponentInputs - V16
     // RouterModule.forRoot(appRoutes, { useHash: true, bindToComponentInputs: true })
     RouterModule.forRoot(appRoutes, { useHash: true}),
-    NgbModule
+    NgbNavModule, NgbModule
   ],
   providers: [AccountService, StockService],
   bootstrap: [AppComponent]

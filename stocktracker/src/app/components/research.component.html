@@ -1,4 +1,4 @@
-<div class = "container">
+<div class = "container-fluid">
 
     <h4>Welcome, {{username}} ({{accountId}})</h4>
   
@@ -7,7 +7,8 @@
         <div *ngIf="(marketIndex$ | async) as marketIndex">
           <ul [ngClass]="{ 'negative': marketIndex[index].change < 0, 
                           'positive': marketIndex[index].change > 0 }">
-            <p>{{marketIndex[index].name}} ({{marketIndex[index].symbol}})</p>
+            <p>{{marketIndex[index].name}}</p>
+            <p>({{marketIndex[index].symbol}})</p>
             <p>{{ marketIndex[index].close | number: '1.2-2' }}</p>
             <p><span class="triangle" *ngIf="marketIndex[index].change > 0">&#9650; &nbsp;+</span>
               <span class="triangle" *ngIf="marketIndex[index].change < 0">&#9660;</span>
@@ -20,8 +21,8 @@
     
   </div>
   
-  
-  <div class = "container">
+<!--   
+  <div class = "container-fluid">
     <h3>Get Stock Data Quote</h3>
   
     <table>
@@ -56,11 +57,11 @@
             </table>
           </form>
         </td>
-  
-        <!-- Table data for stock info (Right-hand column) -->
+
+      
         <div *ngIf="(stock$ | async) as stock">
         <td>
-          <!-- <div *ngIf="(stock$ | async) as stock"> -->
+    
             <table>
               <tr class="data-row">
                 <td>Symbol:</td>
@@ -93,8 +94,7 @@
                 <td><span class="arrow-up" *ngIf="stock.change > 0">&#9650; &nbsp;+{{ stock.change }}</span>
                   <span class="arrow-down" *ngIf="stock.change < 0">&#9660; &nbsp;{{ stock.change }}</span></td>
               </tr>
-              <!-- <p><span class="triangle" *ngIf="marketIndex[index].change > 0">&#9650; &nbsp;+</span>
-                <span class="triangle" *ngIf="marketIndex[index].change < 0">&#9660;</span> -->
+   
               <tr class="data-row">
                 <td>% Change:</td>
                 <td><span class="arrow-up" *ngIf="stock.percent_change > 0">&#9650; &nbsp;+{{ stock.percent_change }}%</span>
@@ -103,7 +103,7 @@
                 <td>{{ stock.datetime | date:'dd-MM-yyyy HH:mm:ss' }}</td>
               </tr>
             </table>
-          <!-- </div> -->
+  
         </td>
         <td>
           <button class="btn btn-primary" (click)="modifyWatchlist(stock.symbol)">Follow</button>
@@ -111,65 +111,221 @@
             <span class="modifylist-message" *ngIf="isFollowed">Already in watchlist</span>
             <span class="modifylist-message" *ngIf="!isFollowed">Added to watchlist</span>
           </ng-container>
-
       </td>
       </div>
     
       </tr>
-    
     </table>
-    
     <br>
   
-  </div>
+  </div> -->
+
+<div class="container-fluid">
+    <h3>Get Stock Data Quote</h3>
   
-  
-  
-  <div class="container">
-    <h3>Company Search</h3>
-    <div style="display: flex; justify-content: flex-start;">
-      <div style="margin-right: 10px;">
-        <label for="perPage">Companies per page:&nbsp;</label>
-        <select (change)="fetchChanges(perPage.value)" #perPage>
-            <option value="5">5</option>
-            <option value="10" selected>10</option>
-            <option value="15">15</option>
-            <option value="20">20</option>
-        </select>
+    <div class="row">
+      <div class="col-md-3">
+        <form [formGroup]="stockDataForm" (submit)="getStockData()">
+          <table>
+            <tr>
+              <td>Stock Symbol:&nbsp;</td>
+              <td>
+                <input type="text" formControlName="symbol" placeholder="Provide Stock Symbol">
+              </td>
+            </tr><br>
+            <tr>
+              <td>Interval:</td>
+              <td>
+                <select formControlName="interval">
+                  <option value="1min">1 minute</option>
+                  <option value="5min">5 minute</option>
+                  <option value="15min">15 minute</option>
+                  <option value="1h">1 hour</option>
+                  <option value="1day">1 day</option>
+                </select>
+              </td>
+            </tr><br>
+            <tr>
+              <td></td>
+              <td><button class="btn btn-primary" type="submit">Submit</button></td>
+            </tr><br>
+          </table>
+        </form>
       </div>
-      
-      <div style="margin-right: 10px;">
-        <label for="exchange">Exchange:&nbsp;</label>
-        <select (change)="fetchExchange(exchange.value)" #exchange>
-          <option value="nyse">NYSE</option>
-          <option value="nasdaq">NASDAQ</option>
-        </select>
-      </div>
-      
-      <div>
-        <label for="filter">Search:&nbsp;</label>
-        <input type="text" id="filter" size="20" placeholder="Company Name"
-          (keyup)="filtering(inputFilter.value)" #inputFilter>
-      </div>
-    </div>
-    
   
-    <br>
-      <div *ngIf="stockInfoList$ | async as stockslist; else blank">
-        <div *ngFor="let s of stockslist">
-          <p (click)="getStockData(s.symbol)" class="stock-item">{{ s.name }} ({{ s.symbol }})</p>
+      <div class="col-md-9">
+        <div *ngIf="(stock$ | async) as stock">
+          <td>
+          <table>
+            <tr class="data-row">
+              <td>Symbol:</td>
+              <td>{{ stock.symbol }}</td>
+              <td>Name:</td>
+              <td>{{ stock.name }}</td>
+            </tr>
+            <tr class="data-row">
+              <td>Exchange:</td>
+              <td>{{ stock.exchange }}</td>
+              <td>Currency:</td>
+              <td>{{ stock.currency }}</td>
+            </tr>
+            <tr class="data-row">
+              <td>Open:</td>
+              <td>{{ stock.open }}</td>
+              <td>High:</td>
+              <td>{{ stock.high }}</td>
+            </tr>
+            <tr class="data-row">
+              <td>Low:</td>
+              <td>{{ stock.low }}</td>
+              <td>Close:</td>
+              <td>{{ stock.close }}</td>
+            </tr>
+            <tr class="data-row">
+              <td>Volume:</td>
+              <td>{{ stock.volume }}</td>
+              <td>Change:</td>
+              <td>
+                <span class="arrow-up" *ngIf="stock.change > 0">&#9650; &nbsp;+{{ stock.change }}</span>
+                <span class="arrow-down" *ngIf="stock.change < 0">&#9660; &nbsp;{{ stock.change }}</span>
+              </td>
+            </tr>
+            <tr class="data-row">
+              <td>% Change:</td>
+              <td>
+                <span class="arrow-up" *ngIf="stock.percent_change > 0">&#9650; &nbsp;+{{ stock.percent_change }}%</span>
+                <span class="arrow-down" *ngIf="stock.percent_change < 0">&#9660; &nbsp;{{ stock.percent_change }}%</span>
+              </td>
+              <td>Last:</td>
+              <td>{{ stock.datetime | date:'dd-MM-yyyy HH:mm:ss' }}</td>
+            </tr>
+
+                <!-- <button class="btn btn-primary" (click)="modifyWatchlist(stock.symbol)">Follow</button> -->
+            </table>
+          </td>
+          <td>
+            <button class="btn btn-primary" (click)="modifyWatchlist(stock.symbol)">Follow</button>
+            <ng-container *ngIf="isButtonClicked">
+              <span class="modifylist-message" *ngIf="isFollowed">Already in watchlist</span>
+              <span class="modifylist-message" *ngIf="!isFollowed">Added to watchlist</span>
+            </ng-container>
+          </td>  
+       
+          <!-- <ng-container *ngIf="isButtonClicked">
+            <span class="modifylist-message" *ngIf="isFollowed">Already in watchlist</span>
+            <span class="modifylist-message" *ngIf="!isFollowed">Added to watchlist</span>
+          </ng-container> -->
         </div>
       </div>
-      
-      <div style="margin-top: 10px;">
-        <button type="button" class="btn btn-success" (click)="page(-1)">Prev</button>&nbsp;
-        <button type="button" class="btn btn-success" (click)="page(1)">Next</button>
+    </div>
+  </div>
+  
+
+  
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-3">
+        <div class="container">
+          <h3>Company Search</h3>
+          <div>
+            <div>
+              <label for="filter">Search:&nbsp;</label>
+              <input type="text" id="filter" size="20" placeholder="Company Name" (keyup)="filtering(inputFilter.value)" #inputFilter>
+            </div>
+            <div style="margin-top: 10px;">
+              <label for="exchange">Exchange:&nbsp;</label>
+              <select (change)="fetchExchange(exchange.value)" #exchange>
+                <option value="nyse">NYSE</option>
+                <option value="nasdaq">NASDAQ</option>
+              </select>
+            </div>
+            <div style="margin-top: 10px;">
+              <label for="perPage">Per page:&nbsp;</label>
+              <select (change)="fetchChanges(perPage.value)" #perPage>
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="15">15</option>
+                <option value="20">20</option>
+              </select>
+            </div>
+          </div>
+          <br>
+          <!-- <div style="margin-top: 5px;">
+            <label for="exchange">Exchange:&nbsp;</label>
+            <select (change)="fetchExchange(exchange.value)" #exchange>
+              <option value="nyse">NYSE</option>
+              <option value="nasdaq">NASDAQ</option>
+            </select>
+          </div> -->
+  
+          <!-- <br> -->
+     
+           <div *ngIf="stockInfoList$ | async as stockslist; else blank">
+            <div *ngFor="let s of stockslist">
+              <p (click)="getStockData(s.symbol)" class="stock-item">{{ s.name }} ({{ s.symbol }})</p>
+            </div>
+          </div>
+
+          <br>
+  
+          <!-- <div style="margin-top: 10px;">
+            <button type="button" class="btn btn-primary" (click)="page(-1)">Prev</button>&nbsp;
+            <button type="button" class="btn btn-primary" (click)="page(1)">Next</button>
+          </div> -->
+          <div style="margin-top: 10px;">
+            <button type="button" class="btn btn-primary" (click)="page(-1)" [disabled]="!hasPreviousPage()">Prev</button>&nbsp;
+            <button type="button" class="btn btn-primary" (click)="page(1)">Next</button>
+          </div>
+  
+          <br>
+  
+          <ng-template #blank></ng-template> 
+
+
+
+        </div>
       </div>
-      <br>
-      <ng-template #blank></ng-template>
+
+
+      <div class="col-md-9">
+        <div class="container-fluid">
+          <div *ngIf="(stockProfile$ | async) as stockProfile">
+            <table>
+              <tr>
+                <h3>Stock Profile</h3>
+              </tr>
+              <tr>
+                <td style="width: 60%; padding-right: 20px;">
+                  <p><strong>Symbol:</strong> {{ stockProfile?.symbol }}</p>
+                  <p><strong>Name:</strong> {{ stockProfile?.name }}</p>
+                  <p><strong>Sector:</strong> {{ stockProfile?.sector }}</p>
+                  <p><strong>Industry:</strong> {{ stockProfile?.industry }}</p>
+                  <p><strong>CEO:</strong> {{ stockProfile?.ceo }}</p>
+                  <p><strong>Employees:</strong> {{ stockProfile?.employees }}</p>
+                  <p><strong>Website: </strong> <a href="{{ stockProfile?.website }}">{{ stockProfile?.website }}</a></p>
+                </td>
+            
+                <td style="padding-left: 20px; padding-bottom:10px;">
+                  <!-- <img [src]="stockProfile?.logoUrl"  onerror="this.onerror=null; this.src='Default.jpg'" width="100" height="100"> -->
+                  <img [src]="stockProfile?.logoUrl" alt="Stock Logo" height="150" >
+                </td>
+              </tr>
+            </table>
+            <table>
+              <tr>
+                <p><strong>Description:</strong> {{ stockProfile?.description }}</p>
+              </tr>
+            </table>
+         
+          </div>
+        </div>
+      </div>
+    </div>
+
 
   </div>
   
+
   
   
   
@@ -185,22 +341,5 @@
   
   
   
-      <!-- Displaying loginResponse$ fields -->
-      <!-- <ng-container *ngIf="(loginResponse$ | async) as loginResponse">
-          <p>Username: {{ loginResponse.username }}</p>
-          <p>Timestamp: {{ loginResponse.timestamp }}</p>
-      </ng-container> -->
-      
-        <!-- Displaying registerResponse$ fields -->
-      <!-- <div *ngIf="(registerResponse$ | async) as registerResponse">
-          <p>Username: {{ registerResponse.username }}</p>
-          <p>Account Id: {{ registerResponse.account_id }}</p>   
-      </div> -->
-  
-      <!-- <div *ngIf="(errorMessage$ | async) as errorMessage">
-          <p>{{ errorMessage }}</p>
-          <p>Please register again.</p>
-          <button class="btn btn-primary" [routerLink]="['/register']">Register</button>
-      </div> -->
-  
-  
+   
+   

@@ -73,3 +73,17 @@ export interface StockInfo {
 
 }
 
+export interface StockProfile {
+
+    symbol: string
+    name: string
+    sector: string
+    industry: string 
+    ceo: string
+    employees: number
+    website: string
+    description: string
+    logoUrl: string
+
+}
+

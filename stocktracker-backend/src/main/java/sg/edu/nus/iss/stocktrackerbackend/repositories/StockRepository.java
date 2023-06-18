@@ -20,6 +20,7 @@ import org.springframework.stereotype.Repository;
 import sg.edu.nus.iss.stocktrackerbackend.models.Market;
 import sg.edu.nus.iss.stocktrackerbackend.models.Stock;
 import sg.edu.nus.iss.stocktrackerbackend.models.StockInfo;
+import sg.edu.nus.iss.stocktrackerbackend.models.StockProfile;
 
 @Repository    
 public class StockRepository {
@@ -27,7 +28,13 @@ public class StockRepository {
        
       //autowired in a bean.
       @Autowired @Qualifier("marketbean")
-      private RedisTemplate<String, String> redisTemplate;
+      private RedisTemplate<String, String> redisMarketTemplate;
+
+      @Autowired @Qualifier("stockbean")
+      private RedisTemplate<String, String> redisStockTemplate;
+
+      @Autowired @Qualifier("stockProfileBean")
+      private RedisTemplate<String, String> redisStockProfileTemplate;
 
       @Autowired
 	    private MongoTemplate mongoTemplate;
@@ -38,24 +45,32 @@ public class StockRepository {
         int cookieTime = 5;
         Duration duration = Duration.ofMinutes(cookieTime);
         System.out.println(">>>>>>weather.getCity>>>"+ market.getSymbol());
-        this.redisTemplate.opsForValue().set(market.getSymbol(), market.toJSON().toString(), duration);
+        this.redisMarketTemplate.opsForValue().set(market.getSymbol(), market.toJSON().toString(), duration);
     }
 
     public void saveStockData(Stock stock, String interval){
       	
       int cookieTime = convertIntervalToMinutes(interval);
       
-
         Duration duration = Duration.ofMinutes(cookieTime);
         String key = stock.getSymbol() + interval;
         System.out.println(">>>>>>stock.getSymbol>>>"+ stock.getSymbol());
-        this.redisTemplate.opsForValue().set(key, stock.toJSON().toString(), duration);
+        this.redisStockTemplate.opsForValue().set(key, stock.toJSON().toString(), duration);
+    }
+
+    public void saveStockProfile(StockProfile stockProfile){
+      	
+      int cookieTime = 90;
+      
+        Duration duration = Duration.ofDays(cookieTime);
+
+        this.redisStockProfileTemplate.opsForValue().set(stockProfile.getSymbol(), stockProfile.toJSON().toString(), duration);
     }
 
     public Optional<Market> getMarketFromRedis(String symbol) throws IOException{
       System.out.println(">>>>>getMarketFromRedis market>>>"+ symbol);
 
-        String json = redisTemplate.opsForValue().get(symbol);
+        String json = redisMarketTemplate.opsForValue().get(symbol);
         System.out.println(">>>>>>>> json from Redis>>>>>>"+json);
         if(null == json|| json.trim().length() <= 0){
           System.out.println(">>>>>>>> I am returning an empty object");
@@ -72,7 +87,7 @@ public class StockRepository {
       System.out.println(">>>>>getStockFromRedis stock>>>"+ symbol);
 
         String key = symbol+interval;
-        String json = redisTemplate.opsForValue().get(key);
+        String json = redisStockTemplate.opsForValue().get(key);
         System.out.println(">>>>>>>> json from Redis>>>>>>"+json);
         if(null == json|| json.trim().length() <= 0){
           System.out.println(">>>>>>>> I am returning an empty object");
@@ -82,7 +97,22 @@ public class StockRepository {
         System.out.println(">>>>>>>>Data retrieved from Redis Server>>>>>" );
 
         return Optional.of(Stock.createUserObjectFromRedis(json));
-  
+
+    }
+
+
+      public Optional<StockProfile> getStockProfileFromRedis(String symbol) throws IOException{
+        System.out.println(">>>>>getStockProfileFromRedis stock>>>"+ symbol);
+
+        String json = redisStockProfileTemplate.opsForValue().get(symbol);
+        if(null == json|| json.trim().length() <= 0){
+          System.out.println(">>>>>>>> I am returning an empty object");
+            return Optional.empty();
+        }
+
+        System.out.println(">>>>>>>>Data retrieved from Redis Server>>>>>" );
+
+        return Optional.of(StockProfile.createUserObjectFromRedis(json));
 
     }
 

@@ -27,3 +27,5 @@ It is built with Angular(frontend), Spring Boot (backend) with SQL, Redis and Mo
 - implemented watchlist database
 - implemented button message for added symbols
 
+17 June (Sat)
+- implemented company profile and logo
