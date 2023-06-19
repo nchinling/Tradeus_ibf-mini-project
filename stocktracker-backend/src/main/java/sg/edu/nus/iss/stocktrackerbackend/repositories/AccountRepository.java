@@ -20,11 +20,28 @@ public class AccountRepository {
     //insert into order table
     public boolean createAccount(Account account){
 
+        if (isAccountIdExists(account.getAccountId())) {
+        return jdbcTemplate.update(UPDATE_ACCOUNT, account.getName(), 
+                                account.getUsername(), account.getPassword(), account.getAddress(),
+                                account.getMobileNo(), account.getNationality(), account.getDateOfBirth(), account.getAccountId()) > 0;
+
+        
+        }
+
+
         return jdbcTemplate.update(INSERT_REGISTRATION, account.getAccountId(), account.getName(), 
                                 account.getUsername(), account.getPassword(), account.getAddress(),
                                 account.getMobileNo(), account.getNationality(), account.getDateOfBirth()) > 0;
 
     }
+
+    private boolean isAccountIdExists(String accountId) {
+    
+    int count = jdbcTemplate.queryForObject(CHECK_ACCOUNTID_EXISTS, Integer.class, accountId);
+    return count > 0; 
+    }
+
+
 
     public Optional<Account> getAccountByUsername(String username){
         List<Account> accounts = jdbcTemplate.query(SELECT_ACCOUNT_BY_USERNAME, 

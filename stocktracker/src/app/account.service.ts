@@ -1,6 +1,6 @@
 import { Injectable, OnInit, inject } from "@angular/core";
-import { Observable, Subject, catchError, filter, of, tap, throwError } from "rxjs";
-import { ErrorResponse, LoginResponse, RegisterData, RegisterResponse } from "./models";
+import { Observable, Subject, catchError, filter, lastValueFrom, map, of, tap, throwError } from "rxjs";
+import { ErrorResponse, LoginResponse, UserData, RegisterResponse, Stock } from "./models";
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Router } from "@angular/router";
 // import { v4 as uuidv4 } from 'uuid'. need to install package
@@ -12,6 +12,7 @@ export class AccountService {
 
   onLoginRequest = new Subject<LoginResponse>()
   onRegisterRequest = new Subject<RegisterResponse>()
+  onUserDataRequest = new Subject<UserData>()
   onErrorResponse = new Subject<ErrorResponse>()
   onErrorMessage = new Subject<string>()
   isLoggedInChanged = new Subject<boolean>()
@@ -49,11 +50,15 @@ export class AccountService {
 
 
 
-  registerAccount(data: RegisterData ): Observable<RegisterResponse> {
+  registerAccount(data: UserData ): Observable<RegisterResponse> {
     // Content-Type: application/x-www-form-urlencoded
     // Accept: application/json
 
+    console.info('I am passing to updateAccount name:' + data.username)
+    console.info('I am passing to updateAccount name:' + data.password)
+
     const form = new HttpParams()
+      .set("account_id", this.account_id? this.account_id : "")
       .set("name", data.name)
       .set("username", data.username)
       .set("password", data.password)
@@ -85,6 +90,31 @@ export class AccountService {
     );
     
   }
+
+  
+  getUserData(username:string): Promise<UserData> {
+
+    const queryParams = new HttpParams()
+        .set('username', username)
+
+    console.info('>>>>>>getting User data from server...')
+    return lastValueFrom(
+      this.http.get<UserData>(`${URL_API_TRADE_SERVER}/getuser`, { params: queryParams })
+        .pipe(
+          tap(resp => this.onUserDataRequest.next(resp)),
+          map(resp => ({ account_id: resp.name, name: resp.name, password: resp.password, username: resp.username, 
+                        address:resp.address,mobile_no: resp.mobile_no,
+                        nationality:resp.nationality, date_of_birth:resp.date_of_birth
+                      }))
+        )
+    )
+}
+
+
+  
+
+
+
 
 
   //A) Works with both Observable and Promise

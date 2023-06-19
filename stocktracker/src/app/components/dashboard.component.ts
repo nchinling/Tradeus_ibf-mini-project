@@ -1,5 +1,5 @@
-import { Component, HostListener, Input, OnChanges, OnInit, inject } from '@angular/core';
-import { Observable, Subscription, interval } from 'rxjs';
+import { Component, HostListener, Injectable, Input, OnChanges, OnInit, inject } from '@angular/core';
+import { Observable, Subject, Subscription, interval } from 'rxjs';
 import { AccountService } from '../account.service';
 import { LoginResponse, MarketIndex, RegisterResponse, Stock, Market, StockInfo } from '../models';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
@@ -8,7 +8,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { StockService } from '../stock.service';
 
 
-
+@Injectable()
 @Component({
   selector: 'app-dashboard', 
   templateUrl: './dashboard.component.html',
@@ -20,12 +20,14 @@ export class DashboardComponent implements OnInit, OnChanges{
   stockSvc = inject(StockService)
   accountSvc = inject(AccountService)
   activatedRoute = inject(ActivatedRoute)
+  router = inject(Router)
   title = inject(Title)
 
   loginResponse$!: Observable<LoginResponse>
   registerResponse$!: Observable<RegisterResponse>
   errorMessage$!: Observable<string>
   username!: string
+  parsedUsername!: string
   status!: string
   timestamp!: string
   accountId!: string
@@ -56,6 +58,8 @@ export class DashboardComponent implements OnInit, OnChanges{
   watchList$!: Promise<Stock[]>
   indexSnP$!: Promise<Stock[]>
   indexNasdaq$!: Promise<Stock[]>
+
+  onStockRequest = new Subject<string>()
 
   //for ng-bootstrap nav
   active = 1;
@@ -122,17 +126,37 @@ export class DashboardComponent implements OnInit, OnChanges{
   }
 
   ngOnChanges(): void{
-    this.symbols$ = this.stockSvc.getWatchlist(this.username)
-    console.info('this.symbols$ is' + this.symbols$)
-    // this.watchList$ = this.stockSvc.getWatchlistData(this.symbols);
-    // this.symbols$ = this.stockSvc.getWatchlist(this.username);
+    // this.symbols$ = this.stockSvc.getWatchlist(this.username)
+    // console.info('this.symbols$ is' + this.symbols$)
 
-    this.symbols$.then((symbol: string[]) => {
-      console.info('Symbols:', symbol);
-      this.watchList$ = this.stockSvc.getStocklistData(symbol);
-    }).catch((error) => {
-      console.error(error);
+    // // this.watchList$ = this.stockSvc.getWatchlistData(this.symbols);
+    // // this.symbols$ = this.stockSvc.getWatchlist(this.username);
+
+    // this.symbols$.then((symbol: string[]) => {
+    //   console.info('Symbols:', symbol);
+    //   this.watchList$ = this.stockSvc.getStocklistData(symbol);
+    // }).catch((error) => {
+    //   console.error(error);
+    // });
+
+  }
+
+  viewStock(symbol:string){
+
+    console.info('Printed the symbol:'+ symbol)
+    this.stockSvc.symbol = symbol
+    // this.router.navigate(['research']);
+
+    // Create a Promise that resolves when this.stockSvc.symbol has completed
+    const symbolPromise = new Promise((resolve) => {
+      resolve(this.stockSvc.symbol);
     });
+
+    // Wait for the symbolPromise to resolve before navigating to "research" route
+    symbolPromise.then(() => {
+      this.router.navigate(['research']);
+    });
+
 
   }
 
@@ -160,21 +184,6 @@ export class DashboardComponent implements OnInit, OnChanges{
   }
   
 
-  // removeFromWatchlist(index: number){
-  //   const symbolToRemove:string = this.stockSvc.symbols[index];
-  //   console.info('To remove symbol:' + symbolToRemove)
-  //   // this.stockSvc.symbols.splice(index, 1);
-  //   // this.username
-  //   this.stockSvc.removeFromWatchlist(index, this.username)
-  //   this.symbols$ = this.stockSvc.getWatchlist(this.username)
-  //   this.symbols$.then((symbol: string[]) => {
-  //     console.info('The updated list of Symbols after removal are:', symbol);
-  //     this.watchList$ = this.stockSvc.getStocklistData(symbol);
-  //   }).catch((error) => {
-  //     console.error(error);
-  //   });
- 
-  // }
 
 
 

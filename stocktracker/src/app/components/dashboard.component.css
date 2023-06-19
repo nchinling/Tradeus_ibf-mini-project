@@ -43,9 +43,16 @@ background-color: green;
     color:red;
 }
 
+.stock-item{
+  color: #1363DF;
+   text-decoration: underline;
+}
+
 .stock-item:hover {
-    color: lightgray;
+    /* color: #1363DF; */
     cursor: pointer;
+    /* text-decoration: underline; */
+    font-weight: bold;
   }
 
 /* for watchlist */
@@ -86,26 +93,4 @@ background-color: green;
     color:green
   }
 
-  .custom-button {
-  
-    background-color:grey; 
-    color: white;
-    font-size: 16px;
-    border: none; 
-    outline: none; 
-    padding-left: 30px;
-    padding-right: 30px;
-    padding-top: 15px;
-    padding-bottom: 15px;
-    border-radius: 4px;
-  }
 
-  /* .custom-button.collapsed {
-
-    background-color: #1363DF; 
-    color: white;
-    border: none; 
-    outline: none; 
-    padding:15px;
- 
-  } */

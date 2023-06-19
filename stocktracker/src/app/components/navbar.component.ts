@@ -3,6 +3,8 @@ import { NgbCollapse } from '@ng-bootstrap/ng-bootstrap';
 import { AccountService } from '../account.service';
 import { Observable, Subscription, of } from 'rxjs';
 import { Router } from '@angular/router';
+import { StockProfile } from '../models';
+import { StockService } from '../stock.service';
 
 @Component({
   selector: 'app-navbar',
@@ -29,6 +31,7 @@ export class NavbarComponent implements OnInit{
   router = inject(Router)
 
   accountSvc = inject(AccountService)
+  stockSvc = inject(StockService)
 
 
 
@@ -51,8 +54,11 @@ export class NavbarComponent implements OnInit{
     // Clear the stored credentials from local storage
     localStorage.removeItem(this.KEY);
     this.isLoggedIn$ = of(false);
+    
+    // reset initialised variables 
     this.accountSvc.username=''
     this.accountSvc.password=''
+    this.stockSvc.symbol=''
     this.router.navigate(['/'])
   }
 

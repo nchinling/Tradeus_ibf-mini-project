@@ -20,6 +20,8 @@ import { AboutComponent } from './components/main/about.component';
 import { TutorialComponent } from './components/main/tutorial.component';
 import { StockService } from './stock.service';
 import { ResearchComponent } from './components/research.component';
+import { PortfolioComponent } from './components/portfolio.component';
+import { UsereditComponent } from './components/useredit.component';
 
 const appRoutes: Routes = [
   { path: '', component: MainComponent, title: 'Welcome to Tradeus' },
@@ -28,6 +30,7 @@ const appRoutes: Routes = [
   { path: 'main/about', component: AboutComponent, title: 'About Us' },
   { path: 'login', component: LoginComponent, title: 'Log In' },
   { path: 'register', component: RegisterComponent, title: 'Register' },
+  { path: 'useredit', component: UsereditComponent, title: 'Edit Profile' },
   // { path: 'dashboard/:userId', component: DashboardComponent, canActivate: [ loginGuard ] },
   // { path: 'dashboard', component: DashboardComponent, canActivate: [ loginGuard ] },
   { path: 'dashboard/:parsedUsername', component: DashboardComponent, title: 'DashBoard', canActivate: [loginGuard]},
@@ -45,7 +48,8 @@ const appRoutes: Routes = [
     MainComponent,
     DashboardComponent, 
     OrderComponent, NavbarComponent, RegisterComponent, 
-    LearnComponent, AboutComponent, TutorialComponent, ResearchComponent,
+    LearnComponent, AboutComponent, TutorialComponent, 
+    ResearchComponent, PortfolioComponent, UsereditComponent,
     
   ],
   imports: [
@@ -55,7 +59,7 @@ const appRoutes: Routes = [
     RouterModule.forRoot(appRoutes, { useHash: true}),
     NgbNavModule, NgbModule
   ],
-  providers: [AccountService, StockService],
+  providers: [AccountService, StockService, DashboardComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

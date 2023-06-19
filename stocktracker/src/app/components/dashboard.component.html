@@ -41,7 +41,7 @@
         <tr *ngFor="let stock of watchList$ | async; let i = index">
           <td>{{ i + 1 }}</td>
           <td>{{ stock.exchange }}</td>
-          <td>{{ stock.symbol }}</td>
+          <td class="stock-item" (click)="viewStock(stock.symbol)">{{ stock.symbol }}</td>
           <td>{{ stock.name }}</td>
           <td>{{ stock.currency }}</td>
           <td>{{ stock.open | number: '1.2-2' }}</td>
@@ -86,7 +86,7 @@
         <tr *ngFor="let stock of indexSnP$ | async; let i = index">
           <td>{{ i + 1 }}</td>
           <td>{{ stock.exchange }}</td>
-          <td>{{ stock.symbol }}</td>
+          <td class="stock-item" (click)="viewStock(stock.symbol)">{{ stock.symbol }}</td>
           <td>{{ stock.name }}</td>
           <td>{{ stock.currency }}</td>
           <td>{{ stock.open | number: '1.2-2' }}</td>
@@ -130,7 +130,7 @@
         <tr *ngFor="let stock of indexNasdaq$ | async; let i = index">
           <td>{{ i + 1 }}</td>
           <td>{{ stock.exchange }}</td>
-          <td>{{ stock.symbol }}</td>
+          <td class="stock-item" (click)="viewStock(stock.symbol)">{{ stock.symbol }}</td>
           <td>{{ stock.name }}</td>
           <td>{{ stock.currency }}</td>
           <td>{{ stock.open | number: '1.2-2' }}</td>

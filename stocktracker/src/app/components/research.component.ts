@@ -2,10 +2,11 @@ import { Component, Injectable, Input, OnInit, Output, inject } from '@angular/c
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, combineLatest, first, forkJoin, of } from 'rxjs';
 import { AccountService } from '../account.service';
 import { LoginResponse, RegisterResponse, Stock, Market, MarketIndex, StockInfo, StockProfile } from '../models';
 import { StockService } from '../stock.service';
+import { DashboardComponent } from './dashboard.component';
 
 
 @Component({
@@ -16,6 +17,7 @@ import { StockService } from '../stock.service';
 export class ResearchComponent  {
   stockSvc = inject(StockService)
   accountSvc = inject(AccountService)
+  dashboardComp = inject(DashboardComponent)
   activatedRoute = inject(ActivatedRoute)
   title = inject(Title)
   fb = inject(FormBuilder)
@@ -32,6 +34,7 @@ export class ResearchComponent  {
   //stock variables
   stock$!: Promise<Stock>
   stockProfile$!: Promise<StockProfile>
+  symbol$!: Observable<string>
   
 
   //for watchlist
@@ -68,8 +71,10 @@ export class ResearchComponent  {
   stockInfoList$!: Promise<StockInfo[]>
  
   stockDataForm!: FormGroup
-  loadStock: string = 'VOO'
+  loadStock: string = 'AAPL'
   loadInterval: string = '1min'
+  
+
  
 
   ngOnInit(): void {
@@ -109,13 +114,19 @@ export class ResearchComponent  {
       //load get stock data form
       this.stockDataForm = this.createStockDataForm()
       this.stockInfoList$ = this.stockSvc.getStocksList(this.exchange, this.filter, this.limit, this.skip)
-      this.stock$ = this.stockSvc.getStockData(this.loadStock, this.loadInterval);
+      
+      this.loadStock = this.stockSvc.symbol
+
+      const symbolToLoad = (this.loadStock !== '') ? this.loadStock : 'AAPL';
+      this.stock$ = this.stockSvc.getStockData(symbolToLoad, this.loadInterval);
+      this.stockProfile$ = this.stockSvc.getStockProfile(symbolToLoad); 
+
     
   }
 
   ngAfterViewInit():void{
-    this.loginResponse$ = this.accountSvc.onLoginRequest
-    this.registerResponse$ = this.accountSvc.onRegisterRequest
+    // this.loginResponse$ = this.accountSvc.onLoginRequest
+    // this.registerResponse$ = this.accountSvc.onRegisterRequest
   }
 
 

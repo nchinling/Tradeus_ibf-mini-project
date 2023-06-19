@@ -1,5 +1,5 @@
-export interface RegisterData {
-
+export interface UserData {
+    account_id: string
     name: string
     username: string
     password: string
@@ -22,8 +22,9 @@ export interface RegisterResponse {
     timestamp: string
     status: string
     // error?: string; 
-
 }
+
+
 
 export interface ErrorResponse {
     error: string; 

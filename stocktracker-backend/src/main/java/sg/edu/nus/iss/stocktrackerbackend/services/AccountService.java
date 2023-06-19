@@ -39,6 +39,36 @@ public class AccountService {
             }
         }
 
+        public Account updateAccount(Account account) throws AccountException {
+            try {
+
+                System.out.println("xxxxxxxxThe accountId in updateAccount is:xxxxx" + account.getAccountId());
+        
+         
+                accountRepo.createAccount(account);
+
+                return account;
+            } catch (DataIntegrityViolationException ex) {
+                String errorMessage = "Email has been taken.";
+                throw new AccountException(errorMessage);
+            }
+        }
+
+        
+        @Transactional(rollbackFor = AccountException.class)
+        public Account retrieveAccount(String username) throws AccountException {
+            // try {
+        
+                Optional<Account> retrievedAccount = accountRepo.getAccountByUsername(username);
+
+                return retrievedAccount.get();
+
+            // } catch (DataIntegrityViolationException ex) {
+            //     String errorMessage = "Error in retrieving account.";
+            //     throw new AccountException(errorMessage);
+            // }
+        }
+
 
         public Account loginAccount(String username, String password) throws IOException, AccountNotFoundException {
             Optional<Account> optAccount = accountRepo.getAccountByUsername(username);

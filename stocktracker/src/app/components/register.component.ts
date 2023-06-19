@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable, Subject, firstValueFrom } from 'rxjs';
 import { AccountService } from '../account.service';
-import { LoginResponse, RegisterData, RegisterResponse } from '../models';
+import { LoginResponse, RegisterResponse, UserData } from '../models';
 
 
 @Component({
@@ -59,7 +59,7 @@ export class RegisterComponent {
 
 
   registerAccount() {
-    const registerData:RegisterData = this.registerForm.value
+    const registerData:UserData = this.registerForm.value
     console.info('>> data: ', registerData)
     const name = this.registerForm.get('name')?.value
     const username = this.registerForm.get('username')?.value

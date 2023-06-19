@@ -29,3 +29,11 @@ It is built with Angular(frontend), Spring Boot (backend) with SQL, Redis and Mo
 
 17 June (Sat)
 - implemented company profile and logo
+
+18 June (Sun)
+- Responsive app
+- Working accordion
+- Beautified app
+- watchlist entry deletion
+
+19 June (Mon)

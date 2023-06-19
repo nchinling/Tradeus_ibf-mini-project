@@ -16,7 +16,7 @@ export class StockService {
 
     onStockSelection = new Subject<string>();
     symbols:string[]=[]
-    symbol!:string
+    symbol:string = ''
 
     getStockData(symbol:string, interval:string): Promise<Stock> {
 
