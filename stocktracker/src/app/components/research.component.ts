@@ -73,6 +73,9 @@ export class ResearchComponent  {
   stockDataForm!: FormGroup
   loadStock: string = 'AAPL'
   loadInterval: string = '1min'
+
+  //for chart
+  initialChartSymbol!:string
   
 
  
@@ -116,6 +119,7 @@ export class ResearchComponent  {
       this.stockInfoList$ = this.stockSvc.getStocksList(this.exchange, this.filter, this.limit, this.skip)
       
       this.loadStock = this.stockSvc.symbol
+      this.initialChartSymbol = 'AAPL'
 
       const symbolToLoad = (this.loadStock !== '') ? this.loadStock : 'AAPL';
       this.stock$ = this.stockSvc.getStockData(symbolToLoad, this.loadInterval);

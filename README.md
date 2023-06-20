@@ -37,3 +37,10 @@ It is built with Angular(frontend), Spring Boot (backend) with SQL, Redis and Mo
 - watchlist entry deletion
 
 19 June (Mon)
+- implemented link from watchlist
+- allow for user profile edit
+
+20 June (Tue)
+- refactored user profile edit
+- implemented charts
+

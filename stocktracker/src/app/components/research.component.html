@@ -19,106 +19,14 @@
       </div>
     </div>
     
-  </div>
-  
-<!--   
-  <div class = "container-fluid">
-    <h3>Get Stock Data Quote</h3>
-  
-    <table>
-      <tr>
-        <td class="stock-form">
-          <form [formGroup]="stockDataForm" (submit)="getStockData()">
-            <table>
-              <tr>
-                <td>Stock Symbol:&nbsp;</td>
-                <td>
-                  <input type="text"  formControlName="symbol" placeholder="Provide Stock Symbol">
-                </td>
-              </tr>
-              <br>
-              <tr>
-                  <td>Interval:</td>
-                  <td>
-                    <select formControlName="interval">
-                        <option value="1min">1 minute</option>
-                        <option value="5min">5 minute</option>
-                        <option value="15min">15 minute</option>
-                        <option value="1h">1 hour</option>
-                        <option value="1day">1 day</option>
-                    </select>
-                </td>
-              </tr>
-              <br>
-              <tr>
-                <td></td>
-                <td> <button type="submit">Submit</button></td>
-              </tr>
-            </table>
-          </form>
-        </td>
+</div>
 
-      
-        <div *ngIf="(stock$ | async) as stock">
-        <td>
-    
-            <table>
-              <tr class="data-row">
-                <td>Symbol:</td>
-                <td>{{ stock.symbol }}</td>
-                <td>Name:</td>
-                <td>{{ stock.name }}</td>
-              </tr>
-              <tr class="data-row">
-                <td>Exchange:</td>
-                <td>{{ stock.exchange }}</td>
-                <td>Currency:</td>
-                <td>{{ stock.currency }}</td>
-              </tr>
-              <tr class="data-row">
-                <td>Open:</td>
-                <td>{{ stock.open }}</td>
-                <td>High:</td>
-                <td>{{ stock.high }}</td>
-              </tr>
-              <tr class="data-row">
-                <td>Low:</td>
-                <td>{{ stock.low }}</td>
-                <td>Close:</td>
-                <td>{{ stock.close }}</td>
-              </tr>
-              <tr class="data-row">
-                <td>Volume:</td>
-                <td>{{ stock.volume }}</td>
-                <td>Change:</td>
-                <td><span class="arrow-up" *ngIf="stock.change > 0">&#9650; &nbsp;+{{ stock.change }}</span>
-                  <span class="arrow-down" *ngIf="stock.change < 0">&#9660; &nbsp;{{ stock.change }}</span></td>
-              </tr>
-   
-              <tr class="data-row">
-                <td>% Change:</td>
-                <td><span class="arrow-up" *ngIf="stock.percent_change > 0">&#9650; &nbsp;+{{ stock.percent_change }}%</span>
-                  <span class="arrow-down" *ngIf="stock.percent_change < 0">&#9660; &nbsp;{{ stock.percent_change }}%</span></td>
-                <td>Last:</td>
-                <td>{{ stock.datetime | date:'dd-MM-yyyy HH:mm:ss' }}</td>
-              </tr>
-            </table>
+  <div class="container-fluid d-flex justify-content-center align-items-center">
+    <app-chart [symbol]="symbol" [initialChartSymbol]="initialChartSymbol"></app-chart>
+  </div>
+
+  <br><br><br><br><br>
   
-        </td>
-        <td>
-          <button class="btn btn-primary" (click)="modifyWatchlist(stock.symbol)">Follow</button>
-          <ng-container *ngIf="isButtonClicked">
-            <span class="modifylist-message" *ngIf="isFollowed">Already in watchlist</span>
-            <span class="modifylist-message" *ngIf="!isFollowed">Added to watchlist</span>
-          </ng-container>
-      </td>
-      </div>
-    
-      </tr>
-    </table>
-    <br>
-  
-  </div> -->
 
 <div class="container-fluid">
     <h3>Get Stock Data Quote</h3>

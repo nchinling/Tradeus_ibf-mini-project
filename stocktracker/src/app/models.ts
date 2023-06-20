@@ -1,3 +1,5 @@
+import { NgbHighlight } from "@ng-bootstrap/ng-bootstrap"
+
 export interface UserData {
     account_id: string
     name: string
@@ -87,4 +89,27 @@ export interface StockProfile {
     logoUrl: string
 
 }
+
+
+export interface ChartData{
+
+    symbol: string
+    interval: string
+    datetime: Date[]
+    open: number[]
+    high: number[]
+    low: number[]
+    close: number[]
+
+}
+
+// export interface ChartValues{
+
+//     datetime: Date
+//     open: number
+//     high: number
+//     low: number
+//     close: number
+
+// }
 

@@ -17,8 +17,10 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -33,7 +35,7 @@ import sg.edu.nus.iss.stocktrackerbackend.services.AccountService;
 @Controller
 @RequestMapping(path="/api")
 @CrossOrigin(origins="*")
-public class AccountCountroller {
+public class AccountController {
     
     @Autowired
     private AccountService accSvc;
@@ -73,9 +75,11 @@ public class AccountCountroller {
 
     }
 
-
-    @PostMapping(path="/register", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-	@ResponseBody
+    
+    // @PostMapping(path="/register", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    // @RequestMapping(path = "/register", method = {RequestMethod.POST, RequestMethod.PUT}, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+	@PostMapping(path="/register", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    @ResponseBody
 	public ResponseEntity<String> register(@RequestBody MultiValueMap<String, String> form) {
 
         System.out.printf(">>> I am inside Controller Register>>>>>\n");
@@ -99,41 +103,6 @@ public class AccountCountroller {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
         LocalDate dateOfBirth = LocalDate.parse(dob, formatter);
         System.out.println(dateOfBirth);
-
-        //For updating account
-       if (!accountId.isEmpty()) {
-            Account account = new Account(accountId, name, username, mobileNo, password, nationality,address,dateOfBirth);
-            JsonObject resp = null;
-
-      
-            Account registeredAccount;
-            try {
-                registeredAccount = accSvc.updateAccount(account);
-                resp = Json.createObjectBuilder()
-                .add("account_id", registeredAccount.getAccountId())
-                .add("username", registeredAccount.getUsername())
-                .add("timestamp", (new Date()).toString())
-                .add("status", "updated")
-                .build();
-
-            System.out.printf(">>>Successfully updated>>>>>\n");   
-            return ResponseEntity.ok(resp.toString());
-
-            } catch (AccountException e) {
-        
-            String errorMessage = e.getMessage();
-            //  String errorMessage = "Email has been taken";
-             System.out.printf(">>>Account Exception occured>>>>>\n");   
-            resp = Json.createObjectBuilder()
-            .add("error", errorMessage)
-            .build();
-            
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .body(resp.toString());
-            }
-        }
-
-        
 
         // For creation of new account
         Account account = new Account(name, username, mobileNo, password, nationality,address,dateOfBirth);
@@ -164,6 +133,71 @@ public class AccountCountroller {
         }
 
         return ResponseEntity.ok(resp.toString());
+
+    }
+
+    
+    @PutMapping(path="/update", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    @ResponseBody
+	public ResponseEntity<String> update(@RequestParam MultiValueMap<String, String> form) {
+
+        System.out.printf(">>> I am inside Controller Register>>>>>\n");
+
+        String accountId = form.getFirst("account_id");
+        String name = form.getFirst("name");
+        String username = form.getFirst("username");
+        String password = form.getFirst("password");
+        String mobileNo = form.getFirst("mobile_no");
+        String nationality = form.getFirst("nationality");
+        String address = form.getFirst("address");
+        String dob = form.getFirst("date_of_birth");
+
+        System.out.println(">>> The accountId for update is >>>>>" + accountId);
+        System.out.println(">>> The username for update is >>>>>" + username);
+        System.out.println(">>> The password for update is >>>>>" + password);
+        System.out.println(">>> The date for update is >>>>>" + dob);
+
+
+        String pattern = "yyyy-MM-dd";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        LocalDate dateOfBirth = LocalDate.parse(dob, formatter);
+        System.out.println(dateOfBirth);
+
+        //For updating account
+        Account account = new Account(accountId, name, username, mobileNo, password, nationality,address,dateOfBirth);
+        JsonObject resp = null;
+
+      
+            Account registeredAccount;
+            try {
+                registeredAccount = accSvc.updateAccount(account);
+                resp = Json.createObjectBuilder()
+                .add("account_id", registeredAccount.getAccountId())
+                .add("username", registeredAccount.getUsername())
+                .add("timestamp", (new Date()).toString())
+                .add("status", "updated")
+                .build();
+
+            System.out.printf(">>>Successfully updated>>>>>\n");   
+            return ResponseEntity.ok(resp.toString());
+
+            } catch (AccountException e) {
+        
+            String errorMessage = e.getMessage();
+            //  String errorMessage = "Email has been taken";
+             System.out.printf(">>>Account Exception occured>>>>>\n");   
+            resp = Json.createObjectBuilder()
+            .add("error", errorMessage)
+            .build();
+            
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body(resp.toString());
+            }
+        
+
+        
+
+
 
     }
 

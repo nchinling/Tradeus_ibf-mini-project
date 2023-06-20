@@ -91,6 +91,50 @@ export class AccountService {
     
   }
 
+
+  
+  updateAccount(data: UserData ): Observable<RegisterResponse> {
+    // Content-Type: application/x-www-form-urlencoded
+    // Accept: application/json
+
+    console.info('I am passing to updateAccount accountId:' + this.account_id)
+    console.info('username in updateAccount:' + this.username)
+    console.info('I am passing to updateAccount name:' + data.password)
+
+    const form = new HttpParams()
+      .set("account_id", this.account_id)
+      .set("name", data.name)
+      .set("username", this.username)
+      .set("password", data.password)
+      .set("mobile_no", data.mobile_no)
+      .set("nationality", data.nationality)
+      .set("address", data.address)
+      .set("date_of_birth", data.date_of_birth.toString())
+
+    const headers = new HttpHeaders()
+      .set("Content-Type", "application/x-www-form-urlencoded")
+
+    return this.http.put<RegisterResponse>(`${URL_API_TRADE_SERVER}/update`, form.toString(), {headers}).pipe(
+      catchError(error => {
+        let errorMessage = 'An error occurred during update: ' + error.message;
+        console.error(errorMessage);
+        
+        if (error instanceof HttpErrorResponse && error.status === 500) {
+          const serverError = error.error.error; 
+          errorMessage = '>>>Server error: ' + serverError;
+        }
+        
+        this.onErrorMessage.next(errorMessage);
+        return throwError(() => ({ error: errorMessage }));
+      }),
+
+      filter((response) => response !== null), // Filter out null responses
+      //the fired onRequest.next is received in dashboard component's ngOnit 
+      tap(response => this.onRegisterRequest.next(response))
+    );
+    
+  }
+
   
   getUserData(username:string): Promise<UserData> {
 

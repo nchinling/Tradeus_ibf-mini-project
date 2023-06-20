@@ -55,7 +55,7 @@ export class UsereditComponent {
     const formGroup = this.fb.group({
       name: ['', Validators.required],
       password: ['', Validators.required],
-      username: ['', Validators.required],
+      // username: ['', Validators.required],
       address: ['', Validators.required],
       mobile_no: ['', Validators.required],
       nationality: ['', Validators.required],
@@ -106,39 +106,24 @@ export class UsereditComponent {
     const updatedUserData:UserData = this.updateForm.value
     console.info('>> data: ', updatedUserData)
     const name = this.updateForm.get('name')?.value
-    const username = this.updateForm.get('username')?.value
+    // const username = this.updateForm.get('username')?.value
     const password = this.updateForm.get('password')?.value
     const mobile_no = this.updateForm.get('mobile_no')?.value
     const nationality = this.updateForm.get('nationality')?.value
     const date_of_birth = this.updateForm.get('date_of_birth')?.value
     const address = this.updateForm.get('address')?.value
 
-    const parsedUsername = username.split('@')[0];
+    // const parsedUsername = username.split('@')[0];
 
     //the username and password are passed to accountSvc for loginGuard
-    this.accountSvc.username = username
+    // this.accountSvc.username = username
     this.accountSvc.password = password
     console.info('data for update: ', updatedUserData)
 
     //Using promise
-    this.update$=firstValueFrom(this.accountSvc.registerAccount(updatedUserData))
+    this.update$=firstValueFrom(this.accountSvc.updateAccount(updatedUserData))
     this.update$.then((response) => {
       console.log('status:', response.status);
-
-      // // this.accountSvc.account_id = account_id
-      // const queryParams = {
-      //   // status: response.status,
-      //   // timestamp: response.timestamp,
-      //   account_id: response.account_id,
-      //   username: response.username
-      // };
-
-      // this.accountSvc.account_id = response.account_id
-
-      // const dashboardUrl = `#/dashboard/${parsedUsername}?account_id=${response.account_id}&username=${response.username}`;
-
-      // // Store the dashboard URL in localStorage
-      // localStorage.setItem('dashboardUrl', dashboardUrl);
 
       this.updateForm.reset
       this.successMessage = 'Account has been successfully updated.'

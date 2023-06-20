@@ -22,6 +22,9 @@ import { StockService } from './stock.service';
 import { ResearchComponent } from './components/research.component';
 import { PortfolioComponent } from './components/portfolio.component';
 import { UsereditComponent } from './components/useredit.component';
+import { ChartComponent } from './components/chart.component';
+import { ChartService } from './chart.service';
+
 
 const appRoutes: Routes = [
   { path: '', component: MainComponent, title: 'Welcome to Tradeus' },
@@ -49,17 +52,17 @@ const appRoutes: Routes = [
     DashboardComponent, 
     OrderComponent, NavbarComponent, RegisterComponent, 
     LearnComponent, AboutComponent, TutorialComponent, 
-    ResearchComponent, PortfolioComponent, UsereditComponent,
+    ResearchComponent, PortfolioComponent, UsereditComponent, ChartComponent,
     
   ],
   imports: [
-    BrowserModule, ReactiveFormsModule, HttpClientModule,
+    BrowserModule, ReactiveFormsModule, HttpClientModule, 
     // bindToComponentInputs - V16
     // RouterModule.forRoot(appRoutes, { useHash: true, bindToComponentInputs: true })
     RouterModule.forRoot(appRoutes, { useHash: true}),
     NgbNavModule, NgbModule
   ],
-  providers: [AccountService, StockService, DashboardComponent],
+  providers: [AccountService, StockService, ChartService, DashboardComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

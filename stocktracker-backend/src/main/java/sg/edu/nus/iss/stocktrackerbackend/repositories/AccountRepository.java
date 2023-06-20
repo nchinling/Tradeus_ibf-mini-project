@@ -20,9 +20,10 @@ public class AccountRepository {
     //insert into order table
     public boolean createAccount(Account account){
 
+        System.out.println(">>>>>>>>AccountId is>>>>>>" + account.getAccountId());
         if (isAccountIdExists(account.getAccountId())) {
         return jdbcTemplate.update(UPDATE_ACCOUNT, account.getName(), 
-                                account.getUsername(), account.getPassword(), account.getAddress(),
+                                account.getPassword(), account.getAddress(),
                                 account.getMobileNo(), account.getNationality(), account.getDateOfBirth(), account.getAccountId()) > 0;
 
         
