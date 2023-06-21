@@ -2,7 +2,7 @@
     <canvas  id="MyChart" >{{ chart }}</canvas>
 
 
-    <p>Initial Symbol: {{ initialChartSymbol }}</p>
+    <!-- <p>Initial Symbol: {{ initialChartSymbol }}</p> -->
     <p>Symbol: {{ symbol }}</p>
 
     <form [formGroup]="chartForm" (submit)="processChart()">
@@ -28,41 +28,3 @@
       </form>
 
     <br>
-
-    
-<!-- 
-
-    <div *ngIf="(chart$ | async) as chartData">
-      <h2>{{ chartData.symbol }}</h2>
-      <p>Interval: {{ chartData.interval }}</p>
-      
-      <h3>Datetime</h3>
-      <ul>
-        <li *ngFor="let datetime of chartData.datetime">{{ datetime | date }}</li>
-      </ul>
-      
-      <h3>Open</h3>
-      <ul>
-        <li *ngFor="let open of chartData.open">{{ open }}</li>
-      </ul>
-      
-      <h3>High</h3>
-      <ul>
-        <li *ngFor="let high of chartData.high">{{ high }}</li>
-      </ul>
-      
-      <h3>Low</h3>
-      <ul>
-        <li *ngFor="let low of chartData.low">{{ low }}</li>
-      </ul>
-      
-      <h3>Close</h3>
-      <ul>
-        <li *ngFor="let close of chartData.close">{{ close }}</li>
-      </ul>
-    </div>
-    
-    
-</div>
-
- -->

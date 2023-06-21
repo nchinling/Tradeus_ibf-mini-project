@@ -38,6 +38,7 @@ const appRoutes: Routes = [
   // { path: 'dashboard', component: DashboardComponent, canActivate: [ loginGuard ] },
   { path: 'dashboard/:parsedUsername', component: DashboardComponent, title: 'DashBoard', canActivate: [loginGuard]},
   { path: 'research', component: ResearchComponent, title: 'Research', canActivate: [ loginGuard] },
+  { path: 'portfolio/:parsedUsername', component: PortfolioComponent, title: 'Portfolio', canActivate: [ loginGuard] },
   { path: 'order', component: OrderComponent, title: 'Order'
       , canActivate: [ loginGuard], canDeactivate: [ leaveComp ] },
   { path: '**', redirectTo: '/', pathMatch: 'full' }

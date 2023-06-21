@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import sg.edu.nus.iss.stocktrackerbackend.models.Account;
+import sg.edu.nus.iss.stocktrackerbackend.models.Trade;
 import sg.edu.nus.iss.stocktrackerbackend.repositories.AccountRepository;
 
 @Service
@@ -86,6 +87,20 @@ public class AccountService {
 
             } else {
                 throw new AccountNotFoundException("Account not found for username: " + username);
+            }
+        }
+
+
+        @Transactional(rollbackFor = AccountException.class)
+        public Trade saveToPortfolio(Trade trade) throws AccountException {
+            try {
+        
+                // accountRepo.saveToPortfolio(trade);
+
+                return trade;
+            } catch (DataIntegrityViolationException ex) {
+                String errorMessage = "Unable to save";
+                throw new AccountException(errorMessage);
             }
         }
 

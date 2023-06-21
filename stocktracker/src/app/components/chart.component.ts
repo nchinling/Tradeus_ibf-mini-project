@@ -1,11 +1,10 @@
-import { Component, ElementRef, Input, ViewChild, inject } from '@angular/core';
+import { Component, Input, SimpleChanges, inject } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
 import { StockService } from '../stock.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ChartService } from '../chart.service';
-import { Observable, map, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { ChartData } from '../models';
-import { formatDate } from '@angular/common';
 Chart.register(...registerables);
 
 @Component({
@@ -38,8 +37,20 @@ export class ChartComponent {
     this.symbol = this.stockSvc.symbol
     console.info('the symbol in chart is: ' + this.symbol)
     this.chartForm = this.createForm()
+    this.processChart()
     // this.createChart();
   }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (
+      changes['symbol'] &&
+      !changes['symbol'].firstChange &&
+      changes['symbol'].currentValue !== changes['symbol'].previousValue
+    ) {
+      this.processChart();
+    }
+  }
+
 
   private createForm(): FormGroup {
     return this.fb.group({
@@ -52,13 +63,12 @@ export class ChartComponent {
   processChart() {
 
     console.info('I am processing chart')
+    console.info('this.symbol in processChart is' + this.symbol)
+    console.info('this.initialChartSymbol in processChart is' + this.initialChartSymbol)
 
     const interval = this.chartForm.get('interval')?.value ?? this.loadInterval;
     const dataPoints = this.chartForm.get('dataPoints')?.value ?? 30;
     this.symbol = this.symbol !== '' ? this.symbol : this.initialChartSymbol;
-    // this.symbol = this.symbol ?? this.initialChartSymbol;
-    // this.symbol = this.initialChartSymbol;
-
 
 
     console.info('interval in processingChart is: ' + interval)
@@ -75,36 +85,32 @@ export class ChartComponent {
       
       this.chart$.subscribe(chartData => {
    
-        // const labels = chartData.datetime.map(date => {
-        //   const formattedDate = date instanceof Date ? date.toISOString().slice(0, 10) : '';
-        //   return formattedDate;
-        // });
-        // const labels = chartData.datetime.map(date => {
-        //   const formattedDate = date instanceof Date ? formatDate(date, 'MMM d, yyyy', 'en-US') : '';
-        //   return formattedDate;
-        // });
         const labels = chartData.datetime
         console.log('the labels are: '+ labels)
         const datasets = [
           {
             label: 'Open',
             data: chartData.open,
-            backgroundColor: 'blue'
+            backgroundColor: 'blue',
+            borderColor:'blue'
           },
           {
             label: 'High',
             data: chartData.high,
-            backgroundColor: 'limegreen'
+            backgroundColor: 'limegreen',
+            borderColor:'limegreen'
           },
           {
             label: 'Low',
             data: chartData.low,
-            backgroundColor: 'red'
+            backgroundColor: 'red',
+            borderColor:'red'
           },
           {
             label: 'Close',
             data: chartData.close,
-            backgroundColor: 'yellow'
+            backgroundColor: 'yellow',
+            borderColor:'yellow'
           }
         ];
 
@@ -121,14 +127,28 @@ export class ChartComponent {
           },
           options: {
             responsive: true,
-            maintainAspectRatio: false
+            maintainAspectRatio: false,
+            scales: {
+              x:{
+                display: false
+              }
+            },
+            plugins:{
+              title: {
+                display: true,
+                text: this.symbol,
+                font:{
+                  size: 20
+                }
+              }
+            }
+       
           }
+
         });
       });
     }
   
-
-
 
     }
 
@@ -168,52 +188,3 @@ export class ChartComponent {
       
   //   });
   // }
-
-
-  // createChart() {
-   
-  //     this.chart$.subscribe(chartData => {
-  //       const labels = chartData.datetime.map(date => date.toISOString().slice(0, 10));
-  //       console.log('the labels are:' + labels)
-  //       console.log('the open array are: '+ chartData.open)
-  //       const datasets = [
-  //         {
-  //           label: 'Open',
-  //           data: chartData.open,
-  //           backgroundColor: 'blue'
-  //         },
-  //         {
-  //           label: 'High',
-  //           data: chartData.high,
-  //           backgroundColor: 'limegreen'
-  //         },
-  //         {
-  //           label: 'Low',
-  //           data: chartData.low,
-  //           backgroundColor: 'red'
-  //         },
-  //         {
-  //           label: 'Close',
-  //           data: chartData.close,
-  //           backgroundColor: 'yellow'
-  //         }
-  //       ];
-  
-  //       this.chart = new Chart('MyChart', {
-  //         type: 'line',
-  //         data: {
-  //           labels: labels,
-  //           datasets: datasets
-  //         },
-  //         options: {
-  //           responsive: true,
-  //           maintainAspectRatio: false
-  //         }
-  //       });
-  //     });
-  //   }
-  
-
-
-  
-

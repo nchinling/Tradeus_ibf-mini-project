@@ -103,13 +103,31 @@ export interface ChartData{
 
 }
 
-// export interface ChartValues{
+export interface TradeData{
 
-//     datetime: Date
-//     open: number
-//     high: number
-//     low: number
-//     close: number
+    exchange: string
+    stockName: string
+    symbol: string
+    units: number
+    price: number
+    fee: number
+    date: Date
 
-// }
+}
+
+export interface TradeResponse{
+
+    account_id: string
+    username: string
+    exchange: string
+    stockName: string
+    symbol: string
+    units: number
+    price: number
+    fee: number
+    date: Date
+
+}
+
+
 

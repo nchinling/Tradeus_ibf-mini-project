@@ -42,5 +42,9 @@ It is built with Angular(frontend), Spring Boot (backend) with SQL, Redis and Mo
 
 20 June (Tue)
 - refactored user profile edit
-- implemented charts
+- implemented working charts. Nice :)
+
+21 June (Wed)
+- improved chart functioning and beautified
+
 

@@ -1,6 +1,6 @@
 import { Injectable, OnInit, inject } from "@angular/core";
 import { Observable, Subject, catchError, filter, lastValueFrom, map, of, tap, throwError } from "rxjs";
-import { ErrorResponse, LoginResponse, UserData, RegisterResponse, Stock } from "./models";
+import { ErrorResponse, LoginResponse, UserData, RegisterResponse, Stock, TradeData, TradeResponse } from "./models";
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Router } from "@angular/router";
 // import { v4 as uuidv4 } from 'uuid'. need to install package
@@ -12,6 +12,7 @@ export class AccountService {
 
   onLoginRequest = new Subject<LoginResponse>()
   onRegisterRequest = new Subject<RegisterResponse>()
+  onSavePortfolioRequest = new Subject<TradeResponse>()
   onUserDataRequest = new Subject<UserData>()
   onErrorResponse = new Subject<ErrorResponse>()
   onErrorMessage = new Subject<string>()
@@ -155,12 +156,6 @@ export class AccountService {
 }
 
 
-  
-
-
-
-
-
   //A) Works with both Observable and Promise
   login(username: string, password: string): Observable<LoginResponse> {
     // Content-Type: application/x-www-form-urlencoded
@@ -190,11 +185,53 @@ export class AccountService {
       //the fired onRequest.next is received in dashboard component's ngOnit 
       tap(response => this.onLoginRequest.next(response))
     );
+  }
 
+
+  saveToPortfolio(data: TradeData ): Observable<TradeResponse> {
+    // Content-Type: application/x-www-form-urlencoded
+    // Accept: application/json
+
+    console.info('I am passing to saveToPortfolio units:' + data.units)
+    console.info('I am passing to saveToPortfolio price:' + data.price)
+
+    const form = new HttpParams()
+      .set("account_id", this.account_id)
+      .set("username", this.username)
+      .set("exchange", data.exchange)
+      .set("symbol", data.symbol)
+      .set("stockName", data.stockName)
+      .set("units", data.units)
+      .set("price", data.price)
+      .set("fee", data.fee)
+      .set("date", data.date.toString())
+
+    console.info('account_id in savePortfolio: ' + this.account_id)
+    console.info('username in savePortfolio: ' + this.username)
+    console.info('stockName in savePortfolio: ' + data.stockName)
+
+    const headers = new HttpHeaders()
+      .set("Content-Type", "application/x-www-form-urlencoded")
+
+    return this.http.post<TradeResponse>(`${URL_API_TRADE_SERVER}/savetoportfolio`, form.toString(), {headers}).pipe(
+      catchError(error => {
+        let errorMessage = 'An error occurred while adding to portfolio: ' + error.message;
+        console.error(errorMessage);
+        
+        if (error instanceof HttpErrorResponse && error.status === 500) {
+          const serverError = error.error.error; 
+          errorMessage = '>>>Server error: ' + serverError;
+        }
+        
+        this.onErrorMessage.next(errorMessage);
+        return throwError(() => ({ error: errorMessage }));
+      }),
+
+      filter((response) => response !== null), // Filter out null responses
+      //the fired onRequest.next is received in dashboard component's ngOnit 
+      tap(response => this.onSavePortfolioRequest.next(response))
+    );
     
-
-
-
   }
 
 

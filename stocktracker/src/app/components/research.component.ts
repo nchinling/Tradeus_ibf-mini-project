@@ -144,10 +144,11 @@ export class ResearchComponent  {
     }
   
     if (symbol && interval) {
-      console.info('>> symbol: ', symbol);
-      console.info('>> interval: ', interval);
-      this.stock$ = this.stockSvc.getStockData(symbol, interval);
-      this.stockProfile$ = this.stockSvc.getStockProfile(symbol); 
+      console.info('>> symbol: ', symbol)
+      console.info('>> interval: ', interval)
+      this.stock$ = this.stockSvc.getStockData(symbol, interval)
+      this.stockProfile$ = this.stockSvc.getStockProfile(symbol)
+      this.symbol = symbol
     }
   }
 
@@ -217,22 +218,6 @@ export class ResearchComponent  {
     return this.skip >= this.limit;
   }
   
-  // async hasNextPage(): Promise<boolean> {
-  //   const stockInfoList = await this.stockInfoList$;
-  //   return stockInfoList && stockInfoList.length === this.limit;
-  // }
-
-  // hasPreviousPage(): boolean {
-  //   return this.skip - this.limit >= 0;
-  // }
-  
-  // async hasNextPage(): Promise<boolean> {
-  //   const stockInfoList = await this.stockInfoList$;
-  //   return stockInfoList && stockInfoList.length === this.limit;
-  // }
-
-
-
 
 }
 

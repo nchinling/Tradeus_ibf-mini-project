@@ -1,0 +1,4 @@
+.stock-item:hover {
+    color: lightgray;
+    cursor: pointer;
+}
