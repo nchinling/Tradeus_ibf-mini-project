@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
-import java.util.Optional;
+import java.util.List;
 
 import javax.security.auth.login.AccountNotFoundException;
 
@@ -20,14 +20,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.json.Json;
+import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonObject;
 import sg.edu.nus.iss.stocktrackerbackend.models.Account;
-import sg.edu.nus.iss.stocktrackerbackend.models.Stock;
+
 import sg.edu.nus.iss.stocktrackerbackend.models.Trade;
 import sg.edu.nus.iss.stocktrackerbackend.services.AccountException;
 import sg.edu.nus.iss.stocktrackerbackend.services.AccountService;
@@ -248,8 +248,7 @@ public class AccountController {
     }
 
      
-    // @PostMapping(path="/register", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    // @RequestMapping(path = "/register", method = {RequestMethod.POST, RequestMethod.PUT}, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+
 	@PostMapping(path="/savetoportfolio", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     @ResponseBody
 	public ResponseEntity<String> saveToPortfolio(@RequestBody MultiValueMap<String, String> form) {
@@ -261,6 +260,7 @@ public class AccountController {
         String exchange = form.getFirst("exchange");
         String stockName = form.getFirst("stockName");
         String symbol = form.getFirst("symbol");
+        String currency = form.getFirst("currency");
         Double units = Double.parseDouble(form.getFirst("units"));
         Double price = Double.parseDouble(form.getFirst("price"));
         Double fee = Double.parseDouble(form.getFirst("fee"));
@@ -278,8 +278,19 @@ public class AccountController {
         System.out.println(loggedDate);
 
         // For creation of new trade
-        Trade trade = new Trade(accountId, username, exchange, stockName, symbol, units, price, fee, loggedDate );
+        Trade trade = new Trade(accountId, username, exchange, stockName, symbol, units, price, currency, fee, loggedDate);
  
+        //         this.accountId = accountId;
+        // this.username = username;
+        // this.exchange = exchange;
+        // this.stockName = stockName;
+        // this.symbol = symbol;
+        // this.units = units;
+        // this.price = price;
+        // this.currency = currency;
+        // this.fee = fee;
+        // this.date = date;
+        // this.total = total;
         JsonObject resp = null;
 
         try {
@@ -315,6 +326,30 @@ public class AccountController {
         return ResponseEntity.ok(resp.toString());
 
     }
+
+
+    
+    @GetMapping(path="/portfolio", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<String> getPortfolioList(@RequestParam(required=true) String accountId) throws IOException{
+        // Integer num = weatherSvc.getWeather(city);
+        System.out.println("I am in getPortfolio server");
+        System.out.println(">>>>>>>>accountId in controller>>>>>" + accountId);
+       
+        JsonArrayBuilder arrBuilder = Json.createArrayBuilder();
+		List<String> userPortfolioList = accSvc.getPortfolioList(accountId);
+		userPortfolioList.stream()
+			.map(each -> Json.createObjectBuilder()
+						.add("symbol", each)
+
+						.build()
+			)
+			.forEach(json -> arrBuilder.add(json));
+
+		return ResponseEntity.ok(arrBuilder.build().toString());
+       
+    }
+
 
     
     // @PutMapping(path="/update", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)

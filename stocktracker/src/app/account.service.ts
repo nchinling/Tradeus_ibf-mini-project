@@ -203,12 +203,14 @@ export class AccountService {
       .set("stockName", data.stockName)
       .set("units", data.units)
       .set("price", data.price)
+      .set("currency", data.currency)
       .set("fee", data.fee)
       .set("date", data.date.toString())
 
     console.info('account_id in savePortfolio: ' + this.account_id)
     console.info('username in savePortfolio: ' + this.username)
     console.info('stockName in savePortfolio: ' + data.stockName)
+    console.info('currency in savePortfolio: ' + data.currency)
 
     const headers = new HttpHeaders()
       .set("Content-Type", "application/x-www-form-urlencoded")

@@ -31,6 +31,7 @@ public class Stock {
     private double change;
     private double percentChange;
     private long averageVolume;
+    private double livePrice;
     
     public Stock() {
     }
@@ -143,6 +144,16 @@ public class Stock {
     public void setAverageVolume(long averageVolume) {
         this.averageVolume = averageVolume;
     }
+
+        public double getLivePrice() {
+        return livePrice;
+    }
+    public void setLivePrice(double livePrice) {
+        this.livePrice = livePrice;
+    }
+
+
+    
     @Override
     public String toString() {
         return "Stock [symbol=" + symbol + ", name=" + name + ", exchange=" + exchange + ", currency=" + currency
@@ -171,6 +182,16 @@ public class Stock {
             s.setChange(Double.parseDouble(o.getString("change")));
             s.setPercentChange(Double.parseDouble(o.getString("percent_change")));
             s.setDatetime(o.getString("datetime"));
+        }
+        return s;
+    }
+
+    public static Stock createPriceObject(String json) throws IOException {
+    Stock s = new Stock();
+    try(InputStream is = new ByteArrayInputStream(json.getBytes())){
+        JsonReader r = Json.createReader(is);
+        JsonObject o = r.readObject();
+        s.setLivePrice(Double.parseDouble(o.getString("price")));
         }
         return s;
     }
@@ -221,6 +242,7 @@ public class Stock {
         JsonReader r = Json.createReader(new StringReader(json));
         return r.readObject();
     }
+
 
     
 

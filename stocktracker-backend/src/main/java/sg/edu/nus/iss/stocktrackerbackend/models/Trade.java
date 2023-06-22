@@ -11,11 +11,13 @@ public class Trade {
     private String symbol;
     private Double units;
     private Double price;
+    private String currency;
     private Double fee;
     private LocalDate date;
+    private Double total;
+
     public Trade() {
     }
-    
 
     public Trade(String accountId, String username, String exchange, String stockName, String symbol, Double units,
             Double price, Double fee, LocalDate date) {
@@ -29,6 +31,54 @@ public class Trade {
         this.fee = fee;
         this.date = date;
     }
+
+    
+    public Trade(String accountId, String username, String exchange, String stockName, String symbol, Double units,
+            Double price, String currency, Double fee, LocalDate date) {
+        this.accountId = accountId;
+        this.username = username;
+        this.exchange = exchange;
+        this.stockName = stockName;
+        this.symbol = symbol;
+        this.units = units;
+        this.price = price;
+        this.currency = currency;
+        this.fee = fee;
+        this.date = date;
+      
+    }
+
+    
+
+    public Trade(String accountId, String username, String exchange, String stockName, String symbol, Double units,
+            Double price, String currency, Double fee, LocalDate date, Double total) {
+        this.accountId = accountId;
+        this.username = username;
+        this.exchange = exchange;
+        this.stockName = stockName;
+        this.symbol = symbol;
+        this.units = units;
+        this.price = price;
+        this.currency = currency;
+        this.fee = fee;
+        this.date = date;
+        this.total = total;
+    }
+
+    public Trade(String accountId, String username, String exchange, String stockName, String symbol, Double units,
+            Double price, Double fee, LocalDate date, Double total) {
+        this.accountId = accountId;
+        this.username = username;
+        this.exchange = exchange;
+        this.stockName = stockName;
+        this.symbol = symbol;
+        this.units = units;
+        this.price = price;
+        this.fee = fee;
+        this.date = date;
+        this.total = total;
+    }
+
 
 
     public String getAccountId() {
@@ -86,18 +136,33 @@ public class Trade {
         this.fee = fee;
     }
 
+    public Double getTotal() {
+        return total;
+    }
+    public void setTotal(Double total) {
+        this.total = total;
+    }
+
+    
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
 
     @Override
     public String toString() {
         return "Trade [accountId=" + accountId + ", username=" + username + ", exchange=" + exchange + ", stockName="
-                + stockName + ", symbol=" + symbol + ", units=" + units + ", price=" + price + ", fee=" + fee
-                + ", date=" + date + "]";
+                + stockName + ", symbol=" + symbol + ", units=" + units + ", price=" + price + ", currency=" + currency
+                + ", fee=" + fee + ", date=" + date + ", total=" + total + "]";
     }
 
     
-    
 
     
+
 }
 
 

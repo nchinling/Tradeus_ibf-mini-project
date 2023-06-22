@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
 import { Subject, lastValueFrom, tap, map, interval, firstValueFrom, debounceTime } from "rxjs";
-import { Market, MarketIndex, Stock, StockInfo, StockProfile } from "./models";
+import { Market, MarketIndex, PortfolioData, Stock, StockInfo, StockProfile } from "./models";
 
 const URL_API_TRADE_SERVER = 'http://localhost:8080/api'
 
@@ -12,6 +12,7 @@ export class StockService {
 
     onStockRequest = new Subject<Stock>()
     onStockProfileRequest = new Subject<StockProfile>()
+    onPortfolioDataRequest = new Subject<PortfolioData>()
     onMarketRequest = new Subject<MarketIndex>()
 
     onStockSelection = new Subject<string>();
@@ -187,7 +188,52 @@ export class StockService {
 
   }
 
+  async getPortfolioSymbols(accountId: string): Promise<string[]> {
+    return firstValueFrom(
+      this.http.get<any[]>(`${URL_API_TRADE_SERVER}/portfolio?accountId=${accountId}`)
+    ).then((response: any[]) => {
+      this.symbols = response.map((item) => item.symbol);
+      console.info('the symbols returned from getPortfolioSymbols are'+this.symbols)
+      return this.symbols;
+    });
+  }
+
+
+  getPortfolioData(portfolioSymbols: string[], account_id: string): Promise<PortfolioData[]> {
+    const portfolioListRequests: Promise<PortfolioData>[] = [];
+    const interval = '5min'
+    console.info('array passed to getPortfolioData is ' + portfolioSymbols)
+
+    for (const symbol of portfolioSymbols) {
+      const queryParams = new HttpParams()
+        .set('symbol', symbol)
+        .set('interval', interval)
+        .set('account_id', account_id)
+        console.info('the symbol in getWatchlistData is ' + symbol)
   
+        const request =  lastValueFrom(
+          this.http.get<PortfolioData>(`${URL_API_TRADE_SERVER}/quote/portfolio`, { params: queryParams })
+            .pipe(
+              tap(resp => this.onPortfolioDataRequest.next(resp)),
+              map(resp => ({ account_id: resp.account_id, symbol: resp.symbol, stock_name: resp.stock_name, 
+                          exchange: resp.exchange, currency: resp.currency,
+                          units:resp.units, buy_unit_price:resp.buy_unit_price, buy_total_price:resp.buy_total_price,
+                          unit_current_price:resp.unit_current_price, total_current_price:resp.total_current_price, 
+                          total_return: resp.total_return, total_percentage_change:resp.total_percentage_change, 
+                          datetime:resp.datetime
+                          }))
+            )
+        )
+
+      portfolioListRequests.push(request);
+    }
+
+    console.info('>>>>>>sending to Stock server...');
+    // return Promise.all(marketRequests);
+    return Promise.all(portfolioListRequests);
+
+    }
+
 
 }
 

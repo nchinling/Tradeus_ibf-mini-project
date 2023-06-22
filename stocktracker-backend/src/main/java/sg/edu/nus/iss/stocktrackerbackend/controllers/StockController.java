@@ -1,6 +1,7 @@
 package sg.edu.nus.iss.stocktrackerbackend.controllers;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +23,7 @@ import jakarta.json.Json;
 import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonObject;
 import sg.edu.nus.iss.stocktrackerbackend.models.Market;
+import sg.edu.nus.iss.stocktrackerbackend.models.Portfolio;
 import sg.edu.nus.iss.stocktrackerbackend.models.Stock;
 import sg.edu.nus.iss.stocktrackerbackend.models.StockInfo;
 import sg.edu.nus.iss.stocktrackerbackend.models.StockProfile;
@@ -394,6 +396,61 @@ public class StockController {
 
 
 	}
+
+ 
+    @GetMapping(path="/quote/portfolio")
+    @ResponseBody
+    public ResponseEntity<String> getPortfolioData(@RequestParam(required=true) String symbol,
+    @RequestParam(defaultValue = "1day",required=false) String interval,
+    @RequestParam(required=false) String account_id) throws IOException{
+        // Integer num = weatherSvc.getWeather(city);
+        System.out.println("I am in getStockData server");
+        System.out.println(">>>>>>>>Symbol in controller>>>>>" + symbol);
+        System.out.println(">>>>>>>>Interval in controller>>>>>" + interval);
+        System.out.println(">>>>>>>>accountId in controller>>>>>" + account_id);
+
+        String accountId = account_id;
+        
+
+        //Obtain data from api and service 
+        // Optional<Portfolio> p = stockSvc.getPortfolioData(accountId, symbol, interval);
+        // if (p.isPresent()) {
+        //     Portfolio portfolio = p.get();
+            Portfolio portfolio = stockSvc.getPortfolioData(accountId, symbol, interval);
+
+            //save portfolio data in redis/mongo for quick retrieval
+            // stockSvc.saveStockData(stock, interval);
+
+            System.out.println("Obtained portfolio data from API");
+            System.out.println(">>>>>Portfolio stockname is>>>>" + portfolio.getStockName());
+
+            JsonObject resp = Json.createObjectBuilder()
+                .add("account_id", portfolio.getAccountId())
+                .add("symbol", portfolio.getSymbol())
+                .add("stock_name", portfolio.getStockName())
+                .add("exchange", portfolio.getExchange())
+                .add("currency", portfolio.getCurrency())
+                .add("units", portfolio.getUnits())
+                .add("buy_unit_price", portfolio.getBuyUnitPrice())
+                .add("buy_total_price", portfolio.getBuyTotalPrice())
+                .add("unit_current_price", portfolio.getUnitCurrentPrice())
+                .add("total_current_price", portfolio.getTotalCurrentPrice())
+                .add("total_return", portfolio.getTotalReturn())
+                .add("total_percentage_change", portfolio.getTotalPercentageChange())
+                // .add("annualised_proft", portfolio.getAnnualisedProfit())
+                .add("datetime", portfolio.getDateTime().toString())
+                .build();
+                System.out.println(">>>resp: " + resp);
+                System.out.println(">>>sending back portfolio data.>>>>>Hooray: ");
+
+            return ResponseEntity.ok(resp.toString());
+        // } 
+        // // Handle the case when the Optional is empty
+        // return ResponseEntity.status(HttpStatus.NOT_FOUND)
+        // .body("Portfolio information not available for the provided symbol.");
+        
+        
+    }
 
 
 

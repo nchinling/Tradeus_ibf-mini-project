@@ -43,6 +43,10 @@ background-color: green;
     color:red;
 }
 
+.stock-item {
+    word-wrap: break-word;
+  }
+
 .stock-item:hover {
     color: lightgray;
     cursor: pointer;

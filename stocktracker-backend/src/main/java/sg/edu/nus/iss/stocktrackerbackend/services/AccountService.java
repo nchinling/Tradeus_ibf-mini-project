@@ -1,6 +1,7 @@
 package sg.edu.nus.iss.stocktrackerbackend.services;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -94,15 +95,23 @@ public class AccountService {
         @Transactional(rollbackFor = AccountException.class)
         public Trade saveToPortfolio(Trade trade) throws AccountException {
             try {
-        
-                // accountRepo.saveToPortfolio(trade);
 
-                return trade;
+                Double total = trade.getUnits()*trade.getPrice() + trade.getFee();
+                trade.setTotal(total);
+        
+                return accountRepo.saveToPortfolio(trade);
+
             } catch (DataIntegrityViolationException ex) {
-                String errorMessage = "Unable to save";
+                String errorMessage = "An error occurred while saving. Please try again.";
                 throw new AccountException(errorMessage);
             }
         }
+
+
+    public List<String> getPortfolioList(String accountId) {
+        System.out.println(">>>>>>>> I am in Service >>> getUserPortfolioList");
+        return accountRepo.getPortfolioList(accountId);
+    }
 
 
     

@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable, Subject, filter, firstValueFrom, from, mergeMap, of, switchMap } from 'rxjs';
 import { AccountService } from '../account.service';
-import { RegisterResponse, Stock, StockInfo, TradeData, TradeResponse, UserData } from '../models';
+import { PortfolioData, RegisterResponse, Stock, StockInfo, TradeData, TradeResponse, UserData } from '../models';
 import { StockService } from '../stock.service';
 
 @Component({
@@ -15,10 +15,14 @@ export class PortfolioComponent {
 
   register$!: Promise<RegisterResponse>
   stockInfoList$!: Promise<StockInfo[]>
+  portfolioSymbols$!:Promise<string[]>
+  portfolioData$!:Promise<PortfolioData[]>
+
   tradeResponse$!: Promise<TradeResponse>
   stockSearch$!: Observable<StockInfo[]>
   stock$!: Promise<Stock>
   symbol!: string
+  currency!: string
 
   portfolioForm!: FormGroup
   errorMessage!: string;
@@ -48,14 +52,26 @@ export class PortfolioComponent {
     this.portfolioForm = this.createForm()
     this.errorMessage$ = this.accountSvc.onErrorMessage;
 
-    // this.stockInfoList$ = this.searchInput.pipe(
-    //   this.stockSvc.getStocksList(this.exchange, title, 5, 0))
+    this.portfolioSymbols$ = this.stockSvc.getPortfolioSymbols(this.accountId)
+    console.info('this.symbols$ is' + this.portfolioSymbols$)
+
+    this.portfolioSymbols$.then((symbol: string[]) => {
+      console.info('Symbols:', symbol);
+      this.portfolioData$ = this.stockSvc.getPortfolioData(symbol, this.accountId);
+    }).catch((error) => {
+      console.error(error);
+    });
+
+    
+
 
     this.stockSearch$ = this.searchInput.pipe(
       switchMap((text: string) => {
         return from(this.stockSvc.getStocksList(this.exchange, text, 5, 0));
       })
     );
+
+    
     
   }
 
@@ -96,6 +112,7 @@ export class PortfolioComponent {
     const fee = this.portfolioForm.get('fee')?.value
     const date = this.portfolioForm.get('date')?.value
     tradeData.symbol = this.symbol
+    tradeData.currency = this.currency
   
 
 
@@ -113,21 +130,30 @@ export class PortfolioComponent {
       console.log('units:', response.fee);
       console.log('price:', response.date);
 
-
       //refer to researchComp
-      this.portfolioList = this.stockSvc.portfolioSymbols
-
+      this.portfolioSymbols$ = this.stockSvc.getPortfolioSymbols(this.accountId)
+      console.info('this.symbols$ is' + this.portfolioSymbols$)
+  
+      this.portfolioSymbols$.then((symbol: string[]) => {
+        console.info('Symbols:', symbol);
+        this.portfolioData$ = this.stockSvc.getPortfolioData(symbol, this.accountId);
+      }).catch((error) => {
+        console.error(error);
+      });
 
     }).catch((error)=>{
   
       this.errorMessage = error.error;
       console.info('this.errorMessage is ' + this.errorMessage)
-      // this.errorMessage$ = this.accountSvc.onErrorMessage;
-      // this.portfolioForm.reset();
+
     });
+
 
   }
 
+
+
+  
   filtering(text:string){
     this.searchInput.next(text as string)
 
@@ -149,9 +175,14 @@ export class PortfolioComponent {
       console.info('>> symbol: ', symbol);
       console.info('>> interval: ', interval);
       this.stock$ = this.stockSvc.getStockData(symbol, interval)
+      // this.stock$.then(stockData => {
+      //   this.currency = stockData.currency;
+        
+      // });
       this.stockSvc.getStockData(symbol, interval)
         .then(stockData => {
           // this.patchNameField(stockData.name); 
+          this.currency = stockData.currency
           this.patchNameField(`${stockData.name} (${stockData.symbol})`);
         });
     }

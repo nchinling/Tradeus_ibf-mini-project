@@ -1,13 +1,14 @@
 package sg.edu.nus.iss.stocktrackerbackend.services;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
-
+import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -15,9 +16,12 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import sg.edu.nus.iss.stocktrackerbackend.models.Market;
+import sg.edu.nus.iss.stocktrackerbackend.models.Portfolio;
 import sg.edu.nus.iss.stocktrackerbackend.models.Stock;
 import sg.edu.nus.iss.stocktrackerbackend.models.StockInfo;
 import sg.edu.nus.iss.stocktrackerbackend.models.StockProfile;
+import sg.edu.nus.iss.stocktrackerbackend.models.Trade;
+import sg.edu.nus.iss.stocktrackerbackend.repositories.AccountRepository;
 import sg.edu.nus.iss.stocktrackerbackend.repositories.StockRepository;
 
 @Service
@@ -34,6 +38,9 @@ public class StockService {
 
     @Autowired
     private StockRepository stockRepo;
+
+    @Autowired
+    private AccountRepository accountRepo;
     
     //function to get info from an external server using API.
    public Optional<Stock> getStockData(String symbol, String interval)
@@ -76,6 +83,46 @@ public class StockService {
 
    }
 
+   public Optional<Stock> getLivePrice(String symbol, String interval)
+   throws IOException{
+       System.out.println("twelveDataUrl: " + twelveDataUrl);
+       System.out.println("twelveDataApiKey: " + twelveDataApiKey);
+       System.out.println("twelveDataApiHost: " + twelveDataApiHost);
+   
+       String stockUrl = UriComponentsBuilder
+                           .fromUriString(twelveDataUrl+"/price")
+                           .queryParam("symbol", symbol)
+                           .queryParam("interval", interval)
+                           .toUriString();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("X-RapidAPI-Key", twelveDataApiKey);
+        headers.set("X-RapidAPI-Host", twelveDataApiHost);
+
+
+        RequestEntity req = RequestEntity.get(stockUrl)
+                    .headers(headers)
+                    .build();
+
+       RestTemplate template= new RestTemplate();
+        ResponseEntity<String> r  = template.exchange(req, 
+        String.class);
+
+
+       //r.getBody is a string response from api.
+        System.out.println(">>>managed to exchange: >>>>" + r.getBody());
+       Stock s = Stock.createPriceObject(r.getBody());
+
+       //for debugging
+       Double livePrice = s.getLivePrice();
+    
+       System.out.println(">>>LivePrice: " + livePrice);
+
+       return Optional.of(s);
+
+   }
+
+
     //function to get info from an external server using API.
    public Optional<StockProfile> getStockProfile(String symbol)
    throws IOException{
@@ -115,6 +162,7 @@ public class StockService {
        return Optional.of(sp);
 
    }
+
 
       public Optional<StockProfile> getStockLogo(String symbol) throws IOException{
        System.out.println("twelveDataUrl: " + twelveDataUrl);
@@ -237,5 +285,69 @@ public class StockService {
         System.out.println(">>>>>>>> I am in Service >>> getUserWatchlist");
         return stockRepo.getUserWatchlist(username);
     }
+
+
+    public Portfolio getPortfolioData(String accountId, String symbol, String interval) throws IOException {
+        System.out.println(">>>>>>>> I am in getPortfolioDataService>>>>>>");
+        Optional<Stock> s;
+        // Portfolio p = new Portfolio();
+        Optional<Trade> t = accountRepo.getTradeData(accountId, symbol);
+        Trade trade = t.get();
+
+        Stock stock;
+            s = getLivePrice(symbol, interval);
+            stock = s.get();
+
+        Portfolio calculatedP = getCalculations(trade.getUnits(), stock.getLivePrice(),trade.getTotal());
+        Portfolio p = new Portfolio(trade.getAccountId(), trade.getSymbol(), trade.getStockName(),
+                        trade.getExchange(), trade.getCurrency(), trade.getUnits(), trade.getPrice(),trade.getTotal(),
+                        stock.getLivePrice(), calculatedP.getTotalCurrentPrice(), 
+                        calculatedP.getTotalReturn(), calculatedP.getTotalPercentageChange(), LocalDate.now()  );
+            System.out.println(">>> The stock price is>>>" + stock.getLivePrice());
+
+        return p;
+        
+    }
+
+    private Portfolio getCalculations(Double units, Double currentUnitPrice, Double totalBuyPrice){
+
+        Double totalCurrentPrice = units*currentUnitPrice; 
+        Double totalReturn = totalCurrentPrice - totalBuyPrice;
+        Double totalPercentageChange = (totalReturn/totalBuyPrice)*100;
+
+        Portfolio p = new Portfolio(totalCurrentPrice, totalReturn, totalPercentageChange);
+        return p;
+    }
+
+    //from trades
+    // private String exchange;
+    // private String stockName;
+    // private String symbol;
+    // private Double units;
+    // private Double price;
+    // private Double fee;
+    // private LocalDate date;
+    // private Double total;
+
+
+    //             //form portfolio
+    //             .add("account_id", portfolio.getAccountId())
+    //             .add("symbol", portfolio.getSymbol())
+    //             .add("stock_name", portfolio.getStockName())
+    //             .add("exchange", portfolio.getExchange())
+    //             .add("currency", portfolio.getCurrency())
+    //             .add("units", portfolio.getUnits())
+    //             .add("buy_unit_price", portfolio.getBuyUnitPrice())
+    //             .add("buy_total_price", portfolio.getBuyTotalPrice())
+    //             .add("unit_current_price", portfolio.getUnitCurrentPrice())
+    //             .add("total_current_price", portfolio.getTotalCurrentPrice())
+    //             .add("total_return", portfolio.getTotalReturn())
+    //             .add("total_percentage_change", portfolio.getTotalPercentageChange())
+    //             .add("datetime", portfolio.getDateTime().toString())
+    //             .build();
+
+
+
+
 
 }

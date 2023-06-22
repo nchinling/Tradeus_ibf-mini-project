@@ -35,13 +35,16 @@
           <a class="nav-link" [routerLink]="['/portfolio', parsedUsername]">Portfolio</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" [routerLink]="['/ai']">AI Feature</a>
+          <a class="nav-link" [routerLink]="['/ai']">AI</a>
+        </li>
+        <li class="nav-item">
+         
+            <button class="btn btn-primary align-text-top" (click)="logout()" style="font-size: 16px;">Log Out</button>
+      
         </li>
         <li class="nav-item">
           <i class="fa-solid fa-user custom-icon" [routerLink]="['/useredit']"></i>
-  
-            <button class="btn btn-primary align-text-top" (click)="logout()" style="font-size: 16px;">Log Out</button>
-      
+
         </li>
 
       </ul>

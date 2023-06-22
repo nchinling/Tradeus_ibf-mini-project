@@ -3,7 +3,6 @@ package sg.edu.nus.iss.stocktrackerbackend.services;
 import java.io.IOException;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.RequestEntity;
@@ -13,8 +12,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import sg.edu.nus.iss.stocktrackerbackend.models.Chart;
-import sg.edu.nus.iss.stocktrackerbackend.models.Stock;
-import sg.edu.nus.iss.stocktrackerbackend.repositories.StockRepository;
+
 
 @Service
 public class ChartService {
