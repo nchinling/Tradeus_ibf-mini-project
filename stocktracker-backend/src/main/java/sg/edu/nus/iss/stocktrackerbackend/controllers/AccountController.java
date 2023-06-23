@@ -275,7 +275,7 @@ public class AccountController {
         String pattern = "yyyy-MM-dd";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
         LocalDate loggedDate = LocalDate.parse(date, formatter);
-        System.out.println(loggedDate);
+        System.out.println(">>>>>>>>The loggedDate is >>>>>>> " + loggedDate);
 
         // For creation of new trade
         Trade trade = new Trade(accountId, username, exchange, stockName, symbol, units, price, currency, fee, loggedDate);

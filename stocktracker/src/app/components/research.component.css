@@ -47,6 +47,11 @@ background-color: green;
     word-wrap: break-word;
   }
 
+  .stock-list-container {
+    width: 100%;
+    max-width: 250px; 
+  }
+
 .stock-item:hover {
     color: lightgray;
     cursor: pointer;

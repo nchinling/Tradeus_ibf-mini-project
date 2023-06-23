@@ -26,23 +26,64 @@ public class DBQueries {
 
     public static final String INSERT_TRADE = """
     
-                insert into trades(account_id, username, exchange, symbol,  
+                insert into trades(portfolio_id,account_id, username, exchange, symbol,  
                                   stock_name, units, buy_date, buy_price, currency, fee, total)
-                        values (?, ?, ?, ? ,?, ?,?,?,?,?,?);
+                        values (?,?, ?, ?, ? ,?, ?,?,?,?,?,?);
 
             """;
-
-    public static final String SELECT_TRADE_BY_ACCOUNTID_AND_SYMBOL ="""
-        SELECT t.*
-        FROM portfolio AS p
-        JOIN trades AS t ON p.account_id = t.account_id AND p.symbol = t.symbol
-        WHERE p.account_id = ? and p.symbol=?
-        ORDER BY p.symbol
-    """;
-
     public static final String SELECT_SYMBOLS_BY_ACCOUNTID = "SELECT symbol FROM portfolio WHERE account_id = ?";
 
+    public static final String SELECT_PORTFOLIO_ID ="SELECT id FROM portfolio WHERE account_id = ? AND symbol = ?";
 
+    // public static final String SELECT_TRADE_BY_ACCOUNTID_AND_SYMBOL ="""
+    //     SELECT t.*
+    //     FROM portfolio AS p
+    //     JOIN trades AS t ON p.account_id = t.account_id AND p.symbol = t.symbol
+    //     WHERE p.account_id = ? and p.symbol=?
+    //     ORDER BY p.symbol
+    // """;
+
+
+    //next best working
+    // public static final String SELECT_TRADE_BY_ACCOUNTID_AND_SYMBOL = """
+    //     SELECT p.account_id, p.symbol, t.username, t.exchange, t.stock_name, t.buy_date,
+    //     t.currency, SUM(t.units*t.buy_price)/SUM(t.units) as buy_price, 
+    //     SUM(t.total) AS total_sum, SUM(t.units) AS total_units, 
+    //     SUM(t.fee) AS total_fee
+    //     FROM portfolio AS p
+    //     JOIN trades AS t ON p.account_id = t.account_id AND p.symbol = t.symbol
+    //     WHERE p.account_id = ? and p.symbol=?
+    //     GROUP BY p.account_id, p.symbol, t.username, t.exchange, t.stock_name, t.buy_date, t.currency
+    //     ORDER BY p.symbol
+    // """;
+
+public static final String SELECT_TRADE_BY_ACCOUNTID_AND_SYMBOL = """
+        SELECT t.account_id, t.symbol, t.username, t.exchange, t.stock_name,
+        t.currency, SUM(t.units*t.buy_price)/SUM(t.units) as buy_price, 
+        SUM(t.total) AS total_sum, SUM(t.units) AS total_units, 
+        SUM(t.fee) AS total_fee
+        FROM trades AS t
+        RIGHT JOIN portfolio AS p ON t.portfolio_id = p.id
+        WHERE t.account_id = ? AND t.symbol = ?
+        GROUP BY t.account_id, t.symbol, t.username, t.exchange, t.stock_name, t.currency
+        ORDER BY t.symbol
+    """;
+
+
+
+    // public static final String SELECT_TRADE_BY_ACCOUNTID_AND_SYMBOL ="""
+    //     SELECT p.account_id, p.symbol, t.username, t.exchange, t.stock_name, t.buy_date,
+    //     t.currency, SUM(t.units*t.buy_price)/SUM(t.units) as buy_price, 
+    //     SUM(t.total) AS total, SUM(t.units) AS units, 
+    //     SUM(t.fee) AS fee, SUM(t.total) AS total
+    //     FROM portfolio AS p
+    //     JOIN trades AS t ON p.account_id = t.account_id AND p.symbol = t.symbol
+    //     WHERE p.account_id = ? and p.symbol=?
+    //     GROUP BY p.account_id, p.symbol, t.username, t.exchange, t.stock_name, t.buy_date, t.currency
+    //     ORDER BY p.symbol
+    // """;
+
+ 
     // public static final String SELECT_TRADE_BY_ACCOUNTID ="""
 
     //         select p.account_id, p.symbol

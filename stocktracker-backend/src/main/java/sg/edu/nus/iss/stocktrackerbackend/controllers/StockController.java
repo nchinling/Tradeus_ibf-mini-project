@@ -443,6 +443,7 @@ public class StockController {
                 System.out.println(">>>resp: " + resp);
                 System.out.println(">>>sending back portfolio data.>>>>>Hooray: ");
 
+            System.out.println(">>>>>Portfolio" + portfolio.getStockName() +"total units is>>>>" + portfolio.getUnits());
             return ResponseEntity.ok(resp.toString());
         // } 
         // // Handle the case when the Optional is empty

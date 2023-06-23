@@ -92,3 +92,21 @@ table {
 .btn:hover {
   background-color: #0056b3;
 }
+
+.arrow-up{
+  color:green;
+}
+
+.arrow-down{
+  color:red;
+}
+
+.total-return {
+  font-size: 30px;
+}
+
+.container-fluid {
+  /* display: flex; */
+  justify-content: center;
+  align-items: center;
+}

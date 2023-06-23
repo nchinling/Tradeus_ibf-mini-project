@@ -93,4 +93,18 @@ background-color: green;
     color:green
   }
 
+  .arrow-down{
+    color:red;
+  }
+  
+  .total-return {
+    font-size: 30px;
+  }
+  
+  .container-fluid {
+    /* display: flex; */
+    justify-content: center;
+    align-items: center;
+  }
+
 

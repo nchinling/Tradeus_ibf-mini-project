@@ -63,8 +63,6 @@ export class PortfolioComponent {
     });
 
     
-
-
     this.stockSearch$ = this.searchInput.pipe(
       switchMap((text: string) => {
         return from(this.stockSvc.getStocksList(this.exchange, text, 5, 0));
@@ -198,6 +196,16 @@ export class PortfolioComponent {
 
   private patchNameField(value: string) {
     this.portfolioForm.patchValue({ stockName:value });
+  }
+
+  calculateTotalReturn(portfolioData: any[]): number {
+    return portfolioData.reduce((total, data) => total + data.total_return, 0);
+  }
+
+  calculateTotalPercentageReturn(portfolioData: any[]): number {
+    const totalReturn = this.calculateTotalReturn(portfolioData);
+    const totalInvestment = portfolioData.reduce((total, data) => total + data.buy_total_price, 0);
+    return (totalReturn / totalInvestment) * 100;
   }
 
 

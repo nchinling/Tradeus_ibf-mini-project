@@ -165,7 +165,7 @@
   
           <!-- <br> -->
      
-           <div *ngIf="stockInfoList$ | async as stockslist; else blank">
+           <div *ngIf="stockInfoList$ | async as stockslist; else blank" class="stock-list-container">
             <div *ngFor="let s of stockslist">
               <p (click)="getStockData(s.symbol)" class="stock-item">{{ s.name }} ({{ s.symbol }})</p>
             </div>

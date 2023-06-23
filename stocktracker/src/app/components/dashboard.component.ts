@@ -1,7 +1,7 @@
 import { Component, HostListener, Injectable, Input, OnChanges, OnInit, inject } from '@angular/core';
 import { Observable, Subject, Subscription, interval } from 'rxjs';
 import { AccountService } from '../account.service';
-import { LoginResponse, MarketIndex, RegisterResponse, Stock, Market, StockInfo } from '../models';
+import { LoginResponse, MarketIndex, RegisterResponse, Stock, Market, StockInfo, PortfolioData } from '../models';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -59,6 +59,10 @@ export class DashboardComponent implements OnInit, OnChanges{
   indexSnP$!: Promise<Stock[]>
   indexNasdaq$!: Promise<Stock[]>
 
+  portfolioSymbols$!:Promise<string[]>
+  portfolioData$!:Promise<PortfolioData[]>
+
+
   onStockRequest = new Subject<string>()
 
   //for ng-bootstrap nav
@@ -94,6 +98,18 @@ export class DashboardComponent implements OnInit, OnChanges{
           this.accountId = this.accountSvc.account_id
         } else{
         }
+
+      //initialise portfolio
+      this.portfolioSymbols$ = this.stockSvc.getPortfolioSymbols(this.accountId)
+      console.info('this.symbols$ is' + this.portfolioSymbols$)
+  
+      this.portfolioSymbols$.then((symbol: string[]) => {
+        console.info('Symbols:', symbol);
+        this.portfolioData$ = this.stockSvc.getPortfolioData(symbol, this.accountId);
+      }).catch((error) => {
+        console.error(error);
+      });
+
 
       //load market data
       // this.marketIndex$ = this.stockSvc.getMarketData('SPX', '1day');
@@ -181,6 +197,17 @@ export class DashboardComponent implements OnInit, OnChanges{
       .catch((error) => {
         console.error(error);
       });
+  }
+
+
+  calculateTotalReturn(portfolioData: any[]): number {
+    return portfolioData.reduce((total, data) => total + data.total_return, 0);
+  }
+
+  calculateTotalPercentageReturn(portfolioData: any[]): number {
+    const totalReturn = this.calculateTotalReturn(portfolioData);
+    const totalInvestment = portfolioData.reduce((total, data) => total + data.buy_total_price, 0);
+    return (totalReturn / totalInvestment) * 100;
   }
   
 

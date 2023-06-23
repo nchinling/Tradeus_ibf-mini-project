@@ -115,6 +115,7 @@ export class UsereditComponent {
 
     // const parsedUsername = username.split('@')[0];
 
+    const parsedUsername = this.accountSvc.parsedUsername
     //the username and password are passed to accountSvc for loginGuard
     // this.accountSvc.username = username
     this.accountSvc.password = password
@@ -127,6 +128,9 @@ export class UsereditComponent {
 
       this.updateForm.reset
       this.successMessage = 'Account has been successfully updated.'
+      setTimeout(() => {
+        this.router.navigate(['/dashboard', parsedUsername]);
+      }, 2000); 
 
       // this.router.navigate(['/dashboard', parsedUsername], { queryParams: queryParams })
     }).catch((error)=>{
