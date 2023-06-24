@@ -114,6 +114,13 @@ public class AccountService {
     }
 
 
+    public String deleteFromPortfolio(String symbol, String accountId) {
+        System.out.println(">>>>>>>> I am in Service >>> deleteFromPortfolio");
+        return accountRepo.deleteFromPortfolio(symbol, accountId);
+    }
+
+
+
     
 }
 

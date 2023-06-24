@@ -19,6 +19,7 @@ export class StockService {
     symbols:string[]=[]
     portfolioSymbols: string[] = []
     symbol:string = ''
+    portfolioSymbol: string=''
 
     getStockData(symbol:string, interval:string): Promise<Stock> {
 
@@ -169,6 +170,7 @@ export class StockService {
 
       }
     
+
   removeFromWatchlist(index: number, username: string){
       
       this.symbols.splice(index, 1)
@@ -192,9 +194,9 @@ export class StockService {
     return firstValueFrom(
       this.http.get<any[]>(`${URL_API_TRADE_SERVER}/portfolio?accountId=${accountId}`)
     ).then((response: any[]) => {
-      this.symbols = response.map((item) => item.symbol);
-      console.info('the symbols returned from getPortfolioSymbols are'+this.symbols)
-      return this.symbols;
+      this.portfolioSymbols = response.map((item) => item.symbol);
+      console.info('the symbols returned from getPortfolioSymbols are'+this.portfolioSymbols)
+      return this.portfolioSymbols;
     });
   }
 
@@ -233,6 +235,28 @@ export class StockService {
     return Promise.all(portfolioListRequests);
 
     }
+
+  
+    removeFromPortfolio(index: number, accountId: string){
+      
+      // this.portfolioSymbols.splice(index, 1)
+      this.portfolioSymbol = this.portfolioSymbols[index]
+      // console.log('the symbols after removal are' + this.portfolioSymbols)
+      console.info('sending symbol to Stock server with ' + this.portfolioSymbol);
+      // const payload = {
+      //   symbol: this.portfolioSymbol,
+      //   accountId: accountId
+      // };
+
+      const headers = new HttpHeaders().set('Content-Type', 'application/json');
+
+      return firstValueFrom(
+        this.http.delete<string[]>(`${URL_API_TRADE_SERVER}/portfolioList?symbol=${this.portfolioSymbol}&accountId=${accountId}`, { headers })
+      );
+      
+    
+
+  }
 
 
 }

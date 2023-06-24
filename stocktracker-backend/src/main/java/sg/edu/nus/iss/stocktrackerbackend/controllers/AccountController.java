@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -29,6 +30,7 @@ import jakarta.json.JsonObject;
 import sg.edu.nus.iss.stocktrackerbackend.models.Account;
 
 import sg.edu.nus.iss.stocktrackerbackend.models.Trade;
+import sg.edu.nus.iss.stocktrackerbackend.models.Watchlist;
 import sg.edu.nus.iss.stocktrackerbackend.services.AccountException;
 import sg.edu.nus.iss.stocktrackerbackend.services.AccountService;
 
@@ -332,7 +334,7 @@ public class AccountController {
     @GetMapping(path="/portfolio", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<String> getPortfolioList(@RequestParam(required=true) String accountId) throws IOException{
-        // Integer num = weatherSvc.getWeather(city);
+     
         System.out.println("I am in getPortfolio server");
         System.out.println(">>>>>>>>accountId in controller>>>>>" + accountId);
        
@@ -351,73 +353,23 @@ public class AccountController {
     }
 
 
+    @DeleteMapping(path="/portfolioList", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    // public ResponseEntity<String> saveWatchlist(@RequestBody String[] symbols) {
+        public ResponseEntity<String> deleteFromPortfolio(@RequestParam("symbol") String symbol, 
+                                                        @RequestParam("accountId") String accountId) {
+
+        System.out.println(">>>>The symbol received is>>>" + symbol);
+        System.out.println(">>>>The accountId received is>>>" + accountId);
+        String deletedSymbol = accSvc.deleteFromPortfolio(symbol, accountId);
+        JsonObject resp = Json.createObjectBuilder()
+                .add("symbol", deletedSymbol)
+                .build();
     
-    // @PutMapping(path="/update", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    // @ResponseBody
-	// public ResponseEntity<String> update(@RequestParam MultiValueMap<String, String> form) {
+            return ResponseEntity.ok(resp.toString());
 
-    //     System.out.printf(">>> I am inside Controller Register>>>>>\n");
+	}
 
-    //     String accountId = form.getFirst("account_id");
-    //     String name = form.getFirst("name");
-    //     String username = form.getFirst("username");
-    //     String password = form.getFirst("password");
-    //     String mobileNo = form.getFirst("mobile_no");
-    //     String nationality = form.getFirst("nationality");
-    //     String address = form.getFirst("address");
-    //     String dob = form.getFirst("date_of_birth");
-
-    //     System.out.println(">>> The accountId for update is >>>>>" + accountId);
-    //     System.out.println(">>> The username for update is >>>>>" + username);
-    //     System.out.println(">>> The password for update is >>>>>" + password);
-    //     System.out.println(">>> The date for update is >>>>>" + dob);
-
-
-    //     String pattern = "yyyy-MM-dd";
-    //     DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
-    //     LocalDate dateOfBirth = LocalDate.parse(dob, formatter);
-    //     System.out.println(dateOfBirth);
-
-    //     //For updating account
-    //     Account account = new Account(accountId, name, username, mobileNo, password, nationality,address,dateOfBirth);
-    //     JsonObject resp = null;
-
-      
-    //         Account registeredAccount;
-    //         try {
-    //             registeredAccount = accSvc.updateAccount(account);
-    //             resp = Json.createObjectBuilder()
-    //             .add("account_id", registeredAccount.getAccountId())
-    //             .add("username", registeredAccount.getUsername())
-    //             .add("timestamp", (new Date()).toString())
-    //             .add("status", "updated")
-    //             .build();
-
-    //         System.out.printf(">>>Successfully updated>>>>>\n");   
-    //         return ResponseEntity.ok(resp.toString());
-
-    //         } catch (AccountException e) {
-        
-    //         String errorMessage = e.getMessage();
-    //         //  String errorMessage = "Email has been taken";
-    //          System.out.printf(">>>Account Exception occured>>>>>\n");   
-    //         resp = Json.createObjectBuilder()
-    //         .add("error", errorMessage)
-    //         .build();
-            
-    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-    //         .body(resp.toString());
-    //         }
-        
-
-        
-
-
-
-    // }
-        
-        
-    
 
 
 }

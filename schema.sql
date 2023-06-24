@@ -43,7 +43,7 @@ CREATE TABLE trades (
     currency VARCHAR(10),
     fee NUMERIC(10,2),
     total NUMERIC(15,2),
-    FOREIGN KEY (portfolio_id) REFERENCES portfolio(id)
+    FOREIGN KEY (portfolio_id) REFERENCES portfolio(id) ON DELETE CASCADE
 );
 
 

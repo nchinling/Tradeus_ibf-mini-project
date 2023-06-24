@@ -102,6 +102,13 @@ public class AccountRepository {
     return portfolioSymbols;
     }
 
+
+    public String deleteFromPortfolio(String symbol, String accountId) {
+        jdbcTemplate.update(DELETE_SYMBOL_BY_ACCOUNTID, symbol, accountId);
+    
+        return symbol;
+    }
+
   
 
 }

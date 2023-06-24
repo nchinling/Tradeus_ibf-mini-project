@@ -209,8 +209,8 @@ export class DashboardComponent implements OnInit, OnChanges{
     const totalInvestment = portfolioData.reduce((total, data) => total + data.buy_total_price, 0);
     return (totalReturn / totalInvestment) * 100;
   }
-  
 
+  
 
 
 
