@@ -145,7 +145,24 @@ export interface PortfolioData{
     total_current_price: number
     total_return: number
     total_percentage_change: number
-    // annualised_profit: number
+    datetime: Date
+
+}
+
+export interface AnnualisedPortfolioData{
+
+    account_id: string
+    symbol: string
+    stock_name: string
+    exchange: string
+    currency: string
+    units: number
+    buy_unit_price: number
+    buy_total_price: number
+    unit_current_price: number
+    total_current_price: number
+    total_return: number
+    annualised_profit: number
     datetime: Date
 
 }

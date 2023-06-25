@@ -69,7 +69,6 @@ public class ChartController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
         .body("Stock information not available for the provided symbol.");
             
-        
     }
 
 

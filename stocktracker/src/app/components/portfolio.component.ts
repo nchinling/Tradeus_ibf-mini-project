@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable, Subject, filter, firstValueFrom, from, mergeMap, of, switchMap } from 'rxjs';
 import { AccountService } from '../account.service';
-import { PortfolioData, RegisterResponse, Stock, StockInfo, TradeData, TradeResponse, UserData } from '../models';
+import { AnnualisedPortfolioData, PortfolioData, RegisterResponse, Stock, StockInfo, TradeData, TradeResponse, UserData } from '../models';
 import { StockService } from '../stock.service';
 
 @Component({
@@ -17,6 +17,7 @@ export class PortfolioComponent {
   stockInfoList$!: Promise<StockInfo[]>
   portfolioSymbols$!:Promise<string[]>
   portfolioData$!:Promise<PortfolioData[]>
+  annualisedPortfolioData$!:Observable<AnnualisedPortfolioData[]>
 
   tradeResponse$!: Promise<TradeResponse>
   stockSearch$!: Observable<StockInfo[]>
@@ -51,6 +52,8 @@ export class PortfolioComponent {
     this.username = this.accountSvc.username
     this.portfolioForm = this.createForm()
     this.errorMessage$ = this.accountSvc.onErrorMessage;
+
+    this.annualisedPortfolioData$ = this.stockSvc.getAnnualisedPortfolioData(this.accountId);
 
     this.portfolioSymbols$ = this.stockSvc.getPortfolioSymbols(this.accountId)
     console.info('this.symbols$ is' + this.portfolioSymbols$)
@@ -131,6 +134,8 @@ export class PortfolioComponent {
       //refer to researchComp
       this.portfolioSymbols$ = this.stockSvc.getPortfolioSymbols(this.accountId)
       console.info('this.symbols$ is' + this.portfolioSymbols$)
+
+
   
       this.portfolioSymbols$.then((symbol: string[]) => {
         console.info('Symbols:', symbol);

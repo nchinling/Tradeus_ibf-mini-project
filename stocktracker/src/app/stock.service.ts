@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
-import { Subject, lastValueFrom, tap, map, interval, firstValueFrom, debounceTime } from "rxjs";
-import { Market, MarketIndex, PortfolioData, Stock, StockInfo, StockProfile } from "./models";
+import { Subject, lastValueFrom, tap, map, interval, firstValueFrom, debounceTime, Observable } from "rxjs";
+import { AnnualisedPortfolioData, Market, MarketIndex, PortfolioData, Stock, StockInfo, StockProfile } from "./models";
 
 const URL_API_TRADE_SERVER = 'http://localhost:8080/api'
 
@@ -13,6 +13,7 @@ export class StockService {
     onStockRequest = new Subject<Stock>()
     onStockProfileRequest = new Subject<StockProfile>()
     onPortfolioDataRequest = new Subject<PortfolioData>()
+    onAnnualisedPortfolioDataRequest = new Subject<AnnualisedPortfolioData[]>()
     onMarketRequest = new Subject<MarketIndex>()
 
     onStockSelection = new Subject<string>();
@@ -211,7 +212,7 @@ export class StockService {
         .set('symbol', symbol)
         .set('interval', interval)
         .set('account_id', account_id)
-        console.info('the symbol in getWatchlistData is ' + symbol)
+   
   
         const request =  lastValueFrom(
           this.http.get<PortfolioData>(`${URL_API_TRADE_SERVER}/quote/portfolio`, { params: queryParams })
@@ -236,7 +237,53 @@ export class StockService {
 
     }
 
+
+    
+  // getAnnualisedPortfolioData(account_id: string): Observable<AnnualisedPortfolioData[]> {
+  //   // const portfolioListRequests: Promise<AnnualisedPortfolioData>[] = [];
+  //   const interval = '5min'
+   
+  //     const queryParams = new HttpParams()
+  //       .set('interval', interval)
+  //       .set('account_id', account_id)
+     
   
+    
+  //       return this.http.get<AnnualisedPortfolioData[]>(`${URL_API_TRADE_SERVER}/quote/portfolio/annualised`, { params: queryParams })
+  //           .pipe(
+  //             tap(resp => this.onAnnualisedPortfolioDataRequest.next(resp)),
+  //             map(resp => ({ account_id: resp.account_id, symbol: resp.symbol, stock_name: resp.stock_name, 
+  //                         exchange: resp.exchange, currency: resp.currency,
+  //                         units:resp.units, buy_unit_price:resp.buy_unit_price, buy_total_price:resp.buy_total_price,
+  //                         unit_current_price:resp.unit_current_price, total_current_price:resp.total_current_price, 
+  //                         total_return: resp.total_return, 
+  //                         datetime:resp.datetime, annualised_profit: resp.annualised_profit
+  //                         }))
+  //           )
+
+  //   }
+
+  getAnnualisedPortfolioData(account_id: string): Observable<AnnualisedPortfolioData[]> {
+    const interval = '5min';
+  
+    const queryParams = new HttpParams()
+      .set('interval', interval)
+      .set('account_id', account_id);
+  
+    return this.http.get<AnnualisedPortfolioData[]>(`${URL_API_TRADE_SERVER}/quote/portfolio/annualised`, { params: queryParams })
+      .pipe(
+        tap(resp => this.onAnnualisedPortfolioDataRequest.next(resp)),
+        map(portfolioList => portfolioList.map(portfolioItem => ({
+          account_id: portfolioItem.account_id, symbol: portfolioItem.symbol, stock_name: portfolioItem.stock_name,
+          exchange: portfolioItem.exchange, currency: portfolioItem.currency, units: portfolioItem.units,
+          buy_unit_price: portfolioItem.buy_unit_price, buy_total_price: portfolioItem.buy_total_price,
+          unit_current_price: portfolioItem.unit_current_price, total_current_price: portfolioItem.total_current_price,
+          total_return: portfolioItem.total_return, datetime: portfolioItem.datetime, annualised_profit: portfolioItem.annualised_profit
+        })))
+      );
+  }
+  
+
     removeFromPortfolio(index: number, accountId: string){
       
       // this.portfolioSymbols.splice(index, 1)

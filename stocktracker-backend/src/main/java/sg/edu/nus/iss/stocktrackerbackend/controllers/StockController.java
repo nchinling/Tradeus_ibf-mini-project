@@ -20,8 +20,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.json.Json;
+import jakarta.json.JsonArray;
 import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonObject;
+import jakarta.json.JsonObjectBuilder;
 import sg.edu.nus.iss.stocktrackerbackend.models.Market;
 import sg.edu.nus.iss.stocktrackerbackend.models.Portfolio;
 import sg.edu.nus.iss.stocktrackerbackend.models.Stock;
@@ -437,7 +439,7 @@ public class StockController {
                 .add("total_current_price", portfolio.getTotalCurrentPrice())
                 .add("total_return", portfolio.getTotalReturn())
                 .add("total_percentage_change", portfolio.getTotalPercentageChange())
-                // .add("annualised_proft", portfolio.getAnnualisedProfit())
+                // .add("annualised_profit", portfolio.getAnnualisedProfit())
                 .add("datetime", portfolio.getDateTime().toString())
                 .build();
                 System.out.println(">>>resp: " + resp);
@@ -445,6 +447,58 @@ public class StockController {
 
             System.out.println(">>>>>Portfolio" + portfolio.getStockName() +"total units is>>>>" + portfolio.getUnits());
             return ResponseEntity.ok(resp.toString());
+        // } 
+        // // Handle the case when the Optional is empty
+        // return ResponseEntity.status(HttpStatus.NOT_FOUND)
+        // .body("Portfolio information not available for the provided symbol.");
+        
+        
+    }
+
+
+    
+    @GetMapping(path="/quote/portfolio/annualised")
+    @ResponseBody
+    public ResponseEntity<String> getAnnualisedPortfolioData(@RequestParam(defaultValue = "1day",required=false) String interval,
+    @RequestParam(required=true) String account_id) throws IOException{
+        // Integer num = weatherSvc.getWeather(city);
+        System.out.println("I am in getStockData server");
+
+        System.out.println(">>>>>>>>Interval in controller>>>>>" + interval);
+        System.out.println(">>>>>>>>accountId in controller>>>>>" + account_id);
+
+        String accountId = account_id;
+        
+
+  
+            List<Portfolio> portfolio = stockSvc.getAnnualisedPortfolioData(accountId, interval);
+
+            //save portfolio data in redis/mongo for quick retrieval
+            // stockSvc.saveStockData(stock, interval);
+
+            JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+
+            for (Portfolio portfolioItem : portfolio) {
+                JsonObjectBuilder portfolioBuilder = Json.createObjectBuilder()
+                        .add("symbol", portfolioItem.getSymbol())
+                        .add("stock_name", portfolioItem.getStockName())
+                        .add("exchange", portfolioItem.getExchange())
+                        .add("currency", portfolioItem.getCurrency())
+                        .add("units", portfolioItem.getUnits())
+                        .add("buy_unit_price", portfolioItem.getBuyUnitPrice())
+                        .add("buy_total_price", portfolioItem.getBuyTotalPrice())
+                        .add("unit_current_price", portfolioItem.getUnitCurrentPrice())
+                        .add("total_current_price", portfolioItem.getTotalCurrentPrice())
+                        .add("total_return", portfolioItem.getTotalReturn())
+                        .add("annualised_profit", portfolioItem.getAnnualisedProfit())
+                        .add("datetime", portfolioItem.getDateTime().toString());
+                        
+                arrayBuilder.add(portfolioBuilder);
+            }
+
+            JsonArray respArray = arrayBuilder.build();
+            System.out.println(">>>sending back jsonarray annualised portfolio data.>>>>>Hooray: ");
+            return ResponseEntity.ok(respArray.toString());
         // } 
         // // Handle the case when the Optional is empty
         // return ResponseEntity.status(HttpStatus.NOT_FOUND)

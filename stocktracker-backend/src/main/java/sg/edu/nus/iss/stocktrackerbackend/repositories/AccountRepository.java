@@ -74,6 +74,11 @@ public class AccountRepository {
         
     }
 
+    public List<Trade> getAnnualisedTradeData(String accountId){
+        return jdbcTemplate.query(SELECT_TRADES_BY_ACCOUNTID_AND_SYMBOL_ANNUALISED, 
+        new AnnualisedTradeRowMapper() , new Object[]{accountId});    
+    }
+
 
     //insert into portfolio and trades table
     @Transactional(rollbackFor = AccountException.class)

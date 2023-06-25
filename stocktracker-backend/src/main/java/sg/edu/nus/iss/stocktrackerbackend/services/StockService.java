@@ -1,19 +1,23 @@
 package sg.edu.nus.iss.stocktrackerbackend.services;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.Period;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+
 
 import sg.edu.nus.iss.stocktrackerbackend.models.Market;
 import sg.edu.nus.iss.stocktrackerbackend.models.Portfolio;
@@ -299,6 +303,7 @@ public class StockService {
             stock = s.get();
 
         Portfolio calculatedP = getCalculations(trade.getUnits(), stock.getLivePrice(),trade.getTotal());
+        System.out.println(">>>>The total percentage change is >>>>>" + calculatedP.getTotalPercentageChange() );
         Portfolio p = new Portfolio(trade.getAccountId(), trade.getSymbol(), trade.getStockName(),
                         trade.getExchange(), trade.getCurrency(), trade.getUnits(), trade.getPrice(),trade.getTotal(),
                         stock.getLivePrice(), calculatedP.getTotalCurrentPrice(), 
@@ -308,6 +313,38 @@ public class StockService {
         return p;
         
     }
+
+    public List<Portfolio> getAnnualisedPortfolioData(String accountId, String interval) throws IOException {
+    System.out.println(">>>>>>>> I am in getPortfolioDataService>>>>>>");
+    Optional<Stock> s;
+    // Portfolio p = new Portfolio();
+    List<Trade> trades = accountRepo.getAnnualisedTradeData(accountId);
+    
+    List<Portfolio> portfolio = new ArrayList<Portfolio>();
+    if (!trades.isEmpty()) {
+    for (Trade trade : trades) {
+        Stock stock;
+        System.out.println(">>> The totalPurchase for trade symbol" + trade.getSymbol()+ "is>>>" + trade.getTotal());
+        s = getLivePrice(trade.getSymbol(), interval);
+        stock = s.get();
+        Portfolio calculatedP = getAnnualisedCalculations(trade.getUnits(), stock.getLivePrice(),trade.getTotal(), trade.getDate());
+        System.out.println(">>> The annualisedProfit is>>>" + calculatedP.getAnnualisedProfit());
+        Portfolio p = new Portfolio(trade.getSymbol(), trade.getStockName(),
+        trade.getExchange(), trade.getCurrency(), trade.getUnits(), trade.getPrice(),trade.getTotal(),
+        stock.getLivePrice(), trade.getUnits()*stock.getLivePrice(), 
+        calculatedP.getTotalReturn(), calculatedP.getAnnualisedProfit(), trade.getDate());
+        System.out.println(">>> The stock price is>>>" + stock.getLivePrice());
+        portfolio.add(p);
+    }
+    } else {
+        // Handle the case when no trades are found
+        System.out.println("No trades found.");
+    }
+
+    return portfolio;
+    
+}
+
 
     private Portfolio getCalculations(Double units, Double currentUnitPrice, Double totalBuyPrice){
 
@@ -319,35 +356,39 @@ public class StockService {
         return p;
     }
 
-    //from trades
-    // private String exchange;
-    // private String stockName;
-    // private String symbol;
-    // private Double units;
-    // private Double price;
-    // private Double fee;
-    // private LocalDate date;
-    // private Double total;
 
+    private Portfolio getAnnualisedCalculations(Double units, Double currentUnitPrice, Double totalBuyPrice, LocalDate buyDate) {
+        Double totalCurrentPrice = units * currentUnitPrice;
+        Double totalReturn = totalCurrentPrice - totalBuyPrice;
 
-    //             //form portfolio
-    //             .add("account_id", portfolio.getAccountId())
-    //             .add("symbol", portfolio.getSymbol())
-    //             .add("stock_name", portfolio.getStockName())
-    //             .add("exchange", portfolio.getExchange())
-    //             .add("currency", portfolio.getCurrency())
-    //             .add("units", portfolio.getUnits())
-    //             .add("buy_unit_price", portfolio.getBuyUnitPrice())
-    //             .add("buy_total_price", portfolio.getBuyTotalPrice())
-    //             .add("unit_current_price", portfolio.getUnitCurrentPrice())
-    //             .add("total_current_price", portfolio.getTotalCurrentPrice())
-    //             .add("total_return", portfolio.getTotalReturn())
-    //             .add("total_percentage_change", portfolio.getTotalPercentageChange())
-    //             .add("datetime", portfolio.getDateTime().toString())
-    //             .build();
+        System.out.println("The total current price is: " + totalCurrentPrice);
+        System.out.println("The total return is: " + totalReturn);
 
+        LocalDate currentDate = LocalDate.now();
+        // Period period = Period.between(buyDate, currentDate);
+        long daysHeld = ChronoUnit.DAYS.between(buyDate, currentDate);
+        if (daysHeld == 0){
+            daysHeld = 1;
+        }
 
+        System.out.println("The number of days held is: " + daysHeld);
 
+        Double totalPercentageChange = (totalReturn / totalBuyPrice) * 100;
+        BigDecimal percentageChange = BigDecimal.valueOf(totalPercentageChange/100);
+        BigDecimal exponent = BigDecimal.valueOf(365.0 / daysHeld);
+        BigDecimal one = BigDecimal.ONE;
+        double base = one.add(percentageChange).doubleValue();
+        double exp = exponent.doubleValue();
+        double annualisedProfitValue = (Math.pow(base, exp) - 1)*100;
 
+        BigDecimal annualisedProfit = BigDecimal.valueOf(annualisedProfitValue);
+
+        System.out.println("Percentage Change: " + percentageChange.toString());
+        System.out.println("Exponent: " + exponent.toString());
+        System.out.println("Annualised Profit: " + annualisedProfit.toString());
+
+        Portfolio p = new Portfolio(totalReturn, annualisedProfit);
+        return p;
+    }
 
 }

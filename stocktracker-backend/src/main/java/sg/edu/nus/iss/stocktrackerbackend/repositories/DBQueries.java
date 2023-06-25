@@ -48,6 +48,11 @@ public class DBQueries {
             ORDER BY t.symbol
         """;
     
+    public static final String SELECT_TRADES_BY_ACCOUNTID_AND_SYMBOL_ANNUALISED = """
+        SELECT * FROM trades AS t WHERE t.account_id = ?
+    """;
+
+
     public static final String DELETE_SYMBOL_BY_ACCOUNTID ="DELETE FROM portfolio WHERE symbol = ? AND account_id = ?";
 
 

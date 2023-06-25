@@ -1,5 +1,6 @@
 package sg.edu.nus.iss.stocktrackerbackend.models;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class Portfolio {
@@ -16,12 +17,19 @@ public class Portfolio {
     private Double totalCurrentPrice;
     private Double totalReturn;
     private Double totalPercentageChange;
-    private Double annualisedProfit;
+    private BigDecimal annualisedProfit;
 
 
     private LocalDate dateTime;
     public Portfolio() {
     }
+
+    
+    public Portfolio(Double totalReturn, BigDecimal annualisedProfit) {
+        this.totalReturn = totalReturn;
+        this.annualisedProfit = annualisedProfit;
+    }
+
 
     public Portfolio(Double totalCurrentPrice, Double totalReturn, Double totalPercentageChange) {
         this.totalCurrentPrice = totalCurrentPrice;
@@ -29,6 +37,23 @@ public class Portfolio {
         this.totalPercentageChange = totalPercentageChange;
     }
 
+    
+    public Portfolio(String symbol, String stockName, String exchange, String currency, Double units,
+            Double buyUnitPrice, Double buyTotalPrice, Double unitCurrentPrice, Double totalCurrentPrice,
+            Double totalReturn, BigDecimal annualisedProfit, LocalDate dateTime) {
+        this.symbol = symbol;
+        this.stockName = stockName;
+        this.exchange = exchange;
+        this.currency = currency;
+        this.units = units;
+        this.buyUnitPrice = buyUnitPrice;
+        this.buyTotalPrice = buyTotalPrice;
+        this.unitCurrentPrice = unitCurrentPrice;
+        this.totalCurrentPrice = totalCurrentPrice;
+        this.totalReturn = totalReturn;
+        this.annualisedProfit = annualisedProfit;
+        this.dateTime = dateTime;
+    }
 
     public Portfolio(String accountId, String symbol, String stockName, String exchange, String currency, Double units,
             Double buyUnitPrice, Double buyTotalPrice, Double unitCurrentPrice, Double totalCurrentPrice,
@@ -50,7 +75,7 @@ public class Portfolio {
 
     public Portfolio(String accountId, String symbol, String stockName, String exchange, String currency, Double units,
             Double buyUnitPrice, Double buyTotalPrice, Double unitCurrentPrice, Double totalCurrentPrice,
-            Double totalReturn, Double totalPercentageChange, Double annualisedProfit, LocalDate dateTime) {
+            Double totalReturn, Double totalPercentageChange, BigDecimal annualisedProfit, LocalDate dateTime) {
         this.accountId = accountId;
         this.symbol = symbol;
         this.stockName = stockName;
@@ -142,11 +167,11 @@ public class Portfolio {
         this.totalPercentageChange = totalPercentageChange;
     }
 
-    public Double getAnnualisedProfit() {
+    public BigDecimal getAnnualisedProfit() {
         return annualisedProfit;
     }
 
-    public void setAnnualisedProfit(Double annualisedProfit) {
+    public void setAnnualisedProfit(BigDecimal annualisedProfit) {
         this.annualisedProfit = annualisedProfit;
     }
 

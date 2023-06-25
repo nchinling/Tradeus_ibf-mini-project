@@ -22,6 +22,8 @@ public class TradeRowMapper implements RowMapper<Trade> {
         trade.setStockName(rs.getString("stock_name"));
         trade.setUnits(rs.getDouble("total_units"));
         trade.setPrice(rs.getDouble("buy_price"));
+        // Date buyDate = rs.getDate("buy_date");
+        // trade.setDate(buyDate.toLocalDate());
         trade.setCurrency(rs.getString("currency"));
         trade.setFee(rs.getDouble("total_fee"));
         trade.setTotal(rs.getDouble("total_sum"));

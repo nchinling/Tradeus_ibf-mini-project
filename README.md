@@ -50,6 +50,16 @@ It is built with Angular(frontend), Spring Boot (backend) with SQL, Redis and Mo
 - started on annualised return portfolio
 
 22 June (Thu)
-- 
+- implemented delete for portfolio
+
+23 June (Fri)
+- improved sql table
+
+24 June (Sat)
+- implemented delete for portfolio
+25 June (Sun)
+- used nav tabs
+
+
 
 
