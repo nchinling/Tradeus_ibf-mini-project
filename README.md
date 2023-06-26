@@ -59,7 +59,8 @@ It is built with Angular(frontend), Spring Boot (backend) with SQL, Redis and Mo
 - implemented delete for portfolio
 25 June (Sun)
 - used nav tabs
+- implemented delete for portfolio
 
-
-
+26 June (Mon)
+- removed bugs for portfolio
 

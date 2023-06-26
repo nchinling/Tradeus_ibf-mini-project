@@ -134,9 +134,8 @@ export class PortfolioComponent {
       //refer to researchComp
       this.portfolioSymbols$ = this.stockSvc.getPortfolioSymbols(this.accountId)
       console.info('this.symbols$ is' + this.portfolioSymbols$)
+      this.annualisedPortfolioData$ = this.stockSvc.getAnnualisedPortfolioData(this.accountId);
 
-
-  
       this.portfolioSymbols$.then((symbol: string[]) => {
         console.info('Symbols:', symbol);
         this.portfolioData$ = this.stockSvc.getPortfolioData(symbol, this.accountId);
@@ -214,7 +213,7 @@ export class PortfolioComponent {
   }
 
   
-  removeFromPortfolio(index: number) {
+  removeFromCumulativePortfolio(index: number) {
     const symbolToRemove: string = this.stockSvc.portfolioSymbols[index];
     console.info('To remove symbol: ' + symbolToRemove);
   
@@ -226,6 +225,7 @@ export class PortfolioComponent {
       .then((symbol: string[]) => {
         console.info('The updated list of Symbols after removal are:', symbol);
         this.portfolioSymbols$ = Promise.resolve(symbol);
+        this.annualisedPortfolioData$ = this.stockSvc.getAnnualisedPortfolioData(this.accountId);
         return this.stockSvc.getPortfolioData(symbol, this.accountId);
       })
       .then((allPortfolioData: PortfolioData[]) => {
@@ -234,18 +234,36 @@ export class PortfolioComponent {
       .catch((error) => {
         console.error(error);
       });
+      // this.annualisedPortfolioData$ = this.stockSvc.getAnnualisedPortfolioData(this.accountId);
   }
 
-  // this.portfolioSymbols$ = this.stockSvc.getPortfolioSymbols(this.accountId)
-  // console.info('this.symbols$ is' + this.portfolioSymbols$)
 
-  // this.portfolioSymbols$.then((symbol: string[]) => {
-  //   console.info('Symbols:', symbol);
-  //   this.portfolioData$ = this.stockSvc.getPortfolioData(symbol, this.accountId);
-  // }).catch((error) => {
-  //   console.error(error);
-  // });
   
+  removeFromAnnualisedPortfolio(symbol: string, date: Date) {
+    
+    console.info('To remove symbol: ' + symbol);
+  
+    this.stockSvc.removeFromAnnualisedPortfolio(symbol, date, this.accountId)
+      .then(() => {
+        console.info('Symbol removed successfully');
+        return this.stockSvc.getPortfolioSymbols(this.accountId);
+      })
+      .then((symbol: string[]) => {
+        console.info('The updated list of Symbols after removal are:', symbol);
+        this.portfolioSymbols$ = Promise.resolve(symbol);
+        this.annualisedPortfolioData$ = this.stockSvc.getAnnualisedPortfolioData(this.accountId);
+        return this.stockSvc.getPortfolioData(symbol, this.accountId);
+      })
+      .then((allPortfolioData: PortfolioData[]) => {
+        this.portfolioData$ = Promise.resolve(allPortfolioData);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+      // this.annualisedPortfolioData$ = this.stockSvc.getAnnualisedPortfolioData(this.accountId);
+  }
+
+
 
 
 

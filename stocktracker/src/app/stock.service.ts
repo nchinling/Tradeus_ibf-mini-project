@@ -300,8 +300,22 @@ export class StockService {
       return firstValueFrom(
         this.http.delete<string[]>(`${URL_API_TRADE_SERVER}/portfolioList?symbol=${this.portfolioSymbol}&accountId=${accountId}`, { headers })
       );
+  }
+
+
+  removeFromAnnualisedPortfolio(symbol: string, date: Date, accountId: string){
       
-    
+    console.info('sending symbol to Stock server with ' + this.portfolioSymbol);
+    // const payload = {
+    //   symbol: this.portfolioSymbol,
+    //   accountId: accountId
+    // };
+
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+
+    return firstValueFrom(
+      this.http.delete<string[]>(`${URL_API_TRADE_SERVER}/tradesList?symbol=${symbol}&date=${date}&accountId=${accountId}`, { headers })
+    );
 
   }
 

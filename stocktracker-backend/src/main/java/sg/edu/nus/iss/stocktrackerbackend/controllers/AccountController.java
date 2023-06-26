@@ -1,6 +1,8 @@
 package sg.edu.nus.iss.stocktrackerbackend.controllers;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -367,6 +369,42 @@ public class AccountController {
                 .build();
     
             return ResponseEntity.ok(resp.toString());
+
+	}
+
+
+    @DeleteMapping(path="/tradesList", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    // public ResponseEntity<String> saveWatchlist(@RequestBody String[] symbols) {
+        public ResponseEntity<String> deleteFromAnnualisedPortfolio(@RequestParam("symbol") String symbol, 
+            @RequestParam("date") String stringDate,@RequestParam("accountId") String accountId) {
+
+        
+        System.out.println(">>>>The symbol received is>>>" + symbol);
+        System.out.println(">>>>The accountId received is>>>" + accountId);
+        System.out.println(">>>>The date received is>>>" + stringDate);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date;
+        JsonObject resp= null;
+        try {
+            date = dateFormat.parse(stringDate);
+            String deletedSymbol = accSvc.deleteFromTrades(symbol, date, accountId);
+            resp = Json.createObjectBuilder()
+                .add("symbol", deletedSymbol)
+                .build();
+    
+            return ResponseEntity.ok(resp.toString());
+        } catch (ParseException e) {
+           
+            e.printStackTrace();
+        }
+
+            // Handle the case when an exception occurs
+        resp = Json.createObjectBuilder()
+            .add("error", "An error occurred")
+            .build();
+
+        return ResponseEntity.ok(resp.toString());
 
 	}
 

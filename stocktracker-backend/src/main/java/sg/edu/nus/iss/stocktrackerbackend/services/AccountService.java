@@ -1,6 +1,7 @@
 package sg.edu.nus.iss.stocktrackerbackend.services;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -117,6 +118,11 @@ public class AccountService {
     public String deleteFromPortfolio(String symbol, String accountId) {
         System.out.println(">>>>>>>> I am in Service >>> deleteFromPortfolio");
         return accountRepo.deleteFromPortfolio(symbol, accountId);
+    }
+
+    public String deleteFromTrades(String symbol, Date date, String accountId) {
+        System.out.println(">>>>>>>> I am in Service >>> deleteFromPortfolio");
+        return accountRepo.deleteFromTrades(symbol, date, accountId);
     }
 
 

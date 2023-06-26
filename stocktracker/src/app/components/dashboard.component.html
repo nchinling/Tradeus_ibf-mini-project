@@ -20,7 +20,7 @@
   <br>
 
 
-  <div class="container-fluid" *ngIf="(portfolioData$ | async) as portfolioData; else blank">
+  <div class="container-fluid" *ngIf="(portfolioData$ | async) as portfolioData;">
     <p class="total-return" *ngIf="portfolioData.length > 0">
       <strong>Total Return: 
       <span [ngClass]="{ 'red': calculateTotalReturn(portfolioData) < 0, 'green': calculateTotalReturn(portfolioData) > 0 }">
@@ -38,245 +38,35 @@
     </p>
   </div>
   
-  
-      <!-- <table *ngIf="(portfolioData$ | async) as portfolioData">
-        <thead *ngIf="portfolioData.length > 0">
-          <tr>
-            <th>Stock Name</th><th>Exchange</th>
-            <th>Units</th><th>Avg Unit Price</th><th>Buy Total Price</th>
-            <th>Unit Current Price</th><th>Total Current Price</th>
-            <th>Total Return</th><th>% Change</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let data of portfolioData;">
-            <td>{{ data.stock_name }}</td><td>{{ data.exchange.toUpperCase()}}</td>
-            <td>{{ data.units }}</td><td>{{ data.buy_unit_price | number: '1.2-2' }}</td>
-            <td>{{data.currency}} {{ data.buy_total_price }} </td><td>{{ data.unit_current_price }}</td>
-            <td>{{ data.currency }} {{ data.total_current_price | number: '1.2-2' }}</td>
-            <td [ngClass]="{ 'red': data.total_return < 0, 
-            'green': data.total_return > 0 }">
-            <span class="arrow-up" *ngIf="data.total_return > 0"><strong>&#9650; &nbsp;{{ data.total_return | number: '1.2-2'  }} {{ data.currency }}</strong></span>
-            <span class="arrow-down" *ngIf="data.total_return < 0"><strong>&#9660; &nbsp;{{ data.total_return | number: '1.2-2'  }} {{ data.currency }}</strong></span>
-    
-          </td>
-  
-            <td [ngClass]="{ 'red': data.total_percentage_change < 0, 
-            'green': data.total_percentage_change > 0 }">
-            <span class="arrow-up" *ngIf="data.total_percentage_change > 0"><strong>&#9650; &nbsp;{{ data.total_percentage_change| number: '1.2-2'  }} %</strong></span>
-            <span class="arrow-down" *ngIf="data.total_percentage_change < 0"><strong>&#9660; &nbsp;{{ data.total_percentage_change | number: '1.2-2'  }} %</strong></span></td>
-          
-          </tr>
-        </tbody>
-      </table>
-      -->
-      <br>
 
-
-  <!-- For accordion -->
-  <!-- <div class="accordion accordion-flush" id="accordionFlushExample">
-    <div class="accordion-item">
-      <h2 class="accordion-header" id="flush-headingOne">
-        <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="true" aria-controls="flush-collapseOne">
-         Portfolio
-        </button>
-      </h2>
-      <div id="flush-collapseOne" class="accordion-collapse collapse show" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
-        <div class="accordion-body">
-          
-          <table *ngIf="(portfolioData$ | async) as portfolioData">
-            <thead *ngIf="portfolioData.length > 0">
-              <tr>
-                <th>Stock Name</th><th>Exchange</th>
-                <th>Units</th><th>Avg Unit Price</th><th>Buy Total Price</th>
-                <th>Unit Current Price</th><th>Total Current Price</th>
-                <th>Total Return</th><th>% Change</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let data of portfolioData;">
-                <td>{{ data.stock_name }}</td><td>{{ data.exchange.toUpperCase()}}</td>
-                <td>{{ data.units }}</td><td>{{ data.buy_unit_price | number: '1.2-2' }}</td>
-                <td>{{data.currency}} {{ data.buy_total_price }} </td><td>{{ data.unit_current_price }}</td>
-                <td>{{ data.currency }} {{ data.total_current_price | number: '1.2-2' }}</td>
-                <td [ngClass]="{ 'red': data.total_return < 0, 
-                'green': data.total_return > 0 }">
-                <span class="arrow-up" *ngIf="data.total_return > 0"><strong>&#9650; &nbsp;{{ data.total_return | number: '1.2-2'  }} {{ data.currency }}</strong></span>
-                <span class="arrow-down" *ngIf="data.total_return < 0"><strong>&#9660; &nbsp;{{ data.total_return | number: '1.2-2'  }} {{ data.currency }}</strong></span>
-        
-              </td>
-      
-                <td [ngClass]="{ 'red': data.total_percentage_change < 0, 
-                'green': data.total_percentage_change > 0 }">
-                <span class="arrow-up" *ngIf="data.total_percentage_change > 0"><strong>&#9650; &nbsp;{{ data.total_percentage_change| number: '1.2-2'  }} %</strong></span>
-                <span class="arrow-down" *ngIf="data.total_percentage_change < 0"><strong>&#9660; &nbsp;{{ data.total_percentage_change | number: '1.2-2'  }} %</strong></span></td>
-              
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-
-
-
-    <div class="accordion-item">
-      <h2 class="accordion-header" id="flush-headingOne">
-        <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="true" aria-controls="flush-collapseOne">
-         Watchlist
-        </button>
-      </h2>
-      <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
-        <div class="accordion-body">
-          
-   <div *ngIf="(watchList$ | async)?.length">
-    <table>
-      <thead>
-        <tr>
-          <th>#</th><th>Exch</th><th>Sym</th><th>Name</th><th>Curr</th><th>Open</th><th>High</th><th>Low</th>
-          <th>Close</th><th>Vol.</th><th>Prev. Close</th><th>Chg</th><th>Chg%</th><th>Date/Time</th><th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let stock of watchList$ | async; let i = index">
-          <td>{{ i + 1 }}</td>
-          <td>{{ stock.exchange }}</td>
-          <td class="stock-item" (click)="viewStock(stock.symbol)">{{ stock.symbol }}</td>
-          <td>{{ stock.name }}</td>
-          <td>{{ stock.currency }}</td>
-          <td>{{ stock.open | number: '1.2-2' }}</td>
-          <td>{{ stock.high | number: '1.2-2' }}</td>
-          <td>{{ stock.low | number: '1.2-2' }}</td>
-          <td>{{ stock.close | number: '1.2-2' }}</td>
-          <td>{{ stock.volume }}</td>
-          <td>{{ stock.previous_close | number: '1.2-2' }}</td>
-          <td [ngClass]="{ 'red': stock.change < 0, 
-          'green': stock.change > 0 }">{{ stock.change | number: '1.2-2' }}</td>
-          <td [ngClass]="{ 'red': stock.percent_change < 0, 
-            'green': stock.percent_change > 0 }">{{ stock.percent_change | number: '1.2-2' }}%</td>
-          <td>{{ stock.datetime | date:'dd-MM-YYYY HH:mm' }}</td>
-          <td><button class="btn btn-warning btn-sm" type="button" (click)="removeFromWatchlist(i)">Remove</button></td>
-        </tr>
-      </tbody>
-    </table>
-  </div> 
-        </div>
-      </div>
-    </div>
-
-    
-    <div class="accordion-item">
-      <h2 class="accordion-header" id="flush-headingTwo">
-        <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-          S&P 500 Top 10
-        </button>
-      </h2>
-      <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
-        <div class="accordion-body">
-          
-   <div *ngIf="(indexSnP$ | async)?.length">
-    <table>
-      <thead>
-        <tr>
-          <th>#</th><th>Exch</th><th>Sym</th><th>Name</th><th>Curr</th><th>Open</th><th>High</th><th>Low</th>
-          <th>Close</th><th>Vol.</th><th>Prev. Close</th><th>Chg</th><th>Chg%</th><th>Date/Time</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let stock of indexSnP$ | async; let i = index">
-          <td>{{ i + 1 }}</td>
-          <td>{{ stock.exchange }}</td>
-          <td class="stock-item" (click)="viewStock(stock.symbol)">{{ stock.symbol }}</td>
-          <td>{{ stock.name }}</td>
-          <td>{{ stock.currency }}</td>
-          <td>{{ stock.open | number: '1.2-2' }}</td>
-          <td>{{ stock.high | number: '1.2-2' }}</td>
-          <td>{{ stock.low | number: '1.2-2' }}</td>
-          <td>{{ stock.close | number: '1.2-2' }}</td>
-          <td>{{ stock.volume }}</td>
-          <td>{{ stock.previous_close | number: '1.2-2' }}</td>
-          <td [ngClass]="{ 'red': stock.change < 0, 
-          'green': stock.change > 0 }">{{ stock.change | number: '1.2-2' }}</td>
-          <td [ngClass]="{ 'red': stock.percent_change < 0, 
-            'green': stock.percent_change > 0 }">{{ stock.percent_change | number: '1.2-2' }}%</td>
-          <td>{{ stock.datetime | date:'dd-MM-YYYY HH:mm' }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-
-        </div>
-      </div>
-    </div>
-    <div class="accordion-item">
-      <h2 class="accordion-header" id="flush-headingThree">
-        <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
-         NASDAQ Top 10
-        </button>
-      </h2>
-      <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
-        <div class="accordion-body">
-          
-   <div *ngIf="(indexNasdaq$ | async)?.length">
-    <table>
-      <thead>
-        <tr>
-          <th>#</th><th>Exch</th><th>Sym</th><th>Name</th><th>Curr</th><th>Open</th><th>High</th><th>Low</th>
-          <th>Close</th><th>Vol.</th><th>Prev. Close</th><th>Chg</th><th>Chg%</th><th>Date/Time</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let stock of indexNasdaq$ | async; let i = index">
-          <td>{{ i + 1 }}</td>
-          <td>{{ stock.exchange }}</td>
-          <td class="stock-item" (click)="viewStock(stock.symbol)">{{ stock.symbol }}</td>
-          <td>{{ stock.name }}</td>
-          <td>{{ stock.currency }}</td>
-          <td>{{ stock.open | number: '1.2-2' }}</td>
-          <td>{{ stock.high | number: '1.2-2' }}</td>
-          <td>{{ stock.low | number: '1.2-2' }}</td>
-          <td>{{ stock.close | number: '1.2-2' }}</td>
-          <td>{{ stock.volume }}</td>
-          <td>{{ stock.previous_close | number: '1.2-2' }}</td>
-          <td [ngClass]="{ 'red': stock.change < 0, 
-          'green': stock.change > 0 }">{{ stock.change | number: '1.2-2' }}</td>
-          <td [ngClass]="{ 'red': stock.percent_change < 0, 
-            'green': stock.percent_change > 0 }">{{ stock.percent_change | number: '1.2-2' }}%</td>
-          <td>{{ stock.datetime | date:'dd-MM-YYYY HH:mm' }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-
-        </div>
-      </div>
-    </div>
-  </div>
-
-<br> -->
-
-
-<ng-template #blank><p>Loading...</p></ng-template>
-
+  <br>
 
 
 <nav>
-  <div class="nav nav-tabs" id="nav-tab" role="tablist">
-    <a class="nav-item nav-link" id="nav-portfolio-tab" data-toggle="tab" href="#nav-portfolio" role="tab" aria-controls="nav-portfolio" aria-selected="true">Portfolio</a>
-    <a class="nav-item nav-link" id="nav-watchlist-tab" data-toggle="tab" href="#nav-watchlist" role="tab" aria-controls="nav-watchlist" aria-selected="false">Watchlist</a>
-    <a class="nav-item nav-link" id="nav-snp500-tab" data-toggle="tab" href="#nav-snp500" role="tab" aria-controls="nav-snp500" aria-selected="false">S&P 500 Top 10</a>
-    <a class="nav-item nav-link" id="nav-nasdaq-tab" data-toggle="tab" href="#nav-nasdaq" role="tab" aria-controls="nav-nasdaq" aria-selected="false">NASDAQ Top 10</a>
-  </div>
+  <ul class="nav nav-tabs" id="nav-tab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" id="nav-portfolio-tab" data-toggle="tab" href="#nav-portfolio" role="tab" aria-controls="nav-portfolio" aria-selected="true">Portfolio</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="nav-watchlist-tab" data-toggle="tab" href="#nav-watchlist" role="tab" aria-controls="nav-watchlist" aria-selected="false">Watchlist</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="nav-snp500-tab" data-toggle="tab" href="#nav-snp500" role="tab" aria-controls="nav-snp500" aria-selected="false">S&amp;P 500 Top 10</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="nav-nasdaq-tab" data-toggle="tab" href="#nav-nasdaq" role="tab" aria-controls="nav-nasdaq" aria-selected="false">NASDAQ Top 10</a>
+    </li>
+  </ul>
 </nav>
+
 <div class="tab-content" id="nav-tabContent">
   <div class="tab-pane active" id="nav-portfolio" role="tabpanel" aria-labelledby="nav-portfolio-tab">
     <br>
-      
-    <table *ngIf="(portfolioData$ | async) as portfolioData">
-        <thead *ngIf="portfolioData.length > 0">
+    <div *ngIf="(portfolioData$ | async) as portfolioData">
+    <div *ngIf="portfolioData.length > 0;else noPortfolioMessage">
+      <p>Portfolio (Cumulative)</p>
+    <table>
+        <thead>
           <tr>
             <th>#</th>
             <th>Stock Name</th><th>Exchange</th>
@@ -285,7 +75,7 @@
             <th>Total Return</th><th>% Change</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody *ngIf="portfolioData.length > 0">
           <tr *ngFor="let data of portfolioData; let i = index">
             <td>{{i+1}}</td>
             <td class="stock-item" (click)="viewStock(data.symbol)">{{ data.stock_name }}</td><td>{{ data.exchange.toUpperCase()}}</td>
@@ -307,6 +97,49 @@
           </tr>
         </tbody>
       </table>
+      </div>
+      </div>
+<br>
+
+    <div *ngIf="(annualisedPortfolioData$ | async) as portfolioData">
+      <div *ngIf="portfolioData.length > 0">
+        <p>Portfolio (Annualised)</p>
+    
+        <table >
+          <thead>
+            <tr>
+              <th>#</th><th>Stock Name</th><th>Exchange</th><th>Units</th><th>Date</th>
+              <th>Avg Unit Price</th><th>Buy Total Price</th><th>Unit Current Price</th>
+              <th>Total Current Price</th><th>Total Return</th><th>Annualised Return</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of portfolioData; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td class="stock-item" (click)="viewStock(data.symbol)">{{ data.stock_name }}</td>
+              <td>{{ data.exchange.toUpperCase() }}</td>
+              <td>{{ data.units }}</td>
+              <td>{{ data.datetime}}</td>
+              <td>{{ data.buy_unit_price | number: '1.2-2' }}</td>
+              <td>{{ data.currency }} {{ data.buy_total_price }}</td>
+              <td>{{ data.unit_current_price }}</td>
+              <td>{{ data.currency }} {{ data.total_current_price | number: '1.2-2' }}</td>
+              <td [ngClass]="{ 'red': data.total_return < 0, 'green': data.total_return > 0 }">
+                <span class="arrow-up" *ngIf="data.total_return > 0"><strong>&#9650; &nbsp;{{ data.total_return | number: '1.2-2' }} {{ data.currency }}</strong></span>
+                <span class="arrow-down" *ngIf="data.total_return < 0"><strong>&#9660; &nbsp;{{ data.total_return | number: '1.2-2' }} {{ data.currency }}</strong></span>
+              </td>
+              <td [ngClass]="{ 'red': data.annualised_profit < 0, 'green': data.annualised_profit > 0 }">
+                <span class="arrow-up" *ngIf="data.annualised_profit > 0"><strong>&#9650; &nbsp;{{ data.annualised_profit | number: '1.2-2' }} %</strong></span>
+                <span class="arrow-down" *ngIf="data.annualised_profit < 0"><strong>&#9660; &nbsp;{{ data.annualised_profit | number: '1.2-2' }} %</strong></span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      </div>
+
+
+
 
   </div>
 
@@ -425,10 +258,13 @@
 
 </div>
 
+<br>
+<br>
+<br>
 
-<br>
-<br>
-<br>
+<ng-template #noPortfolioMessage>
+  <p>No portfolio created.</p>
+</ng-template>
 
 
 

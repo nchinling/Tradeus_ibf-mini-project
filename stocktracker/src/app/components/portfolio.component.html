@@ -13,7 +13,7 @@
         <p>{{errorMessage}}</p>
     </div>
 
- <div class="container-fluid" *ngIf="(portfolioData$ | async) as portfolioData; else blank">
+ <div class="container-fluid" *ngIf="(portfolioData$ | async) as portfolioData">
   <p class="total-return" *ngIf="portfolioData.length > 0">
     <strong>Total Return: 
     <span [ngClass]="{ 'red': calculateTotalReturn(portfolioData) < 0, 'green': calculateTotalReturn(portfolioData) > 0 }">
@@ -31,13 +31,14 @@
   </p>
 </div>
 
-<h2>Portfolio (Cumulative)</h2>
+<div *ngIf="(portfolioData$ | async) as portfolioData">
+<div *ngIf="portfolioData.length > 0">
+<h3>Portfolio (Cumulative)</h3>
 
-
-    <table *ngIf="(portfolioData$ | async) as portfolioData">
-      <thead *ngIf="portfolioData.length > 0">
+    <table>
+      <thead>
         <tr>
-          <th>Stock Name</th><th>Exchange</th>
+          <th>#</th><th>Stock Name</th><th>Exchange</th>
           <th>Units</th><th>Avg Unit Price</th><th>Buy Total Price</th>
           <th>Unit Current Price</th><th>Total Current Price</th>
           <th>Total Return</th><th>% Change</th><th>Action</th>
@@ -45,6 +46,7 @@
       </thead>
       <tbody>
         <tr *ngFor="let data of portfolioData; let i = index">
+          <td>{{i+1}}</td>
           <td>{{ data.stock_name }}</td><td>{{ data.exchange.toUpperCase()}}</td>
           <td>{{ data.units }}</td><td>{{ data.buy_unit_price | number: '1.2-2' }}</td>
           <td>{{data.currency}} {{ data.buy_total_price }} </td><td>{{ data.unit_current_price }}</td>
@@ -61,35 +63,34 @@
           <span class="arrow-up" *ngIf="data.total_percentage_change > 0"><strong>&#9650; &nbsp;{{ data.total_percentage_change| number: '1.2-2'  }} %</strong></span>
           <span class="arrow-down" *ngIf="data.total_percentage_change < 0"><strong>&#9660; &nbsp;{{ data.total_percentage_change | number: '1.2-2'  }} %</strong></span>
           </td>
-          <td><button class="btn btn-warning btn-sm" type="button" (click)="removeFromPortfolio(i)">Remove</button></td>
+          <td><button class="btn btn-warning btn-sm" type="button" (click)="removeFromCumulativePortfolio(i)">Remove</button></td>
         </tr>
       </tbody>
     </table> 
-  
+  </div>
+  </div>
+
     <br>
+<div *ngIf="(annualisedPortfolioData$ | async) as portfolioData">
+  <div *ngIf="portfolioData.length > 0; else noPortfolioMessage">
+    <h3>Portfolio (Annualised)</h3>
 
-    <h2>Portfolio (Annualised)</h2>
-
-    <table *ngIf="(annualisedPortfolioData$ | async) as portfolioData">
-      <thead *ngIf="portfolioData.length > 0">
+    <table >
+      <thead>
         <tr>
-          <th>Stock Name</th>
-          <th>Exchange</th>
-          <th>Units</th>
-          <th>Avg Unit Price</th>
-          <th>Buy Total Price</th>
-          <th>Unit Current Price</th>
-          <th>Total Current Price</th>
-          <th>Total Return</th>
-          <th>Annualised Return</th>
+          <th>#</th><th>Stock Name</th><th>Exchange</th><th>Units</th><th>Date</th>
+          <th>Avg Unit Price</th><th>Buy Total Price</th><th>Unit Current Price</th>
+          <th>Total Current Price</th><th>Total Return</th><th>Annualised Return</th>
           <th>Action</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let data of portfolioData; let i = index">
+          <td>{{ i + 1 }}</td>
           <td>{{ data.stock_name }}</td>
           <td>{{ data.exchange.toUpperCase() }}</td>
           <td>{{ data.units }}</td>
+          <td>{{ data.datetime}}</td>
           <td>{{ data.buy_unit_price | number: '1.2-2' }}</td>
           <td>{{ data.currency }} {{ data.buy_total_price }}</td>
           <td>{{ data.unit_current_price }}</td>
@@ -102,11 +103,14 @@
             <span class="arrow-up" *ngIf="data.annualised_profit > 0"><strong>&#9650; &nbsp;{{ data.annualised_profit | number: '1.2-2' }} %</strong></span>
             <span class="arrow-down" *ngIf="data.annualised_profit < 0"><strong>&#9660; &nbsp;{{ data.annualised_profit | number: '1.2-2' }} %</strong></span>
           </td>
-          <td><button class="btn btn-warning btn-sm" type="button" (click)="removeFromPortfolio(i)">Remove</button></td>
+          <td><button class="btn btn-warning btn-sm" type="button" (click)="removeFromAnnualisedPortfolio(data.symbol, data.datetime)">Remove</button></td>
         </tr>
       </tbody>
     </table>
-    
+  </div>
+  </div>
+
+  <br>
   
       <h3>Add to Portfolio</h3>
  
@@ -168,7 +172,9 @@
 
 <br>
 
-<ng-template #blank><p>Loading...</p></ng-template>
+<ng-template #noPortfolioMessage>
+  <p>No portfolio created.</p>
+</ng-template>
 
   
 

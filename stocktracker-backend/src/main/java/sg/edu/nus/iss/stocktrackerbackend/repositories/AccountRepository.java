@@ -12,6 +12,7 @@ import sg.edu.nus.iss.stocktrackerbackend.services.AccountException;
 
 import static sg.edu.nus.iss.stocktrackerbackend.repositories.DBQueries.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -111,6 +112,21 @@ public class AccountRepository {
     public String deleteFromPortfolio(String symbol, String accountId) {
         jdbcTemplate.update(DELETE_SYMBOL_BY_ACCOUNTID, symbol, accountId);
     
+        return symbol;
+    }
+
+
+    public String deleteFromTrades(String symbol, Date date, String accountId) {
+        int rowCount = jdbcTemplate.queryForObject(FIND_TOTAL_BY_ACCOUNTID_AND_SYMBOL, Integer.class, symbol, accountId);
+        System.out.println(">>>>The number of rows returned is>>>>" + rowCount);
+
+        if (rowCount == 1){
+            jdbcTemplate.update(DELETE_TRADE_BY_ACCOUNTID_AND_DATE, symbol, date, accountId);
+            jdbcTemplate.update(DELETE_FROM_PORTFOLIO_BY_ACCOUNTID_AND_SYMBOL, symbol, accountId);
+        }
+        else{
+            jdbcTemplate.update(DELETE_TRADE_BY_ACCOUNTID_AND_DATE, symbol, date, accountId);
+        }
         return symbol;
     }
 

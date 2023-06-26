@@ -1,7 +1,7 @@
 import { Component, HostListener, Injectable, Input, OnChanges, OnInit, inject } from '@angular/core';
 import { Observable, Subject, Subscription, interval } from 'rxjs';
 import { AccountService } from '../account.service';
-import { LoginResponse, MarketIndex, RegisterResponse, Stock, Market, StockInfo, PortfolioData } from '../models';
+import { LoginResponse, MarketIndex, RegisterResponse, Stock, Market, StockInfo, PortfolioData, AnnualisedPortfolioData } from '../models';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -61,6 +61,7 @@ export class DashboardComponent implements OnInit, OnChanges{
 
   portfolioSymbols$!:Promise<string[]>
   portfolioData$!:Promise<PortfolioData[]>
+  annualisedPortfolioData$!:Observable<AnnualisedPortfolioData[]>
 
 
   onStockRequest = new Subject<string>()
@@ -98,8 +99,10 @@ export class DashboardComponent implements OnInit, OnChanges{
           this.accountId = this.accountSvc.account_id
         } else{
         }
+      
+      this.annualisedPortfolioData$ = this.stockSvc.getAnnualisedPortfolioData(this.accountId);
 
-      //initialise portfolio
+      //initialise portfolio (cumulative)
       this.portfolioSymbols$ = this.stockSvc.getPortfolioSymbols(this.accountId)
       console.info('this.symbols$ is' + this.portfolioSymbols$)
   
@@ -109,6 +112,9 @@ export class DashboardComponent implements OnInit, OnChanges{
       }).catch((error) => {
         console.error(error);
       });
+
+      //initialise portfolio (annualised)
+
 
 
       //load market data

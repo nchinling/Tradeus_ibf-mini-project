@@ -55,10 +55,11 @@ public class DBQueries {
 
     public static final String DELETE_SYMBOL_BY_ACCOUNTID ="DELETE FROM portfolio WHERE symbol = ? AND account_id = ?";
 
+    public static final String DELETE_TRADE_BY_ACCOUNTID_AND_DATE ="DELETE FROM trades WHERE symbol = ? AND buy_date =? AND account_id = ?";
 
+    public static final String FIND_TOTAL_BY_ACCOUNTID_AND_SYMBOL ="SELECT COUNT(*) FROM trades WHERE symbol = ? AND account_id = ?";
 
-
-        
-
+    public static final String DELETE_FROM_PORTFOLIO_BY_ACCOUNTID_AND_SYMBOL ="DELETE FROM portfolio WHERE symbol = ? AND account_id = ?";
+   
 
 }
