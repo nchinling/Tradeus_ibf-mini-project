@@ -20,6 +20,65 @@
   <br>
 
 
+  <table>
+    <thead>
+      <tr>
+        <th>Symbol</th>
+        <th>Currency</th>
+        <th>Exchange</th>
+        <th>Day Volume</th>
+        <th>Price</th>
+        <th>Ask</th>
+        <th>Bid</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let stock of webSocketStocks">
+        <td>{{ stock.symbol }}</td>
+        <td>{{ stock.currency }}</td>
+        <td>{{ stock.exchange }}</td>
+        <td>{{ stock.volume }}</td>
+        <td>{{ stock.price }}</td>
+        <td>{{ stock.ask }}</td>
+        <td>{{ stock.bid }}</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+
+
+  <!-- <div *ngIf="(webSocketStocks$ | async) as webSocketStocks">
+    <table>
+      <thead>
+        <tr>
+          <th>Symbol</th>
+          <th>Exchange</th>
+          <th>Currency</th>
+          <th>Price</th>
+          <th>Ask</th>
+          <th>Bid</th>
+          <th>Volume</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let stock of webSocketStocks">
+          <td>{{ stock.symbol }}</td>
+          <td>{{ stock.exchange }}</td>
+          <td>{{ stock.currency }}</td>
+          <td>{{ stock.price }}</td>
+          <td>{{ stock.ask }}</td>
+          <td>{{ stock.bid }}</td>
+          <td>{{ stock.volume }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+   -->
+
+
+
+
   <div class="container-fluid" *ngIf="(portfolioData$ | async) as portfolioData;">
     <p class="total-return" *ngIf="portfolioData.length > 0">
       <strong>Total Return: 
@@ -178,7 +237,8 @@
   </div> 
 </div>
 
-  <div class="tab-pane fade" id="nav-snp500" role="tabpanel" aria-labelledby="nav-snp500-tab">
+
+<div class="tab-pane fade" id="nav-snp500" role="tabpanel" aria-labelledby="nav-snp500-tab">
 <!-- third -->
 <br>    
 <div *ngIf="(indexSnP$ | async)?.length">

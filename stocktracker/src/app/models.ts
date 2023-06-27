@@ -167,5 +167,17 @@ export interface AnnualisedPortfolioData{
 
 }
 
+export interface WebSocketStock{
+
+    symbol: string
+    exchange: string
+    currency: string
+    price: number
+    ask: number
+    bid: number
+    volume: number
+
+}
+
 
 

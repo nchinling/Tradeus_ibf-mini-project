@@ -24,6 +24,7 @@ import { PortfolioComponent } from './components/portfolio.component';
 import { UsereditComponent } from './components/useredit.component';
 import { ChartComponent } from './components/chart.component';
 import { ChartService } from './chart.service';
+import { WebSocketService } from './websocket.service';
 
 
 const appRoutes: Routes = [
@@ -63,7 +64,7 @@ const appRoutes: Routes = [
     RouterModule.forRoot(appRoutes, { useHash: true}),
     NgbNavModule, NgbModule
   ],
-  providers: [AccountService, StockService, ChartService, DashboardComponent],
+  providers: [AccountService, StockService, ChartService, WebSocketService, DashboardComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

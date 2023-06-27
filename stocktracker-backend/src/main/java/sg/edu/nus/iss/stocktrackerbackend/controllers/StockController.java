@@ -32,6 +32,7 @@ import sg.edu.nus.iss.stocktrackerbackend.models.StockProfile;
 import sg.edu.nus.iss.stocktrackerbackend.models.Watchlist;
 import sg.edu.nus.iss.stocktrackerbackend.services.StockService;
 
+
 @Controller
 @RequestMapping(path="/api", produces = MediaType.APPLICATION_JSON_VALUE)
 @CrossOrigin(origins="*")
@@ -40,6 +41,9 @@ public class StockController {
     
     @Autowired
     private StockService stockSvc;
+
+
+
 
     @GetMapping(path="/quote/stock")
     @ResponseBody
@@ -497,7 +501,7 @@ public class StockController {
             }
 
             JsonArray respArray = arrayBuilder.build();
-            System.out.println(">>>sending back jsonarray annualised portfolio data.>>>>>Hooray: ");
+            System.out.println(">>>sending back jsonarray annualised portfolio data.>>>>>Hooray: " + respArray);
             return ResponseEntity.ok(respArray.toString());
         // } 
         // // Handle the case when the Optional is empty

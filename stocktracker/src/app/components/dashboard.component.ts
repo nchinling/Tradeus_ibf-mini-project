@@ -1,11 +1,12 @@
 import { Component, HostListener, Injectable, Input, OnChanges, OnInit, inject } from '@angular/core';
-import { Observable, Subject, Subscription, interval } from 'rxjs';
+import { Observable, Subject, Subscription, interval, map } from 'rxjs';
 import { AccountService } from '../account.service';
-import { LoginResponse, MarketIndex, RegisterResponse, Stock, Market, StockInfo, PortfolioData, AnnualisedPortfolioData } from '../models';
+import { LoginResponse, MarketIndex, RegisterResponse, Stock, Market, StockInfo, PortfolioData, AnnualisedPortfolioData, WebSocketStock } from '../models';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { StockService } from '../stock.service';
+import { WebSocketService } from '../websocket.service';
 
 
 @Injectable()
@@ -19,6 +20,7 @@ export class DashboardComponent implements OnInit, OnChanges{
 
   stockSvc = inject(StockService)
   accountSvc = inject(AccountService)
+  webSocketSvc = inject(WebSocketService)
   activatedRoute = inject(ActivatedRoute)
   router = inject(Router)
   title = inject(Title)
@@ -58,10 +60,15 @@ export class DashboardComponent implements OnInit, OnChanges{
   watchList$!: Promise<Stock[]>
   indexSnP$!: Promise<Stock[]>
   indexNasdaq$!: Promise<Stock[]>
+  webSocketSymbols = ['AAPL', 'QQQ', 'ABML', 'BT.A' ];
 
   portfolioSymbols$!:Promise<string[]>
   portfolioData$!:Promise<PortfolioData[]>
   annualisedPortfolioData$!:Observable<AnnualisedPortfolioData[]>
+  webSocketStocks$!:Observable<WebSocketStock[]>
+  socket!: WebSocket;
+  webSocketStocks: WebSocketStock[] = [];
+  ENDPOINT: string = 'wss://ws.twelvedata.com/v1/quotes/price?apikey=a875c7c23fba474fb03828f4557dcb97';
 
 
   onStockRequest = new Subject<string>()
@@ -76,7 +83,6 @@ export class DashboardComponent implements OnInit, OnChanges{
     this.registerResponse$ = this.accountSvc.onRegisterRequest
     this.loginResponse$ = this.accountSvc.onLoginRequest
     this.errorMessage$ = this.accountSvc.onErrorMessage
-
 
         // Access the query parameters
         const queryParams = this.activatedRoute.snapshot.queryParams;
@@ -100,6 +106,9 @@ export class DashboardComponent implements OnInit, OnChanges{
         } else{
         }
       
+
+      this.connectWebSocket();
+      // this.webSocketStocks$ = this.webSocketSvc.getWebSocketData();
       this.annualisedPortfolioData$ = this.stockSvc.getAnnualisedPortfolioData(this.accountId);
 
       //initialise portfolio (cumulative)
@@ -114,8 +123,6 @@ export class DashboardComponent implements OnInit, OnChanges{
       });
 
       //initialise portfolio (annualised)
-
-
 
       //load market data
       // this.marketIndex$ = this.stockSvc.getMarketData('SPX', '1day');
@@ -138,30 +145,96 @@ export class DashboardComponent implements OnInit, OnChanges{
       }).catch((error) => {
         console.error(error);
       });
-      
+
+
+      // this.webSocketStocks$ = this.webSocketSvc.getWebSocketData();
+
+      // this.webSocketStocks$ = this.webSocketSvc.getWebSocketData()
+      // .pipe(
+      //   map(webSocketItem => [webSocketItem]) // Convert WebSocketStock to WebSocketStock[]
+      // );
 
   }
 
-  ngAfterViewInit():void{
 
+
+private initialiseWebSocketStocks() {
+  this.webSocketStocks = this.webSocketSymbols.map(symbol => ({
+    symbol: symbol,
+    exchange: '',
+    currency: '',
+    price: 0,
+    ask: 0,
+    bid: 0,
+    volume: 0
+  }));
+}
+
+  private connectWebSocket() {
+    this.initialiseWebSocketStocks();
+    
+    this.socket = new WebSocket(this.ENDPOINT);
+
+    this.socket.onopen = (event) => {
+      console.log('WebSocket opened!');
+      // const symbols = ['AAPL', 'QQQ', 'ABML', 'TRP:TSX'];
+      // this.socket.send(JSON.stringify({ action: 'subscribe', params: { symbols: 'AAPL', } }));
+      this.socket.send(JSON.stringify({ action: 'subscribe', params: { symbols: this.webSocketSymbols.join(',') } }));
+    };
+
+    // this.socket.onmessage = (event) => {
+    //   const message = JSON.parse(event.data) as WebSocketStock
+    //   console.log(message);
+    //   this.messages.push(message);
+    // };
+
+    this.socket.onmessage = (event) => {
+      const messageString = event.data;
+      const message = JSON.parse(messageString);
+    
+      const webSocketStock: WebSocketStock = {
+        symbol: message.symbol,
+        exchange: message.exchange,
+        currency: message.currency,
+        price: message.price,
+        ask: message.ask,
+        bid: message.bid,
+        volume: message.day_volume
+      };
+      console.log(webSocketStock);
+      // this.webSocketStocks.push(webSocketStock);
+        // Find the index of the existing stock with the same symbol
+        const index = this.webSocketStocks.findIndex(stock => stock.symbol === webSocketStock.symbol);
+
+        if (index !== -1) {
+          // Replace the existing stock with the new data
+          this.webSocketStocks[index] = webSocketStock;
+        } else {
+          // Add the new stock to the array
+          this.webSocketStocks.push(webSocketStock);
+        }
+      }
+
+
+    this.socket.onclose = (event) => {
+      console.log('WebSocket closed.');
+    };
+
+    this.socket.onerror = (error) => {
+      console.error('WebSocket error:', error);
+    };
+  }
+
+
+
+  ngAfterViewInit():void{
 
   }
 
   ngOnChanges(): void{
-    // this.symbols$ = this.stockSvc.getWatchlist(this.username)
-    // console.info('this.symbols$ is' + this.symbols$)
-
-    // // this.watchList$ = this.stockSvc.getWatchlistData(this.symbols);
-    // // this.symbols$ = this.stockSvc.getWatchlist(this.username);
-
-    // this.symbols$.then((symbol: string[]) => {
-    //   console.info('Symbols:', symbol);
-    //   this.watchList$ = this.stockSvc.getStocklistData(symbol);
-    // }).catch((error) => {
-    //   console.error(error);
-    // });
 
   }
+
 
   viewStock(symbol:string){
 
@@ -217,7 +290,4 @@ export class DashboardComponent implements OnInit, OnChanges{
   }
 
   
-
-
-
 }

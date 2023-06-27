@@ -3,7 +3,6 @@ package sg.edu.nus.iss.stocktrackerbackend.services;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
