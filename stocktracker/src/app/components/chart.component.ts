@@ -24,6 +24,10 @@ export class ChartComponent {
   @Input()
   initialChartSymbol!:string
 
+  @Input()
+  stock_name!:string
+
+
   chart!:any
   loadInterval: string = '1min'
 
@@ -136,7 +140,7 @@ export class ChartComponent {
             plugins:{
               title: {
                 display: true,
-                text: this.symbol,
+                text: this.stock_name,
                 font:{
                   size: 20
                 }

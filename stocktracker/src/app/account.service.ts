@@ -27,6 +27,7 @@ export class AccountService {
   queryParams: any;
   account_id = ""
   KEY = "username"
+  key!: string
 
 
   hasLogin(): boolean {
@@ -156,7 +157,6 @@ export class AccountService {
 }
 
 
-  //A) Works with both Observable and Promise
   login(username: string, password: string): Observable<LoginResponse> {
     // Content-Type: application/x-www-form-urlencoded
     // Accept: application/json
@@ -182,7 +182,7 @@ export class AccountService {
         return throwError(() => ({ error: errorMessage }));
       }),
       filter((response) => response !== null), // Filter out null responses
-      //the fired onRequest.next is received in dashboard component's ngOnit 
+      //the fired onLoginRequest.next is received in dashboard component's ngOnit 
       tap(response => this.onLoginRequest.next(response))
     );
   }

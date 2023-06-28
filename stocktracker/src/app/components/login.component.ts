@@ -66,14 +66,10 @@ export class LoginComponent implements OnInit {
 
       this.accountSvc.queryParams = queryParams;
       this.accountSvc.account_id = response.account_id
+      this.accountSvc.key = response.key
 
 
-      // const dashboardUrl = `#/dashboard/${parsedUsername}?account_id=${response.account_id}&username=${response.username}`;
 
-      // // Store the dashboard URL in localStorage
-      // localStorage.setItem('dashboardUrl', dashboardUrl);
-
-      // localStorage.setItem('loginForm', JSON.stringify(this.loginForm))
       this.router.navigate(['/dashboard', parsedUsername], { queryParams: queryParams })
     }).catch((error)=>{
   

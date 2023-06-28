@@ -11,6 +11,7 @@ import java.util.List;
 import javax.security.auth.login.AccountNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -45,6 +46,9 @@ public class AccountController {
     @Autowired
     private AccountService accSvc;
 
+    @Value("${twelve.data.websocket.key}")
+    private String twelveDataWebSocketApiKey;
+
 	@PostMapping(path="/login", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 	@ResponseBody
 	public ResponseEntity<String> login(@RequestBody MultiValueMap<String, String> form) {
@@ -53,6 +57,7 @@ public class AccountController {
         String password = form.getFirst("password");
 
         System.out.printf(">>> I am inside Controller Login >>>>>\n");
+        System.out.printf(">>> The key is >>>>>\n" + twelveDataWebSocketApiKey);
         JsonObject resp = null;
 
             Account loggedInAccount;
@@ -61,6 +66,7 @@ public class AccountController {
                 resp = Json.createObjectBuilder()
                 .add("account_id", loggedInAccount.getAccountId())
                 .add("username", loggedInAccount.getUsername())
+                .add("key", twelveDataWebSocketApiKey)
                 .add("timestamp", (new Date()).toString())
                 .build();
             } catch (AccountNotFoundException | IOException e) {

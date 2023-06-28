@@ -64,3 +64,11 @@ It is built with Angular(frontend), Spring Boot (backend) with SQL, Redis and Mo
 26 June (Mon)
 - removed bugs for portfolio
 
+27 June (Tues)
+- implemented web socket connection
+
+28 June (Wed)
+- improved web socket connection
+- improved presentation of live data
+- changed chart title to stock name instead of stock symbol
+

@@ -16,6 +16,7 @@ export interface LoginResponse {
     account_id: string
     username: string
     timestamp: string
+    key: string
 }
 
 export interface RegisterResponse {
@@ -167,7 +168,7 @@ export interface AnnualisedPortfolioData{
 
 }
 
-export interface WebSocketStock{
+export interface WebSocketStock {
 
     symbol: string
     exchange: string
@@ -176,7 +177,14 @@ export interface WebSocketStock{
     ask: number
     bid: number
     volume: number
-
+    volumeChanged: boolean
+    priceChanged: boolean
+    askChanged: boolean
+    bidChanged: boolean
+    previousVolume: number
+    previousPrice: number
+    previousAsk: number
+    previousBid: number
 }
 
 

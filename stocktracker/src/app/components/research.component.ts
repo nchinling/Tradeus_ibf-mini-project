@@ -39,6 +39,7 @@ export class ResearchComponent  {
 
   //for watchlist
   symbol!:string
+  stock_name!: string
   watchlist: string[] = []
   isFollowed!:boolean 
   isButtonClicked:boolean = false;
@@ -124,6 +125,11 @@ export class ResearchComponent  {
       const symbolToLoad = (this.loadStock !== '') ? this.loadStock : 'AAPL';
       this.stock$ = this.stockSvc.getStockData(symbolToLoad, this.loadInterval);
       this.stockProfile$ = this.stockSvc.getStockProfile(symbolToLoad); 
+      this.stockProfile$.then(profile => {
+        const name = profile.name
+        console.log('The name is ' + name)
+        this.stock_name = name
+      });
 
     
   }
@@ -148,6 +154,11 @@ export class ResearchComponent  {
       console.info('>> interval: ', interval)
       this.stock$ = this.stockSvc.getStockData(symbol, interval)
       this.stockProfile$ = this.stockSvc.getStockProfile(symbol)
+      this.stockProfile$.then(profile => {
+        const name = profile.name;
+        console.log('The name is ' + name);
+        this.stock_name = name
+      });
       this.symbol = symbol
     }
   }

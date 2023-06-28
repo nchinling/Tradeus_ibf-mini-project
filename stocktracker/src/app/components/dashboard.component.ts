@@ -1,5 +1,5 @@
 import { Component, HostListener, Injectable, Input, OnChanges, OnInit, inject } from '@angular/core';
-import { Observable, Subject, Subscription, interval, map } from 'rxjs';
+import { Observable, Subject, Subscription, filter, interval, map } from 'rxjs';
 import { AccountService } from '../account.service';
 import { LoginResponse, MarketIndex, RegisterResponse, Stock, Market, StockInfo, PortfolioData, AnnualisedPortfolioData, WebSocketStock } from '../models';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
@@ -33,6 +33,7 @@ export class DashboardComponent implements OnInit, OnChanges{
   status!: string
   timestamp!: string
   accountId!: string
+  key!: string
 
   markets: Market[] = [
     { symbol: "SPX", interval: "1day" },
@@ -60,7 +61,9 @@ export class DashboardComponent implements OnInit, OnChanges{
   watchList$!: Promise<Stock[]>
   indexSnP$!: Promise<Stock[]>
   indexNasdaq$!: Promise<Stock[]>
-  webSocketSymbols = ['AAPL', 'QQQ', 'ABML', 'BT.A' ];
+  // webSocketSymbols = ['AAPL', 'QQQ', 'ABML', 'BT.A' ];
+  webSocketSymbols = ['D05:SGX','INFY:NSE', '2603:TWSE', '7203', '002594', '005930', 'AAPL', 'VFIAX'];
+
 
   portfolioSymbols$!:Promise<string[]>
   portfolioData$!:Promise<PortfolioData[]>
@@ -68,7 +71,7 @@ export class DashboardComponent implements OnInit, OnChanges{
   webSocketStocks$!:Observable<WebSocketStock[]>
   socket!: WebSocket;
   webSocketStocks: WebSocketStock[] = [];
-  ENDPOINT: string = 'wss://ws.twelvedata.com/v1/quotes/price?apikey=a875c7c23fba474fb03828f4557dcb97';
+  ENDPOINT!: string
 
 
   onStockRequest = new Subject<string>()
@@ -79,9 +82,8 @@ export class DashboardComponent implements OnInit, OnChanges{
 
 
  ngOnInit():void{
-    // this.loginResponse$ = this.accountSvc.onLoginRequest
-    this.registerResponse$ = this.accountSvc.onRegisterRequest
     this.loginResponse$ = this.accountSvc.onLoginRequest
+    this.registerResponse$ = this.accountSvc.onRegisterRequest
     this.errorMessage$ = this.accountSvc.onErrorMessage
 
         // Access the query parameters
@@ -92,6 +94,7 @@ export class DashboardComponent implements OnInit, OnChanges{
         this.timestamp = queryParams['timestamp'];
         this.accountId = queryParams['account_id'];
         this.username = queryParams['username'];
+     
 
         this.title.setTitle(`Account: ${this.accountSvc.username}`)
 
@@ -105,10 +108,16 @@ export class DashboardComponent implements OnInit, OnChanges{
           this.accountId = this.accountSvc.account_id
         } else{
         }
-      
 
-      this.connectWebSocket();
-      // this.webSocketStocks$ = this.webSocketSvc.getWebSocketData();
+        this.key = this.accountSvc.key
+
+        if (this.key) {
+          console.info('hello, there is a key' + this.key)
+          this.connectWebSocket(this.key);
+        }
+        
+      // this.connectWebSocket(this.accountSvc.key);
+
       this.annualisedPortfolioData$ = this.stockSvc.getAnnualisedPortfolioData(this.accountId);
 
       //initialise portfolio (cumulative)
@@ -147,32 +156,34 @@ export class DashboardComponent implements OnInit, OnChanges{
       });
 
 
-      // this.webSocketStocks$ = this.webSocketSvc.getWebSocketData();
-
-      // this.webSocketStocks$ = this.webSocketSvc.getWebSocketData()
-      // .pipe(
-      //   map(webSocketItem => [webSocketItem]) // Convert WebSocketStock to WebSocketStock[]
-      // );
 
   }
 
 
 
-private initialiseWebSocketStocks() {
+private initialiseWebSocketStocks(aliases: { [key: string]: string }) {
   this.webSocketStocks = this.webSocketSymbols.map(symbol => ({
-    symbol: symbol,
+    symbol:aliases[symbol] || symbol,
     exchange: '',
     currency: '',
     price: 0,
     ask: 0,
     bid: 0,
-    volume: 0
+    volume: 0,
+    volumeChanged: false,
+    priceChanged: false,
+    askChanged: false,
+    bidChanged: false,
+    previousVolume: 0,
+    previousPrice: 0,
+    previousAsk: 0,
+    previousBid: 0
   }));
 }
 
-  private connectWebSocket() {
-    this.initialiseWebSocketStocks();
-    
+  private connectWebSocket(key:string) {
+    // this.initialiseWebSocketStocks(symbolAliases);
+    this.ENDPOINT= 'wss://ws.twelvedata.com/v1/quotes/price?apikey='+key;
     this.socket = new WebSocket(this.ENDPOINT);
 
     this.socket.onopen = (event) => {
@@ -188,18 +199,59 @@ private initialiseWebSocketStocks() {
     //   this.messages.push(message);
     // };
 
+    const symbolAliases:{ [key: string]: string } = {
+      'INFY': 'Infosys',
+      'INFY:NSE': 'Infosys',
+      '7203': 'Toyota',
+      '002594': 'BYD',
+      '005930': 'Samsung',
+      'D05': 'DBS Group',
+      'D05:SGX': 'DBS Group',
+      'VFIAX': 'Vanguard 500',
+      '2603:TWSE': 'Evergreen',
+      'AAPL':'Apple'
+    };
+
+    this.initialiseWebSocketStocks(symbolAliases);
+
+
     this.socket.onmessage = (event) => {
       const messageString = event.data;
       const message = JSON.parse(messageString);
+
+      const symbol = message.symbol;
+      const alias = symbolAliases[symbol] || symbol; 
+
+      const existingStock = this.webSocketStocks.find(stock => stock.symbol === alias);
+      let previousVolume = 0;
+      let previousPrice = 0;
+      let previousAsk = 0;
+      let previousBid = 0;
+    
+      if (existingStock) {
+        previousVolume = existingStock.volume;
+        previousPrice = existingStock.price;
+        previousAsk = existingStock.ask;
+        previousBid = existingStock.bid;
+      }
     
       const webSocketStock: WebSocketStock = {
-        symbol: message.symbol,
+        symbol: alias,
         exchange: message.exchange,
         currency: message.currency,
         price: message.price,
         ask: message.ask,
         bid: message.bid,
-        volume: message.day_volume
+        volume: message.day_volume,
+        volumeChanged: previousVolume !== message.day_volume,
+        priceChanged: previousPrice !== message.price,
+        askChanged: previousAsk !== message.ask,
+        bidChanged: previousBid !== message.bid,
+        previousVolume,
+        previousPrice,
+        previousAsk,
+        previousBid
+
       };
       console.log(webSocketStock);
       // this.webSocketStocks.push(webSocketStock);
@@ -288,6 +340,12 @@ private initialiseWebSocketStocks() {
     const totalInvestment = portfolioData.reduce((total, data) => total + data.buy_total_price, 0);
     return (totalReturn / totalInvestment) * 100;
   }
+
+  // ngOnDestroy() {
+  //   if (this.loginResponse$) {
+  //     this.loginResponse$.unsubscribe();
+  //   }
+  // }
 
   
 }

@@ -130,6 +130,31 @@ background-color: green;
     display: flex;
     flex-wrap: nowrap;
   }
+
+  .table-layout{
+    table-layout: fixed;
+  }
+
+  @keyframes valueChangeAnimation {
+    0% { color: inherit; font-weight: normal; }
+    100% { color: inherit; font-weight: normal; }
+  }
+  
+  .value-drop {
+    animation: valueChangeAnimation 0.5s;
+    color: red;
+    font-weight: bold;
+  }
+  
+  .value-increase {
+    animation: valueChangeAnimation 0.5s;
+    color: green;
+    font-weight: bold;
+  }
+  
+  
+
+
   
 
 

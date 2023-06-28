@@ -20,65 +20,6 @@
   <br>
 
 
-  <table>
-    <thead>
-      <tr>
-        <th>Symbol</th>
-        <th>Currency</th>
-        <th>Exchange</th>
-        <th>Day Volume</th>
-        <th>Price</th>
-        <th>Ask</th>
-        <th>Bid</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let stock of webSocketStocks">
-        <td>{{ stock.symbol }}</td>
-        <td>{{ stock.currency }}</td>
-        <td>{{ stock.exchange }}</td>
-        <td>{{ stock.volume }}</td>
-        <td>{{ stock.price }}</td>
-        <td>{{ stock.ask }}</td>
-        <td>{{ stock.bid }}</td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-
-
-  <!-- <div *ngIf="(webSocketStocks$ | async) as webSocketStocks">
-    <table>
-      <thead>
-        <tr>
-          <th>Symbol</th>
-          <th>Exchange</th>
-          <th>Currency</th>
-          <th>Price</th>
-          <th>Ask</th>
-          <th>Bid</th>
-          <th>Volume</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let stock of webSocketStocks">
-          <td>{{ stock.symbol }}</td>
-          <td>{{ stock.exchange }}</td>
-          <td>{{ stock.currency }}</td>
-          <td>{{ stock.price }}</td>
-          <td>{{ stock.ask }}</td>
-          <td>{{ stock.bid }}</td>
-          <td>{{ stock.volume }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-   -->
-
-
-
-
   <div class="container-fluid" *ngIf="(portfolioData$ | async) as portfolioData;">
     <p class="total-return" *ngIf="portfolioData.length > 0">
       <strong>Total Return: 
@@ -114,6 +55,9 @@
     </li>
     <li class="nav-item">
       <a class="nav-link" id="nav-nasdaq-tab" data-toggle="tab" href="#nav-nasdaq" role="tab" aria-controls="nav-nasdaq" aria-selected="false">NASDAQ Top 10</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="nav-live-tab" data-toggle="tab" href="#nav-live" role="tab" aria-controls="nav-live" aria-selected="false">Live Data</a>
     </li>
   </ul>
 </nav>
@@ -272,12 +216,6 @@
   </table>
 </div>
 
-
-
-
-
-
-
   </div>
 
   <div class="tab-pane fade" id="nav-nasdaq" role="tabpanel" aria-labelledby="nav-nasdaq-tab">
@@ -316,6 +254,70 @@
 </div>
 
 
+<div class="tab-pane fade" id="nav-live" role="tabpanel" aria-labelledby="nav-live-tab">
+  <!-- fifth tab -->
+  <br>    
+ <div>
+  <table class="table-layout">
+    <thead>
+      <tr>
+        <th style="width: 10px;">Company</th>
+        <th style="width: 10px;">Curr</th>
+        <th style="width: 10px;">Exch</th>
+        <th style="width: 10px;">Volume</th>
+        <th style="width: 10px;">Price</th>
+        <th style="width: 10px;">Ask</th>
+        <th style="width: 10px;">Bid</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let stock of webSocketStocks">
+        <td style="width: 10px;">{{ stock.symbol }}</td>
+        <td style="width: 10px;">{{ stock.currency }}</td>
+        <td style="width: 10px;">{{ stock.exchange }}</td>
+        <td style="width: 10px;" [ngClass]="{ 'value-drop': stock.volume < stock.previousVolume, 'value-increase': stock.volume > stock.previousVolume }">
+          <span>{{ (stock.volume !== null ? stock.volume : stock.previousVolume) | number: '1.2-2' }}</span>
+          <span *ngIf="stock.volume < stock.previousVolume">&#9660;</span>
+          <span *ngIf="stock.volume > stock.previousVolume">&#9650;</span>
+        </td>
+        <td style="width: 10px;" [ngClass]="{ 'value-drop': stock.price < stock.previousPrice, 'value-increase': stock.price > stock.previousPrice }">
+          <span>{{ (stock.price !== null ? stock.price : stock.previousPrice) | number: '1.2-2' }}</span>
+          <span *ngIf="stock.price < stock.previousPrice">&#9660;</span>
+          <span *ngIf="stock.price > stock.previousPrice">&#9650;</span>
+        </td>
+        <td style="width: 10px;" [ngClass]="{ 'value-drop': stock.ask < stock.previousAsk, 'value-increase': stock.ask > stock.previousAsk }">
+          <span>{{ (stock.ask !== null ? stock.ask : stock.previousAsk) | number: '1.2-2' }}</span>
+          <span *ngIf="stock.ask < stock.previousAsk">&#9660;</span>
+          <span *ngIf="stock.ask > stock.previousAsk">&#9650;</span>
+        </td>
+        <td style="width: 10px;" [ngClass]="{ 'value-drop': stock.bid < stock.previousBid, 'value-increase': stock.bid > stock.previousBid }">
+          <span>{{ (stock.bid !== null ? stock.bid : stock.previousBid) | number: '1.2-2' }}</span>
+          <span *ngIf="stock.bid < stock.previousBid">&#9660;</span>
+          <span *ngIf="stock.bid > stock.previousBid">&#9650;</span>
+        </td>
+        
+        <!-- <td style="width: 10px;" [ngClass]="{ 'value-drop': stock.volume < stock.previousVolume, 'value-increase': stock.volume > stock.previousVolume }">{{ stock.volume | number: '1.2-2' }}</td>
+        <td style="width: 10px;" [ngClass]="{ 'value-drop': stock.price < stock.previousPrice, 'value-increase': stock.price > stock.previousPrice }">{{ stock.price | number: '1.2-2' }}</td>
+        <td style="width: 10px;" [ngClass]="{ 'value-drop': stock.ask < stock.previousAsk, 'value-increase': stock.ask > stock.previousAsk }">{{ stock.ask | number: '1.2-2' }}</td>
+        <td style="width: 10px;" [ngClass]="{ 'value-drop': stock.bid < stock.previousBid, 'value-increase': stock.bid > stock.previousBid }">{{ stock.bid | number: '1.2-2' }}</td> -->
+        <!-- <td style="width: 10px;" [ngClass]="{ 'value-drop': stock.volume < stock.previousVolume, 'value-increase': stock.volume > stock.previousVolume }">
+          {{ (stock.volume !== null ? stock.volume : stock.previousVolume) | number: '1.2-2' }}
+        </td>
+        <td style="width: 10px;" [ngClass]="{ 'value-drop': stock.price < stock.previousPrice, 'value-increase': stock.price > stock.previousPrice }">
+          {{ (stock.price !== null ? stock.price : stock.previousPrice) | number: '1.2-2' }}
+        </td>
+        <td style="width: 10px;" [ngClass]="{ 'value-drop': stock.ask < stock.previousAsk, 'value-increase': stock.ask > stock.previousAsk }">
+          {{ (stock.ask !== null ? stock.ask : stock.previousAsk) | number: '1.2-2' }}
+        </td>
+        <td style="width: 10px;" [ngClass]="{ 'value-drop': stock.bid < stock.previousBid, 'value-increase': stock.bid > stock.previousBid }">
+          {{ (stock.bid !== null ? stock.bid : stock.previousBid) | number: '1.2-2' }}
+        </td> -->
+      </tr>
+    </tbody>
+  </table>
+  
+  </div>
+  </div>
 </div>
 
 <br>
