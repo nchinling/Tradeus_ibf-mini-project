@@ -1,20 +1,40 @@
+// declare var require: any
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
-import { Observable, tap, map, Subject } from "rxjs";
+import { Observable, tap, map, Subject, throwError, catchError } from "rxjs";
 import { WebSocketStock} from "./models";
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
+import * as SockJs from 'sockjs-client';
+import * as Stomp from 'stompjs';
 
-const URL_API_TRADE_SERVER = 'http://localhost:8080/api'
 
 
+//working web socket
 @Injectable()
 export class WebSocketService {
 
-    http = inject(HttpClient)
-  
-    onWebSocketDataRequest = new Subject<WebSocketStock[]>()
+    // Open connection with the back-end socket
+    public connect() {
+        let socket = new SockJs(`http://localhost:8080/socket`);
+
+        let stompClient = Stomp.over(socket);
+
+        return stompClient;
+    }
 
     
+}
+
+// @Injectable()
+// export class WebSocketService {
+
+//     http = inject(HttpClient)
+  
+//     onWebSocketDataRequest = new Subject<WebSocketStock[]>()
+
+//     constructor() { }
+
+
   // getWebSocketData(): Observable<WebSocketStock[]> {
   
   //   return this.http.get<WebSocketStock[]>(`${URL_API_TRADE_SERVER}/quote/websocket`)
@@ -30,14 +50,37 @@ export class WebSocketService {
   // }
 
   
-}
+// }
 
 
 
-  // private String symbol;
-  // private String exchange;
-  // private String currency;
-  // private Double price;
-  // private Double ask;
-  // private Double day_volume;
-  // private Double bid;
+
+
+//to be used as submission codes
+// @Injectable()
+// export class WebSocketService {
+//   socket!: WebSocketSubject<any>;
+
+//   constructor() { }
+
+//   connectWebSocket(): void {
+//     this.socket = webSocket('ws://localhost:8080/ws');
+//   }
+
+//   getWebSocketData(): Observable<WebSocketStock[]> {
+//     return this.socket.pipe(
+//       catchError((error: any) => {
+//         // Handle WebSocket errors
+//         console.error('WebSocket error:', error);
+//         return throwError(error);
+//       })
+//     )
+//   }
+// }
+
+
+
+
+
+
+

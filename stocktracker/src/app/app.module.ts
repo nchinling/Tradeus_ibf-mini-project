@@ -64,7 +64,7 @@ const appRoutes: Routes = [
     RouterModule.forRoot(appRoutes, { useHash: true}),
     NgbNavModule, NgbModule
   ],
-  providers: [AccountService, StockService, ChartService, WebSocketService, DashboardComponent],
+  providers: [AccountService, StockService, ChartService, WebSocketService,DashboardComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -20,6 +20,7 @@
   <br>
 
 
+
   <div class="container-fluid" *ngIf="(portfolioData$ | async) as portfolioData;">
     <p class="total-return" *ngIf="portfolioData.length > 0">
       <strong>Total Return: 
@@ -38,7 +39,6 @@
     </p>
   </div>
   
-
   <br>
 
 
@@ -174,7 +174,7 @@
           <td [ngClass]="{ 'red': stock.percent_change < 0, 
             'green': stock.percent_change > 0 }">{{ stock.percent_change | number: '1.2-2' }}%</td>
           <td>{{ stock.datetime | date:'dd-MM-YYYY HH:mm' }}</td>
-          <td><button class="btn btn-warning btn-sm" type="button" (click)="removeFromWatchlist(i)">Remove</button></td>
+          <td><button class="btn btn-dark btn-sm" type="button" (click)="removeFromWatchlist(i)">Remove</button></td>
         </tr>
       </tbody>
     </table>

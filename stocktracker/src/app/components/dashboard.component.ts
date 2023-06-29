@@ -1,5 +1,5 @@
 import { Component, HostListener, Injectable, Input, OnChanges, OnInit, inject } from '@angular/core';
-import { Observable, Subject, Subscription, filter, interval, map } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, Subscription, filter, interval, map } from 'rxjs';
 import { AccountService } from '../account.service';
 import { LoginResponse, MarketIndex, RegisterResponse, Stock, Market, StockInfo, PortfolioData, AnnualisedPortfolioData, WebSocketStock } from '../models';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
@@ -7,6 +7,7 @@ import { Title } from '@angular/platform-browser';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { StockService } from '../stock.service';
 import { WebSocketService } from '../websocket.service';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 
 @Injectable()
@@ -20,10 +21,25 @@ export class DashboardComponent implements OnInit, OnChanges{
 
   stockSvc = inject(StockService)
   accountSvc = inject(AccountService)
-  webSocketSvc = inject(WebSocketService)
+  // webSocketService = inject(WebSocketService)
   activatedRoute = inject(ActivatedRoute)
   router = inject(Router)
   title = inject(Title)
+  http=inject(HttpClient)
+
+  public notifications = 0;
+
+// constructor(private webSocketService: WebSocketService) {
+//   this.getNotification()
+//   let stompClient = this.webSocketService.connect();
+
+//   stompClient.connect({}, (frame: any) => {
+//     stompClient.subscribe('/topic/notification', (notifications: any) => {
+//       this.notifications = JSON.parse(notifications.body).count;
+//     });
+//   });
+
+// }
 
   loginResponse$!: Observable<LoginResponse>
   registerResponse$!: Observable<RegisterResponse>
@@ -62,7 +78,7 @@ export class DashboardComponent implements OnInit, OnChanges{
   indexSnP$!: Promise<Stock[]>
   indexNasdaq$!: Promise<Stock[]>
   // webSocketSymbols = ['AAPL', 'QQQ', 'ABML', 'BT.A' ];
-  webSocketSymbols = ['D05:SGX','INFY:NSE', '2603:TWSE', '7203', '002594', '005930', 'AAPL', 'VFIAX'];
+  webSocketSymbols = ['D05:SGX','INFY:NSE', '2603:TWSE', '7203', '002594', '005930', 'AAPL', 'QQQ'];
 
 
   portfolioSymbols$!:Promise<string[]>
@@ -115,8 +131,7 @@ export class DashboardComponent implements OnInit, OnChanges{
           console.info('hello, there is a key' + this.key)
           this.connectWebSocket(this.key);
         }
-        
-      // this.connectWebSocket(this.accountSvc.key);
+
 
       this.annualisedPortfolioData$ = this.stockSvc.getAnnualisedPortfolioData(this.accountId);
 
@@ -155,9 +170,24 @@ export class DashboardComponent implements OnInit, OnChanges{
         console.error(error);
       });
 
+}
 
-
-  }
+getNotification(): void {
+  this.http.get('http://localhost:8080/notify', {responseType: 'text'}).subscribe({
+    next: (response) => {
+      console.log('Notification:', response);
+      // Handle the notification data here
+    },
+    error: (error) => {
+      if (error instanceof HttpErrorResponse) {
+        console.error('Failed to retrieve notification', error.status, error.statusText);
+        console.log('Error body:', error.error);
+      } else {
+        console.error('An unexpected error occurred:', error);
+      }
+    }
+  });
+}
 
 
 
@@ -182,8 +212,8 @@ private initialiseWebSocketStocks(aliases: { [key: string]: string }) {
 }
 
   private connectWebSocket(key:string) {
-    // this.initialiseWebSocketStocks(symbolAliases);
     this.ENDPOINT= 'wss://ws.twelvedata.com/v1/quotes/price?apikey='+key;
+    // this.ENDPOINT= 'wss://ws.twelvedata.com/v1/quotes/price?apikey='
     this.socket = new WebSocket(this.ENDPOINT);
 
     this.socket.onopen = (event) => {
@@ -207,8 +237,9 @@ private initialiseWebSocketStocks(aliases: { [key: string]: string }) {
       '005930': 'Samsung',
       'D05': 'DBS Group',
       'D05:SGX': 'DBS Group',
-      'VFIAX': 'Vanguard 500',
+      'QQQ': 'Invesco',
       '2603:TWSE': 'Evergreen',
+      '2603': 'Evergreen',
       'AAPL':'Apple'
     };
 

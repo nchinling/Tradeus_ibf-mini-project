@@ -36,6 +36,7 @@ import sg.edu.nus.iss.stocktrackerbackend.models.Trade;
 import sg.edu.nus.iss.stocktrackerbackend.models.Watchlist;
 import sg.edu.nus.iss.stocktrackerbackend.services.AccountException;
 import sg.edu.nus.iss.stocktrackerbackend.services.AccountService;
+import sg.edu.nus.iss.stocktrackerbackend.services.WebSocketService;
 
 
 @Controller
@@ -46,12 +47,15 @@ public class AccountController {
     @Autowired
     private AccountService accSvc;
 
+    @Autowired
+    private WebSocketService webSocketSvc;
+
     @Value("${twelve.data.websocket.key}")
     private String twelveDataWebSocketApiKey;
 
 	@PostMapping(path="/login", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 	@ResponseBody
-	public ResponseEntity<String> login(@RequestBody MultiValueMap<String, String> form) {
+	public ResponseEntity<String> login(@RequestBody MultiValueMap<String, String> form) throws Exception {
 
         String username = form.getFirst("username");
         String password = form.getFirst("password");
@@ -59,6 +63,8 @@ public class AccountController {
         System.out.printf(">>> I am inside Controller Login >>>>>\n");
         System.out.printf(">>> The key is >>>>>\n" + twelveDataWebSocketApiKey);
         JsonObject resp = null;
+
+        webSocketSvc.getWebSocketData();
 
             Account loggedInAccount;
             try {

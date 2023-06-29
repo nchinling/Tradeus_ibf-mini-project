@@ -133,29 +133,53 @@ public class WebSocketService {
     @Value("${twelve.data.websocket.key}")
     private String twelveDataWebSocketApiKey;
 
-    public List<WebSocketStock> getWebSocketData() throws Exception {
+    private final List<String> receivedData = new ArrayList<>();
+
+    public void sendReceivedData(String data) {
+        receivedData.add(data);
+    }
+
+    public List<String> getReceivedData() {
+        return receivedData;
+    }
+
+    public void getWebSocketData() throws Exception {
         List<WebSocketStock> receivedData = new ArrayList<>();
+       
 
         String ENDPOINT = "wss://ws.twelvedata.com/v1/quotes/price?apikey=" + twelveDataWebSocketApiKey;
-        System.out.println(">>>The key is >>>>>" + twelveDataWebSocketApiKey);
+        System.out.println(">>>The key in getWebSocketData is >>>>>" + twelveDataWebSocketApiKey);
 
         WebSocketClient client = null;
-        try {
+
             client = new WebSocketClient(new URI(ENDPOINT)) {
                 @Override
                 public void onOpen(ServerHandshake handshake) {
                     System.out.println("TDWebSocket opened!");
-                    send("{\"action\": \"subscribe\", \"params\":{\"symbols\": \"D05:SGX,INFY:NSE,7203:JPX,002594:SZSE,ADYEN:Euronext,BT.A:LSE\"}}");
+                    // send("{\"action\": \"subscribe\", \"params\":{\"symbols\": \"D05:SGX,INFY:NSE,7203:JPX,002594:SZSE,ADYEN:Euronext,BT.A:LSE\"}}");
+                     send("{\"action\": \"subscribe\", \"params\":{\"symbols\": \"'D05:SGX','INFY:NSE', '2603:TWSE', '7203', '002594', '005930', 'AAPL', 'QQQ'\"}}");
                 }
+
+                // @Override
+                // public void onMessage(String message) {
+                //     try {
+                //         ObjectMapper objectMapper = new ObjectMapper();
+                //         WebSocketStock webSocketStock = objectMapper.readValue(message, WebSocketStock.class);
+                //         receivedData.add(webSocketStock);
+                //         System.out.println(webSocketStock);
+                //     } catch (IOException e) {
+                //         e.printStackTrace();
+                //     }
+                // }
 
                 @Override
                 public void onMessage(String message) {
+                    JSONParser parser = new JSONParser();
                     try {
-                        ObjectMapper objectMapper = new ObjectMapper();
-                        WebSocketStock webSocketStock = objectMapper.readValue(message, WebSocketStock.class);
-                        receivedData.add(webSocketStock);
-                        System.out.println(webSocketStock);
-                    } catch (IOException e) {
+                        JSONObject json = (JSONObject) parser.parse(message);
+                        System.out.println(json);
+                        sendReceivedData(json.toString());
+                    } catch(ParseException e) {
                         e.printStackTrace();
                     }
                 }
@@ -163,9 +187,6 @@ public class WebSocketService {
                 @Override
                 public void onClose(int status, String reason, boolean remote) {
                     System.out.println("TDWebSocket closed. Status: " + status + ", Reason: " + reason);
-                    synchronized (receivedData) {
-                        receivedData.notify();  // Notify the waiting thread
-                    }
                     this.close();
                 }
 
@@ -175,30 +196,16 @@ public class WebSocketService {
                 }
             };
 
-            final WebSocketClient finalClient = client;
-            Thread thread = new Thread(() -> {
-                try {
-                    finalClient.connectBlocking();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            });
+        
+            client.connectBlocking();
 
 
-            thread.start();  // Start the WebSocket connection in a separate thread
-
-            synchronized (receivedData) {
-                receivedData.wait();  // Wait for the WebSocket connection to close
-            }
-
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-
-        return receivedData;
     }
+
     
 }
+
+
 
 
 

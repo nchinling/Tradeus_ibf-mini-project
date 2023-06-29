@@ -12,3 +12,17 @@
   .brand-text-2 {
     color: lightslategray; 
   }
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.container h1 {
+    width: 100%;
+}
+
+.container h4 {
+    align-self: flex-end;
+}

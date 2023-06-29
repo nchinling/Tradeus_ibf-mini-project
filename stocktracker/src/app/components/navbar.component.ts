@@ -59,6 +59,7 @@ export class NavbarComponent implements OnInit{
     this.accountSvc.username=''
     this.accountSvc.password=''
     this.stockSvc.symbol=''
+    this.accountSvc.key=''
     this.router.navigate(['/'])
   }
 

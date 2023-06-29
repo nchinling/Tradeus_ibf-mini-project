@@ -63,7 +63,7 @@
           <span class="arrow-up" *ngIf="data.total_percentage_change > 0"><strong>&#9650; &nbsp;{{ data.total_percentage_change| number: '1.2-2'  }} %</strong></span>
           <span class="arrow-down" *ngIf="data.total_percentage_change < 0"><strong>&#9660; &nbsp;{{ data.total_percentage_change | number: '1.2-2'  }} %</strong></span>
           </td>
-          <td><button class="btn btn-warning btn-sm" type="button" (click)="removeFromCumulativePortfolio(i)">Remove</button></td>
+          <td><button class="btn btn-dark btn-sm" type="button" (click)="removeFromCumulativePortfolio(i)">Remove</button></td>
         </tr>
       </tbody>
     </table> 
@@ -103,7 +103,7 @@
             <span class="arrow-up" *ngIf="data.annualised_profit > 0"><strong>&#9650; &nbsp;{{ data.annualised_profit | number: '1.2-2' }} %</strong></span>
             <span class="arrow-down" *ngIf="data.annualised_profit < 0"><strong>&#9660; &nbsp;{{ data.annualised_profit | number: '1.2-2' }} %</strong></span>
           </td>
-          <td><button class="btn btn-warning btn-sm" type="button" (click)="removeFromAnnualisedPortfolio(data.symbol, data.datetime)">Remove</button></td>
+          <td><button class="btn btn-dark btn-sm" type="button" (click)="removeFromAnnualisedPortfolio(data.symbol, data.datetime)">Remove</button></td>
         </tr>
       </tbody>
     </table>
