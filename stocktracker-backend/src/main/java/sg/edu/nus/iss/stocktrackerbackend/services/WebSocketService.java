@@ -174,7 +174,7 @@ public class WebSocketService {
                     JSONParser parser = new JSONParser();
                     try {
                         JSONObject json = (JSONObject) parser.parse(message);
-                        System.out.println(json);
+                        // System.out.println(json);
                         sendReceivedData(json.toString());
                     } catch(ParseException e) {
                         e.printStackTrace();

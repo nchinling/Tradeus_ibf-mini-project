@@ -36,6 +36,7 @@ import sg.edu.nus.iss.stocktrackerbackend.models.Trade;
 import sg.edu.nus.iss.stocktrackerbackend.models.Watchlist;
 import sg.edu.nus.iss.stocktrackerbackend.services.AccountException;
 import sg.edu.nus.iss.stocktrackerbackend.services.AccountService;
+import sg.edu.nus.iss.stocktrackerbackend.services.EmailService;
 import sg.edu.nus.iss.stocktrackerbackend.services.WebSocketService;
 
 
@@ -49,6 +50,9 @@ public class AccountController {
 
     @Autowired
     private WebSocketService webSocketSvc;
+
+    @Autowired
+    private EmailService emailSvc;
 
     @Value("${twelve.data.websocket.key}")
     private String twelveDataWebSocketApiKey;
@@ -64,7 +68,7 @@ public class AccountController {
         System.out.printf(">>> The key is >>>>>\n" + twelveDataWebSocketApiKey);
         JsonObject resp = null;
 
-        webSocketSvc.getWebSocketData();
+        // webSocketSvc.getWebSocketData();
 
             Account loggedInAccount;
             try {
@@ -84,9 +88,15 @@ public class AccountController {
 
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(resp.toString());
-            } 
-
+            }
+         
         System.out.printf(">>>Successfully logged in>>>>>\n");   
+
+        String to = "nchinling@gmail.com";
+        String subject = "Tradeus: Login on " + new Date().toString();
+        String body = "Hi " + loggedInAccount.getName() + ", You have logged in to Tradeus on " +new Date().toString() +". Please contact us immediately if it is not made by you.";
+       
+        emailSvc.sendEmail(to, subject, body);
 
         return ResponseEntity.ok(resp.toString());
 

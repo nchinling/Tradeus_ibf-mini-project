@@ -110,3 +110,17 @@ table {
   justify-content: center;
   align-items: center;
 }
+
+.custom-button {
+ 
+  background-color: transparent;
+  color: grey;
+  border: none
+
+}
+
+.custom-button:hover {
+  color: black;
+  font-weight: bold;
+}
+

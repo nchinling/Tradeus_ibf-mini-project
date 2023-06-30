@@ -174,13 +174,16 @@
           <td [ngClass]="{ 'red': stock.percent_change < 0, 
             'green': stock.percent_change > 0 }">{{ stock.percent_change | number: '1.2-2' }}%</td>
           <td>{{ stock.datetime | date:'dd-MM-YYYY HH:mm' }}</td>
-          <td><button class="btn btn-dark btn-sm" type="button" (click)="removeFromWatchlist(i)">Remove</button></td>
+          <!-- <td><button class="btn btn-dark btn-sm" type="button" (click)="removeFromWatchlist(i)">Remove</button></td> -->
+          <td><button class="fa-solid fa-xmark custom-button" type="button" (click)="removeFromWatchlist(i)"></button></td>
         </tr>
       </tbody>
     </table>
   </div> 
 </div>
 
+<!-- <i class="fa-solid fa-trash"></i> -->
+<!-- <i class="fa-solid fa-xmark"></i> -->
 
 <div class="tab-pane fade" id="nav-snp500" role="tabpanel" aria-labelledby="nav-snp500-tab">
 <!-- third -->

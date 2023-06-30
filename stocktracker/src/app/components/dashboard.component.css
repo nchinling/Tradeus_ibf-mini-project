@@ -152,7 +152,20 @@ background-color: green;
     font-weight: bold;
   }
   
+  .custom-button {
+ 
+    background-color: transparent;
+    color: grey;
+    border: none
   
+  }
+  
+  .custom-button:hover {
+    color: black;
+    font-weight: bold;
+  }
+
+
 
 
   
