@@ -72,3 +72,7 @@ It is built with Angular(frontend), Spring Boot (backend) with SQL, Redis and Mo
 - improved presentation of live data
 - changed chart title to stock name instead of stock symbol
 
+29 June (Thu)
+- websocket counter
+
+30 June (Thu)

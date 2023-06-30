@@ -1,63 +1,29 @@
 package sg.edu.nus.iss.stocktrackerbackend.controllers;
 
-import java.io.IOException;
-import java.util.ArrayList;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 
 import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.handshake.ServerHandshake;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Controller;
+
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.socket.CloseStatus;
-import org.springframework.web.socket.TextMessage;
-import org.springframework.web.socket.WebSocketHandler;
-import org.springframework.web.socket.WebSocketMessage;
-import org.springframework.web.socket.WebSocketSession;
-import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.PreDestroy;
-import jakarta.json.Json;
-import jakarta.json.JsonArray;
-import jakarta.json.JsonArrayBuilder;
-import jakarta.json.JsonObjectBuilder;
+import org.springframework.web.bind.annotation.RestController;
+
 import sg.edu.nus.iss.stocktrackerbackend.models.Notifications;
-import sg.edu.nus.iss.stocktrackerbackend.models.WebSocketStock;
-import sg.edu.nus.iss.stocktrackerbackend.services.StockService;
 import sg.edu.nus.iss.stocktrackerbackend.services.WebSocketService;
 
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 
-
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
-
-
-// working manual increment
 @RestController
 @CrossOrigin(origins="*")
 public class WebSocketController {
@@ -65,26 +31,85 @@ public class WebSocketController {
     @Autowired
     private SimpMessagingTemplate template;
 
+    @Autowired
+    private WebSocketService webSocketService;
+
     // Initialize Notifications
-    private Notifications notifications = new Notifications(0);
+    // private Notifications notifications = new Notifications(0);
 
-    @GetMapping("/notify")
-    public String getNotification() {
+    
+    @MessageMapping("/notify")
+    // @SendTo("/topic/notification")
+    public List<String> getNotification() throws Exception {
+        // Retrieve the initial stock data
+        webSocketService.getWebSocketData();
+        // List<String> stockData = webSocketService.getReceivedData();
 
-        // Increment Notification by one
-        notifications.increment();
+        while (true) {
+            // Perform necessary operations to fetch updated stock data
+             List<String> stockData = webSocketService.getReceivedData();
 
-        System.out.println("Sending back to client the number:" + notifications.getCount());
-
-        // Push notifications to front-end
-        template.convertAndSend("/topic/notification", notifications);
-
-        // return "Notifications successfully sent to Angular !";
-        return "Successfully sent back to angular";
+            template.convertAndSend("/topic/notification", stockData);
+            webSocketService.clearReceivedData();
+            // Push the updated stock data to the front-end
+            Thread.sleep(3000);
+            // Add appropriate delay if needed
+        }
     }
 
+    // @GetMapping("/notify")
+    // public String getNotification() throws Exception {
+
+    //     webSocketService.getWebSocketData();
+
+    //     List<String> stockData = webSocketService.getReceivedData();
+        
+
+    //     // Increment Notification by one
+    //     notifications.increment();
+
+    //     System.out.println("Sending back to client the number:" + notifications.getCount());
+
+    //     // Push notifications to front-end
+    //     template.convertAndSend("/topic/notification", stockData);
+
+    //     // return "Notifications successfully sent to Angular !";
+    //     return "Successfully sent back to angular";
+    // }
 
 }
+
+
+
+
+// working manual increment
+// @RestController
+// @CrossOrigin(origins="*")
+// public class WebSocketController {
+
+//     @Autowired
+//     private SimpMessagingTemplate template;
+
+//     // Initialize Notifications
+//     private Notifications notifications = new Notifications(0);
+
+//     @GetMapping("/notify")
+//     public String getNotification() {
+
+//         // Increment Notification by one
+//         notifications.increment();
+
+//         System.out.println("Sending back to client the number:" + notifications.getCount());
+
+//         // Push notifications to front-end
+//         template.convertAndSend("/topic/notification", notifications);
+
+//         // return "Notifications successfully sent to Angular !";
+//         return "Successfully sent back to angular";
+//     }
+
+
+// }
 
 
 

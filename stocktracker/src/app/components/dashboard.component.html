@@ -295,23 +295,6 @@
           <span *ngIf="stock.bid < stock.previousBid">&#9660;</span>
           <span *ngIf="stock.bid > stock.previousBid">&#9650;</span>
         </td>
-        
-        <!-- <td style="width: 10px;" [ngClass]="{ 'value-drop': stock.volume < stock.previousVolume, 'value-increase': stock.volume > stock.previousVolume }">{{ stock.volume | number: '1.2-2' }}</td>
-        <td style="width: 10px;" [ngClass]="{ 'value-drop': stock.price < stock.previousPrice, 'value-increase': stock.price > stock.previousPrice }">{{ stock.price | number: '1.2-2' }}</td>
-        <td style="width: 10px;" [ngClass]="{ 'value-drop': stock.ask < stock.previousAsk, 'value-increase': stock.ask > stock.previousAsk }">{{ stock.ask | number: '1.2-2' }}</td>
-        <td style="width: 10px;" [ngClass]="{ 'value-drop': stock.bid < stock.previousBid, 'value-increase': stock.bid > stock.previousBid }">{{ stock.bid | number: '1.2-2' }}</td> -->
-        <!-- <td style="width: 10px;" [ngClass]="{ 'value-drop': stock.volume < stock.previousVolume, 'value-increase': stock.volume > stock.previousVolume }">
-          {{ (stock.volume !== null ? stock.volume : stock.previousVolume) | number: '1.2-2' }}
-        </td>
-        <td style="width: 10px;" [ngClass]="{ 'value-drop': stock.price < stock.previousPrice, 'value-increase': stock.price > stock.previousPrice }">
-          {{ (stock.price !== null ? stock.price : stock.previousPrice) | number: '1.2-2' }}
-        </td>
-        <td style="width: 10px;" [ngClass]="{ 'value-drop': stock.ask < stock.previousAsk, 'value-increase': stock.ask > stock.previousAsk }">
-          {{ (stock.ask !== null ? stock.ask : stock.previousAsk) | number: '1.2-2' }}
-        </td>
-        <td style="width: 10px;" [ngClass]="{ 'value-drop': stock.bid < stock.previousBid, 'value-increase': stock.bid > stock.previousBid }">
-          {{ (stock.bid !== null ? stock.bid : stock.previousBid) | number: '1.2-2' }}
-        </td> -->
       </tr>
     </tbody>
   </table>

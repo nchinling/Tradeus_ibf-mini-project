@@ -15,6 +15,7 @@ import org.java_websocket.client.WebSocketClient;
  
 import org.json.simple.parser.ParseException;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.io.IOException;
@@ -143,8 +144,12 @@ public class WebSocketService {
         return receivedData;
     }
 
+    public void clearReceivedData() {
+    receivedData.clear();
+    }
+
     public void getWebSocketData() throws Exception {
-        List<WebSocketStock> receivedData = new ArrayList<>();
+        // List<WebSocketStock> receivedData = new ArrayList<>();
        
 
         String ENDPOINT = "wss://ws.twelvedata.com/v1/quotes/price?apikey=" + twelveDataWebSocketApiKey;
@@ -157,20 +162,12 @@ public class WebSocketService {
                 public void onOpen(ServerHandshake handshake) {
                     System.out.println("TDWebSocket opened!");
                     // send("{\"action\": \"subscribe\", \"params\":{\"symbols\": \"D05:SGX,INFY:NSE,7203:JPX,002594:SZSE,ADYEN:Euronext,BT.A:LSE\"}}");
-                     send("{\"action\": \"subscribe\", \"params\":{\"symbols\": \"'D05:SGX','INFY:NSE', '2603:TWSE', '7203', '002594', '005930', 'AAPL', 'QQQ'\"}}");
-                }
+                    send("{\"action\": \"subscribe\", \"params\":{\"symbols\": \"7203,D05:SGX,INFY:NSE,2603:TWSE,002594,005930,AAPL,QQQ\"}}");
+                  
 
-                // @Override
-                // public void onMessage(String message) {
-                //     try {
-                //         ObjectMapper objectMapper = new ObjectMapper();
-                //         WebSocketStock webSocketStock = objectMapper.readValue(message, WebSocketStock.class);
-                //         receivedData.add(webSocketStock);
-                //         System.out.println(webSocketStock);
-                //     } catch (IOException e) {
-                //         e.printStackTrace();
-                //     }
-                // }
+
+            
+                }
 
                 @Override
                 public void onMessage(String message) {

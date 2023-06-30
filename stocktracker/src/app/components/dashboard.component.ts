@@ -21,7 +21,7 @@ export class DashboardComponent implements OnInit, OnChanges{
 
   stockSvc = inject(StockService)
   accountSvc = inject(AccountService)
-  // webSocketService = inject(WebSocketService)
+  webSocketService = inject(WebSocketService)
   activatedRoute = inject(ActivatedRoute)
   router = inject(Router)
   title = inject(Title)
@@ -79,6 +79,11 @@ export class DashboardComponent implements OnInit, OnChanges{
   indexNasdaq$!: Promise<Stock[]>
   // webSocketSymbols = ['AAPL', 'QQQ', 'ABML', 'BT.A' ];
   webSocketSymbols = ['D05:SGX','INFY:NSE', '2603:TWSE', '7203', '002594', '005930', 'AAPL', 'QQQ'];
+  symbolAliases:{ [key: string]: string } = {
+    'INFY': 'Infosys','INFY:NSE': 'Infosys','7203': 'Toyota','002594': 'BYD','005930': 'Samsung',
+    'D05': 'DBS Group','D05:SGX': 'DBS Group','QQQ': 'Invesco','2603:TWSE': 'Evergreen',
+    '2603': 'Evergreen','AAPL':'Apple'
+  };
 
 
   portfolioSymbols$!:Promise<string[]>
@@ -125,12 +130,13 @@ export class DashboardComponent implements OnInit, OnChanges{
         } else{
         }
 
-        this.key = this.accountSvc.key
-
-        if (this.key) {
-          console.info('hello, there is a key' + this.key)
-          this.connectWebSocket(this.key);
-        }
+        //for websocket using front-end. not good practice
+        // this.key = this.accountSvc.key
+        // if (this.key) {
+        //   console.info('hello, there is a key' + this.key)
+        //   this.connectWebSocket(this.key);
+        // }
+      this.getWebSocketData()
 
 
       this.annualisedPortfolioData$ = this.stockSvc.getAnnualisedPortfolioData(this.accountId);
@@ -170,24 +176,120 @@ export class DashboardComponent implements OnInit, OnChanges{
         console.error(error);
       });
 
+
 }
 
-getNotification(): void {
-  this.http.get('http://localhost:8080/notify', {responseType: 'text'}).subscribe({
-    next: (response) => {
-      console.log('Notification:', response);
-      // Handle the notification data here
-    },
-    error: (error) => {
-      if (error instanceof HttpErrorResponse) {
-        console.error('Failed to retrieve notification', error.status, error.statusText);
-        console.log('Error body:', error.error);
-      } else {
-        console.error('An unexpected error occurred:', error);
-      }
-    }
+getWebSocketData(): void {
+  this.initialiseWebSocketStocks(this.symbolAliases);
+  let stompClient = this.webSocketService.connect();
+
+  stompClient.connect({}, () => {
+    stompClient.send('/app/notify', {}, '');
+    stompClient.subscribe('/topic/notification', (notifications: any) => {
+      const data: string[] = JSON.parse(notifications.body);
+      data.forEach((stockData: string) => {
+        const stock: WebSocketStock = JSON.parse(stockData);
+
+        const index = this.webSocketStocks.findIndex(s => s.symbol === stock.symbol || s.symbol === this.symbolAliases[stock.symbol]);
+
+        if (index !== -1) {
+          const existingStock = this.webSocketStocks[index];
+          existingStock.exchange = stock.exchange;
+          existingStock.currency = stock.currency;
+          existingStock.volumeChanged = existingStock.volume !== stock.volume;
+          existingStock.priceChanged = existingStock.price !== stock.price;
+          existingStock.askChanged = existingStock.ask !== stock.ask;
+          existingStock.bidChanged = existingStock.bid !== stock.bid;
+          existingStock.previousVolume = existingStock.volume; 
+          existingStock.previousPrice = existingStock.price;
+          existingStock.previousAsk = existingStock.ask;
+          existingStock.previousBid = existingStock.bid;
+          existingStock.price = stock.price;
+          existingStock.ask = stock.ask;
+          existingStock.bid = stock.bid;
+          existingStock.volume = stock.volume;
+        } else {
+          const newStock: WebSocketStock = {
+            symbol: stock.symbol,
+            exchange: stock.exchange,
+            currency: stock.currency,
+            price: stock.price,
+            ask: stock.ask,
+            bid: stock.bid,
+            volume: stock.volume,
+            volumeChanged: false,
+            priceChanged: false,
+            askChanged: false,
+            bidChanged: false,
+            previousVolume: 0,
+            previousPrice: 0,
+            previousAsk: 0,
+            previousBid: 0,
+          };
+          this.webSocketStocks.push(newStock);
+        }
+      });
+    });
   });
 }
+
+
+
+
+// getWebSocketData(): void {
+//   this.initialiseWebSocketStocks(this.symbolAliases);
+//   let stompClient = this.webSocketService.connect();
+
+//   stompClient.connect({}, () => {
+//     stompClient.send('/app/notify', {}, '');
+//     stompClient.subscribe('/topic/notification', (notifications: any) => {
+//       const data: string[] = JSON.parse(notifications.body);
+//       data.forEach((stockData: string) => {
+//         const stock: WebSocketStock = JSON.parse(stockData);
+
+//         // const index = this.webSocketStocks.findIndex(s => s.symbol === stock.symbol);
+//         const index = this.webSocketStocks.findIndex(s => s.symbol === stock.symbol || s.symbol === this.symbolAliases[stock.symbol]);
+
+//         if (index !== -1) {
+//           const existingStock = this.webSocketStocks[index];
+//           existingStock.exchange = stock.exchange;
+//           existingStock.currency = stock.currency;
+//           existingStock.price = stock.price;
+//           existingStock.ask = stock.ask;
+//           existingStock.bid = stock.bid;
+//           existingStock.volume = stock.volume;
+//           existingStock.volumeChanged = existingStock.volume !== stock.volume;
+//           existingStock.priceChanged = existingStock.price !== stock.price;
+//           existingStock.askChanged = existingStock.ask !== stock.ask;
+//           existingStock.bidChanged = existingStock.bid !== stock.bid;
+//           existingStock.previousVolume = existingStock.volume;
+//           existingStock.previousPrice = existingStock.price;
+//           existingStock.previousAsk = existingStock.ask;
+//           existingStock.previousBid = existingStock.bid;
+//         } else {
+//           const newStock: WebSocketStock = {
+//             symbol: stock.symbol,
+//             exchange: stock.exchange,
+//             currency: stock.currency,
+//             price: stock.price,
+//             ask: stock.ask,
+//             bid: stock.bid,
+//             volume: stock.volume,
+//             volumeChanged: false,
+//             priceChanged: false,
+//             askChanged: false,
+//             bidChanged: false,
+//             previousVolume: 0,
+//             previousPrice: 0,
+//             previousAsk: 0,
+//             previousBid: 0,
+//           };
+//           this.webSocketStocks.push(newStock);
+//         }
+//       });
+//     });
+//   });
+// }
 
 
 
@@ -198,6 +300,7 @@ private initialiseWebSocketStocks(aliases: { [key: string]: string }) {
     currency: '',
     price: 0,
     ask: 0,
+
     bid: 0,
     volume: 0,
     volumeChanged: false,
@@ -211,104 +314,23 @@ private initialiseWebSocketStocks(aliases: { [key: string]: string }) {
   }));
 }
 
-  private connectWebSocket(key:string) {
-    this.ENDPOINT= 'wss://ws.twelvedata.com/v1/quotes/price?apikey='+key;
-    // this.ENDPOINT= 'wss://ws.twelvedata.com/v1/quotes/price?apikey='
-    this.socket = new WebSocket(this.ENDPOINT);
 
-    this.socket.onopen = (event) => {
-      console.log('WebSocket opened!');
-      // const symbols = ['AAPL', 'QQQ', 'ABML', 'TRP:TSX'];
-      // this.socket.send(JSON.stringify({ action: 'subscribe', params: { symbols: 'AAPL', } }));
-      this.socket.send(JSON.stringify({ action: 'subscribe', params: { symbols: this.webSocketSymbols.join(',') } }));
-    };
-
-    // this.socket.onmessage = (event) => {
-    //   const message = JSON.parse(event.data) as WebSocketStock
-    //   console.log(message);
-    //   this.messages.push(message);
-    // };
-
-    const symbolAliases:{ [key: string]: string } = {
-      'INFY': 'Infosys',
-      'INFY:NSE': 'Infosys',
-      '7203': 'Toyota',
-      '002594': 'BYD',
-      '005930': 'Samsung',
-      'D05': 'DBS Group',
-      'D05:SGX': 'DBS Group',
-      'QQQ': 'Invesco',
-      '2603:TWSE': 'Evergreen',
-      '2603': 'Evergreen',
-      'AAPL':'Apple'
-    };
-
-    this.initialiseWebSocketStocks(symbolAliases);
-
-
-    this.socket.onmessage = (event) => {
-      const messageString = event.data;
-      const message = JSON.parse(messageString);
-
-      const symbol = message.symbol;
-      const alias = symbolAliases[symbol] || symbol; 
-
-      const existingStock = this.webSocketStocks.find(stock => stock.symbol === alias);
-      let previousVolume = 0;
-      let previousPrice = 0;
-      let previousAsk = 0;
-      let previousBid = 0;
-    
-      if (existingStock) {
-        previousVolume = existingStock.volume;
-        previousPrice = existingStock.price;
-        previousAsk = existingStock.ask;
-        previousBid = existingStock.bid;
-      }
-    
-      const webSocketStock: WebSocketStock = {
-        symbol: alias,
-        exchange: message.exchange,
-        currency: message.currency,
-        price: message.price,
-        ask: message.ask,
-        bid: message.bid,
-        volume: message.day_volume,
-        volumeChanged: previousVolume !== message.day_volume,
-        priceChanged: previousPrice !== message.price,
-        askChanged: previousAsk !== message.ask,
-        bidChanged: previousBid !== message.bid,
-        previousVolume,
-        previousPrice,
-        previousAsk,
-        previousBid
-
-      };
-      console.log(webSocketStock);
-      // this.webSocketStocks.push(webSocketStock);
-        // Find the index of the existing stock with the same symbol
-        const index = this.webSocketStocks.findIndex(stock => stock.symbol === webSocketStock.symbol);
-
-        if (index !== -1) {
-          // Replace the existing stock with the new data
-          this.webSocketStocks[index] = webSocketStock;
-        } else {
-          // Add the new stock to the array
-          this.webSocketStocks.push(webSocketStock);
-        }
-      }
-
-
-    this.socket.onclose = (event) => {
-      console.log('WebSocket closed.');
-    };
-
-    this.socket.onerror = (error) => {
-      console.error('WebSocket error:', error);
-    };
-  }
-
-
+// getNotification(): void {
+//   this.http.get('http://localhost:8080/notify', {responseType: 'text'}).subscribe({
+//     next: (response) => {
+//       console.log('Notification:', response);
+//       // Handle the notification data here
+//     },
+//     error: (error) => {
+//       if (error instanceof HttpErrorResponse) {
+//         console.error('Failed to retrieve notification', error.status, error.statusText);
+//         console.log('Error body:', error.error);
+//       } else {
+//         console.error('An unexpected error occurred:', error);
+//       }
+//     }
+//   });
+// }
 
   ngAfterViewInit():void{
 
@@ -377,6 +399,108 @@ private initialiseWebSocketStocks(aliases: { [key: string]: string }) {
   //     this.loginResponse$.unsubscribe();
   //   }
   // }
+
+
+  
+//for websocket using front-end. not good practice
+  // private connectWebSocket(key:string) {
+  //   // this.ENDPOINT= 'wss://ws.twelvedata.com/v1/quotes/price?apikey='+key;
+  //   this.ENDPOINT= 'wss://ws.twelvedata.com/v1/quotes/price?apikey='
+  //   this.socket = new WebSocket(this.ENDPOINT);
+
+  //   this.socket.onopen = (event) => {
+  //     console.log('WebSocket opened!');
+  //     // const symbols = ['AAPL', 'QQQ', 'ABML', 'TRP:TSX'];
+  //     // this.socket.send(JSON.stringify({ action: 'subscribe', params: { symbols: 'AAPL', } }));
+  //     this.socket.send(JSON.stringify({ action: 'subscribe', params: { symbols: this.webSocketSymbols.join(',') } }));
+  //   };
+
+  //   // this.socket.onmessage = (event) => {
+  //   //   const message = JSON.parse(event.data) as WebSocketStock
+  //   //   console.log(message);
+  //   //   this.messages.push(message);
+  //   // };
+
+  //   const symbolAliases:{ [key: string]: string } = {
+  //     'INFY': 'Infosys',
+  //     'INFY:NSE': 'Infosys',
+  //     '7203': 'Toyota',
+  //     '002594': 'BYD',
+  //     '005930': 'Samsung',
+  //     'D05': 'DBS Group',
+  //     'D05:SGX': 'DBS Group',
+  //     'QQQ': 'Invesco',
+  //     '2603:TWSE': 'Evergreen',
+  //     '2603': 'Evergreen',
+  //     'AAPL':'Apple'
+  //   };
+
+  //   this.initialiseWebSocketStocks(symbolAliases);
+
+
+  //   this.socket.onmessage = (event) => {
+  //     const messageString = event.data;
+  //     const message = JSON.parse(messageString);
+
+  //     const symbol = message.symbol;
+  //     const alias = symbolAliases[symbol] || symbol; 
+
+  //     const existingStock = this.webSocketStocks.find(stock => stock.symbol === alias);
+  //     let previousVolume = 0;
+  //     let previousPrice = 0;
+  //     let previousAsk = 0;
+  //     let previousBid = 0;
+    
+  //     if (existingStock) {
+  //       previousVolume = existingStock.volume;
+  //       previousPrice = existingStock.price;
+  //       previousAsk = existingStock.ask;
+  //       previousBid = existingStock.bid;
+  //     }
+    
+  //     const webSocketStock: WebSocketStock = {
+  //       symbol: alias,
+  //       exchange: message.exchange,
+  //       currency: message.currency,
+  //       price: message.price,
+  //       ask: message.ask,
+  //       bid: message.bid,
+  //       volume: message.day_volume,
+  //       volumeChanged: previousVolume !== message.day_volume,
+  //       priceChanged: previousPrice !== message.price,
+  //       askChanged: previousAsk !== message.ask,
+  //       bidChanged: previousBid !== message.bid,
+  //       previousVolume,
+  //       previousPrice,
+  //       previousAsk,
+  //       previousBid
+
+  //     };
+  //     console.log(webSocketStock);
+  //     // this.webSocketStocks.push(webSocketStock);
+  //       // Find the index of the existing stock with the same symbol
+  //       const index = this.webSocketStocks.findIndex(stock => stock.symbol === webSocketStock.symbol);
+
+  //       if (index !== -1) {
+  //         // Replace the existing stock with the new data
+  //         this.webSocketStocks[index] = webSocketStock;
+  //       } else {
+  //         // Add the new stock to the array
+  //         this.webSocketStocks.push(webSocketStock);
+  //       }
+  //     }
+
+
+  //   this.socket.onclose = (event) => {
+  //     console.log('WebSocket closed.');
+  //   };
+
+  //   this.socket.onerror = (error) => {
+  //     console.error('WebSocket error:', error);
+  //   };
+  // }
+
+
 
   
 }
