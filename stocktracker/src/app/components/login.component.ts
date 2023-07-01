@@ -20,6 +20,8 @@ export class LoginComponent implements OnInit {
   errorMessage!: string;
   KEY = "username"
 
+  isLoading = false;
+
   fb = inject(FormBuilder)
   router = inject(Router)
   accountSvc = inject(AccountService)
@@ -29,18 +31,18 @@ export class LoginComponent implements OnInit {
     this.loginForm = this.fb.group({
       // username: this.fb.control<string>('', [ Validators.required, Validators.minLength(5) ]),
       username: this.fb.control<string>('nchinling@gmail.com', [Validators.required, Validators.pattern('[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}')]),
-      password: this.fb.control<string>('#a888888', [ Validators.required, Validators.minLength(8) ])
+      password: this.fb.control<string>('#a888888', [ Validators.required, Validators.minLength(8), Validators.pattern('^(?=.*[a-zA-Z])(?=.*[@#$%^&+=]).*$') ])
     })
   }
 
 
   invalidField(ctrlName:string): boolean{
     return !!(this.loginForm.get(ctrlName)?.invalid && this.loginForm.get(ctrlName)?.dirty)
-    // return !!(this.loginForm.get(ctrlName)?.invalid)
   }
 
 
   login() {
+    this.isLoading = true;
     const username = this.loginForm.get('username')?.value
     const password = this.loginForm.get('password')?.value
     const parsedUsername = username.split('@')[0];
@@ -68,7 +70,9 @@ export class LoginComponent implements OnInit {
       this.accountSvc.account_id = response.account_id
       this.accountSvc.key = response.key
 
-
+      setTimeout(() => {
+        this.isLoading = false;
+      }, 2000);
 
       this.router.navigate(['/dashboard', parsedUsername], { queryParams: queryParams })
     }).catch((error)=>{

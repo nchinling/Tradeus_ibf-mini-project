@@ -18,6 +18,8 @@ export class RegisterComponent {
   registerForm!: FormGroup
   errorMessage!: string;
 
+  isLoading = false;
+
 
   fb = inject(FormBuilder)
   router = inject(Router)
@@ -77,6 +79,7 @@ export class RegisterComponent {
 
 
   registerAccount() {
+    this.isLoading = true;
     const registerData:UserData = this.registerForm.value
     console.info('>> data: ', registerData)
     const name = this.registerForm.get('name')?.value
@@ -118,6 +121,10 @@ export class RegisterComponent {
       // localStorage.setItem('dashboardUrl', dashboardUrl);
 
       this.registerForm.reset
+
+      setTimeout(() => {
+        this.isLoading = false;
+      }, 2000);
 
       this.router.navigate(['/dashboard', parsedUsername], { queryParams: queryParams })
     }).catch((error)=>{

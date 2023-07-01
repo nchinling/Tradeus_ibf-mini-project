@@ -89,3 +89,5 @@ Some exciting implementations in Tradeus include charting, ability to create per
 1 Jul (Sat)
 - favicon
 - improved client-side validation requirements using regex and min length
+- added email notification to new registration
+- created spinner
