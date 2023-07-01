@@ -3,3 +3,8 @@
     margin-top: 10px;
   }
 
+
+  .invalid-field {
+    font-style: italic;
+    color: grey;
+  }

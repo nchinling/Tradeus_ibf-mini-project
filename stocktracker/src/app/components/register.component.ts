@@ -1,5 +1,5 @@
 import { Component, Injectable, inject } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable, Subject, firstValueFrom } from 'rxjs';
 import { AccountService } from '../account.service';
@@ -36,14 +36,32 @@ export class RegisterComponent {
 
   private createForm(): FormGroup {
     return this.fb.group({
-      name: this.fb.control('Chin Ling', [ Validators.required]),
-      username: this.fb.control('ncl@gmail.com', [ Validators.required]),
-      date_of_birth: this.fb.control('', [ Validators.required]),
-      password: this.fb.control('88888', [ Validators.required]),
-      mobile_no: this.fb.control('94892015', [ Validators.required]),
-      nationality: this.fb.control('Singaporean', [ Validators.required]),
-      address: this.fb.control('86 Dawson Road', [ Validators.required]),
+      name: this.fb.control('', [ Validators.required, Validators.minLength(5)]),
+      username: this.fb.control('', [ Validators.required, Validators.pattern('[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}')]),
+      date_of_birth: this.fb.control('', [Validators.required, this.minimumAgeValidator(18)]),
+      password: this.fb.control('', [Validators.required, Validators.minLength(8), Validators.pattern('^(?=.*[a-zA-Z])(?=.*[@#$%^&+=]).*$')]),
+      mobile_no: this.fb.control('', [ Validators.required, Validators.minLength(8)]),
+      nationality: this.fb.control('', [ Validators.required]),
+      address: this.fb.control('', [ Validators.required, Validators.minLength(8)]),
     })
+  }
+
+  private minimumAgeValidator(minAge: number) {
+    return (control: AbstractControl) => {
+      if (control.value) {
+        const today = new Date();
+        const birthDate = new Date(control.value);
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+          age--;
+        }
+        if (age < minAge) {
+          return { minimumAge: true };
+        }
+      }
+      return null;
+    };
   }
 
   canExit(): boolean {

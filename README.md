@@ -85,3 +85,7 @@ Some exciting implementations in Tradeus include charting, ability to create per
 - implemented websocket between angular client and spring
 - implemented email notification on login
 - improved css design for delete button
+
+1 Jul (Sat)
+- favicon
+- improved client-side validation requirements using regex and min length

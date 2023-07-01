@@ -18,7 +18,7 @@
         <td>Username:&nbsp;&nbsp;</td>
         <td>
             <input type="email" size="30" formControlName="username" placeholder="Email address">
-            <span *ngIf="invalidField('username')">
+            <span *ngIf="invalidField('username')" class="invalid-field">
                 Please enter a valid email address
             </span>
         </td>
@@ -27,10 +27,14 @@
         <tr>
         <td>Password:</td>
         <td>
-            <input type="text" size="30" formControlName="password" placeholder="Password">
-            <span *ngIf="invalidField('password')">
-                Please enter a valid password
-            </span>
+            <div>
+                <input type="password" size="30" formControlName="password" placeholder="Password">
+              </div>
+              <div>
+                <span *ngIf="invalidField('password')" class="invalid-field">
+                  Please enter a valid password. Password should have a minimum of 8 characters, including at least 1 special character and 1 letter.
+                </span>
+              </div>
         </td>
         </tr>
     <br>

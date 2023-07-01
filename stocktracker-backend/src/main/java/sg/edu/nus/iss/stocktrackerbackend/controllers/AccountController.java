@@ -92,9 +92,9 @@ public class AccountController {
          
         System.out.printf(">>>Successfully logged in>>>>>\n");   
 
-        String to = "nchinling@gmail.com";
+        String to = username;
         String subject = "Tradeus: Login on " + new Date().toString();
-        String body = "Hi " + loggedInAccount.getName() + ", You have logged in to Tradeus on " +new Date().toString() +". Please contact us immediately if it is not made by you.";
+        String body = "Hi " + loggedInAccount.getName() + ", You have logged in to Tradeus on " +new Date().toString() +". Please contact us immediately if it was not made by you.";
        
         emailSvc.sendEmail(to, subject, body);
 
@@ -158,6 +158,12 @@ public class AccountController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
             .body(resp.toString());
         }
+
+        String to = username;
+        String subject = "Tradeus: New Account created on " + new Date().toString();
+        String body = "Dear " + name + ", a Tradeus account has been created for you on " +new Date().toString() +". Tradeus offers intelligent financial data to users with the aim of improving users' investment decisions. Tradeus is glad to partner with you on this journey. Please contact us immediately if the registration was not made by you.  ";
+       
+        emailSvc.sendEmail(to, subject, body);
 
         return ResponseEntity.ok(resp.toString());
 
