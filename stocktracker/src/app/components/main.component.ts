@@ -3,6 +3,7 @@ import { Observable, BehaviorSubject, Subject, filter } from 'rxjs';
 import { WebSocketService } from '../websocket.service';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { WebSocketStock } from '../models';
+import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-main',
@@ -10,11 +11,6 @@ import { WebSocketStock } from '../models';
   styleUrls: ['./main.component.css']
 })
 export class MainComponent {
-
-
-ngOnInit():void{
-  
-}
 
 
 }

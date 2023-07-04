@@ -1,0 +1,40 @@
+
+  <div class = "container">
+    <h1>Buy Me a Coffee</h1>
+    <br>
+   
+ 
+    <i class="fa-solid fa-mug-hot" style="font-size: 36px;"></i>&nbsp;
+    <i class="fa-solid fa-mug-hot" style="font-size: 36px;"></i>&nbsp;
+    <i class="fa-solid fa-mug-hot" style="font-size: 36px;"></i>&nbsp;
+    <i class="fa-solid fa-mug-hot" style="font-size: 36px;"></i>&nbsp;
+    <i class="fa-solid fa-mug-hot" style="font-size: 36px;"></i>&nbsp;
+    <i class="fa-solid fa-mug-hot" style="font-size: 36px;"></i>
+    <br><br><br>
+    <p>Hi there! I hope you're enjoying your time on Tradeus. If you find the Tradeus helpful and would like to show your support, consider buying me a cup of coffee. Your donation will go a long way in helping me maintain and improve Tradeus. Just a small contribution can make a big difference. Thank you for considering supporting my work!</p>
+  
+    <br>
+    <div>
+      <button type="button" class="btn btn-primary" (click)="pay(500)">
+        Buy me a cup for SGD 5
+      </button>
+    </div>
+    <br>
+    <div>
+  
+      <button type="button" class="btn btn-primary" (click)="pay(customAmount*100)">
+        Buy me a cup for any amount you like
+      </button>&nbsp;
+      <input type="number" [(ngModel)]="customAmount" style="height: 35px;" placeholder="Enter amount in SGD">
+    </div>
+    <br>
+    <ul>
+      <li>Clicking the button will launch a new page in a separate window.</li>
+      <li>Please ensure that your browser allows pop-ups for the payment process.</li>
+      <li>This page will be routed to the dashboard</li>
+    </ul>
+    <br>
+      <div class="container" *ngIf="isLoading" class="loader"></div>
+  
+</div> 
+

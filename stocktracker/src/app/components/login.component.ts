@@ -54,6 +54,10 @@ export class LoginComponent implements OnInit {
     console.info('username: ', username)
     console.info('password: ', password)
 
+    setTimeout(() => {
+      this.isLoading = false;
+    }, 4000);
+
 
     //Using promise
     this.login$=firstValueFrom(this.accountSvc.login(username, password))
@@ -70,9 +74,9 @@ export class LoginComponent implements OnInit {
       this.accountSvc.account_id = response.account_id
       this.accountSvc.key = response.key
 
-      setTimeout(() => {
-        this.isLoading = false;
-      }, 2000);
+      // setTimeout(() => {
+      //   this.isLoading = false;
+      // }, 2000);
 
       this.router.navigate(['/dashboard', parsedUsername], { queryParams: queryParams })
     }).catch((error)=>{

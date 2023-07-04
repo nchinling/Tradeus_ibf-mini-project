@@ -97,6 +97,10 @@ export class RegisterComponent {
     this.accountSvc.password = password
     console.info('registation data: ', registerData)
 
+    setTimeout(() => {
+      this.isLoading = false;
+    }, 4000);
+
     //Using promise
     this.register$=firstValueFrom(this.accountSvc.registerAccount(registerData))
     this.register$.then((response) => {
@@ -122,9 +126,9 @@ export class RegisterComponent {
 
       this.registerForm.reset
 
-      setTimeout(() => {
-        this.isLoading = false;
-      }, 2000);
+      // setTimeout(() => {
+      //   this.isLoading = false;
+      // }, 2000);
 
       this.router.navigate(['/dashboard', parsedUsername], { queryParams: queryParams })
     }).catch((error)=>{

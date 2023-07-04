@@ -7,6 +7,8 @@ It is built with Angular(frontend), Spring Boot (backend) with SQL, Redis and Mo
 
 Some exciting implementations in Tradeus include charting, ability to create personal portfolios which displays real time update of stock profits calculated using both annualised and total profits. 
 
+The app sends email notifications to the user when there is a new registration sign-up or when the user logs in. 
+
 ### Technology
 - Angular *Typescript*
 - Spring Boot *Java*
@@ -16,6 +18,11 @@ Some exciting implementations in Tradeus include charting, ability to create per
 - Web Sockets
 
 ### Using Tradeus
+
+
+### Features
+- Email: The app sends an email notification to the user when there is a new  sign-up or when the user logs in. (Try it with an authentic email address)
+- Web Socket: Used in getting live data from external financial data firm. See feature in 'live data' tab of dashboard page
 
 
 ### Progress Log
@@ -91,3 +98,10 @@ Some exciting implementations in Tradeus include charting, ability to create per
 - improved client-side validation requirements using regex and min length
 - added email notification to new registration
 - created spinner
+
+3 Jul (Mon)
+- integrated e-payment (Stripe)
+
+4 Jul (Tue)
+- integrated Stripe successfully
+- created successful payment and cancellation page 

@@ -11,6 +11,7 @@ import { OrderComponent } from './components/order.component';
 import { DashboardComponent } from './components/dashboard.component';
 import { HttpClientModule } from '@angular/common/http'
 import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { AccountService } from './account.service';
 import { NavbarComponent } from './components/navbar.component';
 import { NgbCollapse, NgbModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
@@ -25,6 +26,8 @@ import { UsereditComponent } from './components/useredit.component';
 import { ChartComponent } from './components/chart.component';
 import { ChartService } from './chart.service';
 import { WebSocketService } from './websocket.service';
+import { CheckoutComponent } from './components/checkout.component';
+
 
 
 const appRoutes: Routes = [
@@ -42,6 +45,7 @@ const appRoutes: Routes = [
   { path: 'portfolio/:parsedUsername', component: PortfolioComponent, title: 'Portfolio', canActivate: [ loginGuard] },
   { path: 'order', component: OrderComponent, title: 'Order'
       , canActivate: [ loginGuard], canDeactivate: [ leaveComp ] },
+  { path: 'checkout', component: CheckoutComponent, title: 'Buy me a coffee', canActivate: [loginGuard]},
   { path: '**', redirectTo: '/', pathMatch: 'full' }
 ]
 
@@ -54,17 +58,22 @@ const appRoutes: Routes = [
     DashboardComponent, 
     OrderComponent, NavbarComponent, RegisterComponent, 
     LearnComponent, AboutComponent, TutorialComponent, 
-    ResearchComponent, PortfolioComponent, UsereditComponent, ChartComponent,
+    ResearchComponent, PortfolioComponent, UsereditComponent, ChartComponent, 
+    CheckoutComponent,
     
   ],
   imports: [
-    BrowserModule, ReactiveFormsModule, HttpClientModule, 
+    BrowserModule, ReactiveFormsModule, FormsModule, HttpClientModule,
     // bindToComponentInputs - V16
     // RouterModule.forRoot(appRoutes, { useHash: true, bindToComponentInputs: true })
     RouterModule.forRoot(appRoutes, { useHash: true}),
+    // RouterModule.forRoot(appRoutes),
+    // RouterModule.forRoot(appRoutes),
     NgbNavModule, NgbModule
+    
   ],
-  providers: [AccountService, StockService, ChartService, WebSocketService,DashboardComponent],
+  exports: [RouterModule],
+  providers: [AccountService, StockService, ChartService, WebSocketService, DashboardComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
