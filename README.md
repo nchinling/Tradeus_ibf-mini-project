@@ -105,3 +105,9 @@ The app sends email notifications to the user when there is a new registration s
 4 Jul (Tue)
 - integrated Stripe successfully
 - created successful payment and cancellation page 
+- implemented Manifest
+- 'Getting Started' page
+
+5 Jul (Wed)
+- Improve 'Edit user' form and chart fields
+- Create 'Features' and 'About Us' page
