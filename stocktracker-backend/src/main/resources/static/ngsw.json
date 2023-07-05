@@ -1,0 +1,103 @@
+{
+  "configVersion": 1,
+  "timestamp": 1688559204427,
+  "index": "/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/favicon.ico",
+        "/index.html",
+        "/main.11532f2ba61e5419.js",
+        "/manifest.webmanifest",
+        "/polyfills.b24922ad62e6d9f0.js",
+        "/runtime.9589e582c285e63a.js",
+        "/scripts.696ef14f5c9030cb.js",
+        "/styles.897077e29848b68c.css"
+      ],
+      "patterns": []
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/assets/icons/icon-128x128.png",
+        "/assets/icons/icon-144x144.png",
+        "/assets/icons/icon-152x152.png",
+        "/assets/icons/icon-192x192.png",
+        "/assets/icons/icon-512x512.png",
+        "/assets/icons/icon-72x72.png",
+        "/assets/icons/icon-96x96.png",
+        "/assets/static/images/background1new.jpg",
+        "/assets/static/images/chart.png",
+        "/assets/static/images/company.png",
+        "/assets/static/images/contribute.png",
+        "/assets/static/images/dashboard.png",
+        "/assets/static/images/portfolio.png",
+        "/background1new.6cf0177f21808269.jpg",
+        "/glyphicons-halflings-regular.009b407a9881be10.ttf",
+        "/glyphicons-halflings-regular.4ba85deaf3670942.woff",
+        "/glyphicons-halflings-regular.85f0466cb4ab3a4d.svg",
+        "/glyphicons-halflings-regular.b70781972ce7320b.woff2"
+      ],
+      "patterns": []
+    }
+  ],
+  "dataGroups": [],
+  "hashTable": {
+    "/assets/icons/icon-128x128.png": "8f57fa7ddb68aafb7d06fd72bd3708069eadd27f",
+    "/assets/icons/icon-144x144.png": "049fc0f3191bc8d5cc7161ec366aeedecc1dcff1",
+    "/assets/icons/icon-152x152.png": "17f1f9b125c075e2eb4580ba661682ada1f622f0",
+    "/assets/icons/icon-192x192.png": "59b87fab32b0a5fc9b3e2ddc0946e26f5cb0bbc4",
+    "/assets/icons/icon-512x512.png": "2befd81c7f8a0f7739d423584dcfdd502fbde0be",
+    "/assets/icons/icon-72x72.png": "a887341e930976cb3801e0fa76b774c36b872aa3",
+    "/assets/icons/icon-96x96.png": "098c1961f9bf6f566e2035ca2aea226065d83d30",
+    "/assets/static/images/background1new.jpg": "d971e5e30e75dffeaf0fe6af027f5ef91fcad246",
+    "/assets/static/images/chart.png": "87bdbd8dd7093db90c089b3195d6e51ea61ae7b6",
+    "/assets/static/images/company.png": "a1cf843b7887f131c33ee6492698a58f6f941b27",
+    "/assets/static/images/contribute.png": "b47b25087c226ace9464068bf0ed29a1afde99c7",
+    "/assets/static/images/dashboard.png": "2eb4a98529e3ba70793e05ea0a1267e6ee2ccb30",
+    "/assets/static/images/portfolio.png": "ee292a730c2a693a085dfb8382d239d3d6a85516",
+    "/background1new.6cf0177f21808269.jpg": "d971e5e30e75dffeaf0fe6af027f5ef91fcad246",
+    "/favicon.ico": "cc4868a2bdde371aac610dd33b4ac9f6bd81ca71",
+    "/glyphicons-halflings-regular.009b407a9881be10.ttf": "44bc1850f570972267b169ae18f1cb06b611ffa2",
+    "/glyphicons-halflings-regular.4ba85deaf3670942.woff": "278e49a86e634da6f2a02f3b47dd9d2a8f26210f",
+    "/glyphicons-halflings-regular.85f0466cb4ab3a4d.svg": "de51a8494180a6db074af2dee2383f0a363c5b08",
+    "/glyphicons-halflings-regular.b70781972ce7320b.woff2": "ca35b697d99cae4d1b60f2d60fcd37771987eb07",
+    "/index.html": "d74049b2e41cf8cb02cd40df5c022bf67bb15c01",
+    "/main.11532f2ba61e5419.js": "78467c091721d26f8707f7a76996b3939c9a7f9d",
+    "/manifest.webmanifest": "66273bbd1eac322c3602f81f5a7363cdbca6b6e8",
+    "/polyfills.b24922ad62e6d9f0.js": "fd0f5b6f61e12ba9f0eb2e8bdcfbd121ecd7f258",
+    "/runtime.9589e582c285e63a.js": "6cf51af90bb3f260d2932b8bc92185e8481e0815",
+    "/scripts.696ef14f5c9030cb.js": "fee4772023bcd0111a8c2f1544770cd20092945d",
+    "/styles.897077e29848b68c.css": "dd500f5e6af113ccbf2b49709b511b3ff328af0a"
+  },
+  "navigationUrls": [
+    {
+      "positive": true,
+      "regex": "^\\/.*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*\\.[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*\\/.*$"
+    }
+  ],
+  "navigationRequestStrategy": "performance"
+}

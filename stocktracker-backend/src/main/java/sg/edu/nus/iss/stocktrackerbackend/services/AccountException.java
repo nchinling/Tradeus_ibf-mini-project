@@ -9,10 +9,6 @@ public class AccountException extends Exception{
         super(message);
     }
 
-    // public AccountException(String message, Throwable cause) {
-    // super(message, cause);
-    // }
-
     
 }
 

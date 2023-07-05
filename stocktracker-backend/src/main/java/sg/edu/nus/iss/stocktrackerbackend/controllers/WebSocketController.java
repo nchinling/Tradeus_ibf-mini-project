@@ -25,7 +25,7 @@ import sg.edu.nus.iss.stocktrackerbackend.services.WebSocketService;
 
 
 @RestController
-@CrossOrigin(origins="*")
+// @CrossOrigin(origins="*")
 public class WebSocketController {
 
     @Autowired

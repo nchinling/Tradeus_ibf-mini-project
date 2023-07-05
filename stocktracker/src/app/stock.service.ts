@@ -3,7 +3,8 @@ import { Injectable, inject } from "@angular/core";
 import { Subject, lastValueFrom, tap, map, interval, firstValueFrom, debounceTime, Observable } from "rxjs";
 import { AnnualisedPortfolioData, Market, MarketIndex, PortfolioData, Stock, StockInfo, StockProfile } from "./models";
 
-const URL_API_TRADE_SERVER = 'http://localhost:8080/api'
+// const URL_API_TRADE_SERVER = 'http://localhost:8080/api'
+const URL_API_TRADE_SERVER = '/api'
 
 @Injectable()
 export class StockService {

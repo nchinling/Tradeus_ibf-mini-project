@@ -15,7 +15,7 @@ import static sg.edu.nus.iss.stocktrackerbackend.repositories.DBQueries.*;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
+
 
 @Repository
 public class AccountRepository {

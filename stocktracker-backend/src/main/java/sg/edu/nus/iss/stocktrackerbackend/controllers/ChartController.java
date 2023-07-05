@@ -23,7 +23,7 @@ import sg.edu.nus.iss.stocktrackerbackend.services.ChartService;
 
 @Controller
 @RequestMapping(path="/api", produces = MediaType.APPLICATION_JSON_VALUE)
-@CrossOrigin(origins="*")
+// @CrossOrigin(origins="*")
 public class ChartController {
     
     @Autowired

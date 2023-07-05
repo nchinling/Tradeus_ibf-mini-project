@@ -5,7 +5,8 @@ import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from "@angular
 import { Router } from "@angular/router";
 // import { v4 as uuidv4 } from 'uuid'. need to install package
 
-const URL_API_TRADE_SERVER = 'http://localhost:8080/api'
+// const URL_API_TRADE_SERVER = 'http://localhost:8080/api'
+const URL_API_TRADE_SERVER = '/api'
 
 @Injectable()
 export class AccountService {

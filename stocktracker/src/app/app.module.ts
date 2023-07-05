@@ -7,7 +7,6 @@ import { LoginComponent } from './components/login.component';
 import { leaveComp, loginGuard} from './util';
 import { RouterModule, Routes } from '@angular/router';
 import { MainComponent } from './components/main.component';
-import { OrderComponent } from './components/order.component';
 import { DashboardComponent } from './components/dashboard.component';
 import { HttpClientModule } from '@angular/common/http'
 import { ReactiveFormsModule } from '@angular/forms';
@@ -31,7 +30,6 @@ import { GettingStartedComponent } from './components/main/getting-started.compo
 import { AiComponent } from './components/ai.component';
 
 
-
 const appRoutes: Routes = [
   { path: '', component: MainComponent, title: 'Welcome to Tradeus' },
   { path: 'learn', component: LearnComponent, title: 'Learn' },
@@ -44,8 +42,6 @@ const appRoutes: Routes = [
   { path: 'research', component: ResearchComponent, title: 'Research', canActivate: [ loginGuard] },
   { path: 'ai', component: AiComponent, title: 'AISA', canActivate: [ loginGuard] },
   { path: 'portfolio/:parsedUsername', component: PortfolioComponent, title: 'Portfolio', canActivate: [ loginGuard] },
-  { path: 'order', component: OrderComponent, title: 'Order'
-      , canActivate: [ loginGuard], canDeactivate: [ leaveComp ] },
   { path: 'checkout', component: CheckoutComponent, title: 'Buy me a coffee', canActivate: [loginGuard]},
   { path: '**', redirectTo: '/', pathMatch: 'full' }
 ]
@@ -56,8 +52,7 @@ const appRoutes: Routes = [
     AppComponent,
     LoginComponent,
     MainComponent,
-    DashboardComponent, 
-    OrderComponent, NavbarComponent, RegisterComponent, 
+    DashboardComponent, NavbarComponent, RegisterComponent, 
     LearnComponent, AboutComponent, ResearchComponent, 
     PortfolioComponent, UsereditComponent, ChartComponent, 
     CheckoutComponent, GettingStartedComponent, AiComponent,

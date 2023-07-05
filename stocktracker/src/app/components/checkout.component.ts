@@ -36,12 +36,12 @@ export class CheckoutComponent {
       // cancelUrl: `${window.location.origin}/cancel`,
       // successUrl: `${window.location.origin}/success`,
 
-      successUrl: 'http://localhost:8080/api/stripe-success',
-      cancelUrl: 'http://localhost:8080/api/stripe-cancelled',
+      // successUrl: 'http://localhost:8080/api/stripe-success',
+      // cancelUrl: 'http://localhost:8080/api/stripe-cancelled',
 
       //for deployment when single server is used
-      // successUrl: `${window.location.origin}/api/stripe-success`,
-      // cancelUrl: `${window.location.origin}/api/stripe-cancelled`,
+      successUrl: `${window.location.origin}/api/stripe-success`,
+      cancelUrl: `${window.location.origin}/api/stripe-cancelled`,
     
     };
 
@@ -61,7 +61,11 @@ export class CheckoutComponent {
         console.log('Session ID:', sessionId);
         // Redirect to the server's endpoint for handling the Stripe checkout
         // window.location.href = `${environment.serverUrl}/checkout/${sessionId}`;
-        window.open(`${environment.serverUrl}/checkout/${sessionId}`, '_blank');
+        // window.open(`${environment.serverUrl}/checkout/${sessionId}`, '_blank');
+
+        const url = `${environment.serverUrl}/checkout/${sessionId}`;
+        console.log(url);
+        window.open(url, '_blank');
 
 
       },

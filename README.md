@@ -115,3 +115,7 @@ Some exciting implementations in Tradeus include charting, creation of watch lis
 - start deployment
 - create corporate Gmail
 
+6 Jul (Thu)
+- Provide minimum amount for credit card
+- Start deployment
+

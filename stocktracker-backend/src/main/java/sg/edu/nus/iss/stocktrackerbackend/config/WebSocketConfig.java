@@ -17,9 +17,12 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer  {
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry stompEndpointRegistry) {
-		stompEndpointRegistry.addEndpoint("/socket")
-				.setAllowedOrigins("http://localhost:4200")
-				.withSockJS();
+		// stompEndpointRegistry.addEndpoint("/socket")
+		// 		.setAllowedOrigins("http://localhost:4200")
+		// 		.withSockJS();
+		stompEndpointRegistry.addEndpoint("/api/socket")
+		// .setAllowedOrigins("*")
+		.withSockJS();
 	}
 
 	@Override

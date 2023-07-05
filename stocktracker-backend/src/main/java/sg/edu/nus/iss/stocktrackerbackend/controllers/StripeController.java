@@ -23,8 +23,7 @@ import sg.edu.nus.iss.stocktrackerbackend.models.CheckoutPayment;
 
 @RestController
 @RequestMapping(value = "/api")
-// @CrossOrigin(origins = "http://localhost:4200")
-@CrossOrigin(origins = "*")
+// @CrossOrigin(origins = "*")
 public class StripeController {
 
 @Value("${stripe.secret.key}")
@@ -67,7 +66,7 @@ private String stripeSecretKey;
  @GetMapping("/checkout/{sessionId}")
   public ResponseEntity<String> redirectToCheckout(@PathVariable String sessionId) {
 
-  
+    // Stripe.apiKey = stripeSecretKey;
 
     System.out.println(">>>the sessionId in checkout is >>>>" + sessionId);
     System.out.println(">>>I am inside checkout/sessionId");
@@ -77,6 +76,7 @@ private String stripeSecretKey;
       
       // Get the checkout URL from the session
       String checkoutUrl = session.getUrl();
+      System.out.println("The checkout Url is >>>>>" + checkoutUrl);
       
       // Redirect to the checkout URL
       return ResponseEntity.status(HttpStatus.FOUND)
@@ -101,7 +101,7 @@ private String stripeSecretKey;
 public String stripeSuccess() {
     System.out.println(">> I am inside /stripe-success");
 
-    return "<p>Your payment was successful. Thank you.</p><p>You may close this page</p>";
+    return "<p>Your payment was successful. Thank you.</p><p>You may close this page.</p>";
 }
 
 

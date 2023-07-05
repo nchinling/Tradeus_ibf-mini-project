@@ -42,7 +42,7 @@ import sg.edu.nus.iss.stocktrackerbackend.services.WebSocketService;
 
 @Controller
 @RequestMapping(path="/api")
-@CrossOrigin(origins="*")
+// @CrossOrigin(origins="*")
 public class AccountController {
     
     @Autowired

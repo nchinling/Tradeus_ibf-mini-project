@@ -35,7 +35,7 @@ import sg.edu.nus.iss.stocktrackerbackend.services.StockService;
 
 @Controller
 @RequestMapping(path="/api", produces = MediaType.APPLICATION_JSON_VALUE)
-@CrossOrigin(origins="*")
+// @CrossOrigin(origins="*")
 // @CrossOrigin(origins = "http://localhost:4200")
 public class StockController {
     
