@@ -96,7 +96,7 @@ public class AccountController {
         String subject = "Tradeus: Login on " + new Date().toString();
         String body = "Hi " + loggedInAccount.getName() + ", You have logged in to Tradeus on " +new Date().toString() +". Please contact us immediately if it was not made by you.";
        
-        // emailSvc.sendEmail(to, subject, body);
+        emailSvc.sendEmail(to, subject, body);
 
         return ResponseEntity.ok(resp.toString());
 

@@ -1,5 +1,5 @@
 import { Component, Input, inject } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable, Subject, filter, firstValueFrom, from, mergeMap, of, switchMap } from 'rxjs';
 import { AccountService } from '../account.service';
@@ -85,10 +85,11 @@ export class PortfolioComponent {
     return this.fb.group({
       exchange: this.fb.control<string>('nyse', [ Validators.required]),
       stockName: this.fb.control<string>('', [ Validators.required]),
-      units: this.fb.control<number>(2000, [ Validators.required]),
-      price: this.fb.control<number>(1.60, [ Validators.required]),
-      fee: this.fb.control<number>(20.45, [ Validators.required]),
-      date: this.fb.control('', [ Validators.required]),
+      units: this.fb.control<number>(0, [ Validators.required, Validators.min(1)]),
+      price: this.fb.control<number>(0, [ Validators.required, Validators.min(0.0001)]),
+      fee: this.fb.control<number>(0, [ Validators.required, Validators.min(0)]),
+      // date: this.fb.control('', [ Validators.required]),
+      date: ['', [Validators.required, this.futureDateValidator]],
     })
   }
 
@@ -101,6 +102,13 @@ export class PortfolioComponent {
   invalidField(ctrlName:string): boolean{
     return !!(this.portfolioForm.get(ctrlName)?.invalid && 
           this.portfolioForm.get(ctrlName)?.dirty)
+  }
+
+  private futureDateValidator(control: AbstractControl): ValidationErrors | null {
+    const selectedDate = new Date(control.value);
+    const currentDate = new Date();
+  
+    return selectedDate <= currentDate ? null : { futureDate: true };
   }
 
 

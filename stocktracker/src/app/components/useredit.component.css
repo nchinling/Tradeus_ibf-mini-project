@@ -2,3 +2,8 @@
     color:blue;
     font-size: 20px;
 }
+
+.invalid-field {
+    font-style: italic;
+    color: #1363DF; 
+}

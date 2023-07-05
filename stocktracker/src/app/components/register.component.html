@@ -78,6 +78,9 @@
             <td>
                 <input type="text" size="30" formControlName="nationality" placeholder="Nationality">
             </td>
+            <span *ngIf="invalidField('nationality')" class="invalid-field">
+              Please enter your nationality.
+            </span>
           </tr>
           <br>
           <tr>

@@ -124,3 +124,8 @@ table {
   font-weight: bold;
 }
 
+.invalid-field {
+  font-style: italic;
+  color: #1363DF; 
+}
+

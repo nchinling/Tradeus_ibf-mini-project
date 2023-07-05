@@ -1,3 +1,4 @@
-#MyChart {
-    /* background-color: lightskyblue */
-  }
+.invalid-field {
+  font-style: italic;
+  color: #1363DF; 
+}

@@ -48,7 +48,7 @@ public class WebSocketController {
         while (true) {
             // Perform necessary operations to fetch updated stock data
              List<String> stockData = webSocketService.getReceivedData();
-
+            // System.out.println("I am inside websocket");
             template.convertAndSend("/topic/notification", stockData);
             webSocketService.clearReceivedData();
             // Push the updated stock data to the front-end

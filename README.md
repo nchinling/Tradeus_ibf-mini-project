@@ -5,9 +5,9 @@ Tradeus is a stock tracker app, with features that distinguishes it from other t
 
 It is built with Angular(frontend), Spring Boot (backend) with SQL, Redis and MongoDB as databases.
 
-Some exciting implementations in Tradeus include charting, ability to create personal portfolios which displays real time update of stock profits calculated using both annualised and total profits. 
+Some exciting implementations in Tradeus include charting, creation of watch list and ability to create personal portfolios which displays real time update of stock profits calculated using both annualised and total profits. 
 
-The app sends email notifications to the user when there is a new registration sign-up or when the user logs in. 
+
 
 ### Technology
 - Angular *Typescript*
@@ -16,6 +16,7 @@ The app sends email notifications to the user when there is a new registration s
 - ngBootStrap and Bootstrap 
 - Java Mail
 - Web Sockets
+- Stripe E-payment
 
 ### Using Tradeus
 
@@ -109,5 +110,8 @@ The app sends email notifications to the user when there is a new registration s
 - 'Getting Started' page
 
 5 Jul (Wed)
-- Improve 'Edit user' form and chart fields
-- Create 'Features' and 'About Us' page
+- Provide validation for 'Edit user' form, portfolio form and chart fields
+- Create 'Learn' and 'About Us' pages
+- start deployment
+- create corporate Gmail
+

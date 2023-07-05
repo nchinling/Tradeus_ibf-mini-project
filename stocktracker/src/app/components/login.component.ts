@@ -30,7 +30,7 @@ export class LoginComponent implements OnInit {
     this.errorMessage$ = this.accountSvc.onErrorMessage;
     this.loginForm = this.fb.group({
       // username: this.fb.control<string>('', [ Validators.required, Validators.minLength(5) ]),
-      username: this.fb.control<string>('nchinling@gmail.com', [Validators.required, Validators.pattern('[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}')]),
+      username: this.fb.control<string>('tradeus@email.com', [Validators.required, Validators.pattern('[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}')]),
       password: this.fb.control<string>('#a888888', [ Validators.required, Validators.minLength(8), Validators.pattern('^(?=.*[a-zA-Z])(?=.*[@#$%^&+=]).*$') ])
     })
   }
@@ -56,7 +56,7 @@ export class LoginComponent implements OnInit {
 
     setTimeout(() => {
       this.isLoading = false;
-    }, 4000);
+    }, 10000);
 
 
     //Using promise

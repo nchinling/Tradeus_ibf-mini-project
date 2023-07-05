@@ -18,7 +18,6 @@ import { NgbCollapse, NgbModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap
 import { RegisterComponent } from './components/register.component';
 import { LearnComponent } from './components/main/learn.component';
 import { AboutComponent } from './components/main/about.component';
-import { TutorialComponent } from './components/main/tutorial.component';
 import { StockService } from './stock.service';
 import { ResearchComponent } from './components/research.component';
 import { PortfolioComponent } from './components/portfolio.component';
@@ -28,21 +27,22 @@ import { ChartService } from './chart.service';
 import { WebSocketService } from './websocket.service';
 import { CheckoutComponent } from './components/checkout.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { GettingStartedComponent } from './components/main/getting-started.component';
+import { AiComponent } from './components/ai.component';
 
 
 
 const appRoutes: Routes = [
   { path: '', component: MainComponent, title: 'Welcome to Tradeus' },
-  { path: 'main/learn', component: LearnComponent, title: 'Learn' },
-  { path: 'main/tutorial', component: TutorialComponent, title: 'Getting Started' },
-  { path: 'main/about', component: AboutComponent, title: 'About Us' },
+  { path: 'learn', component: LearnComponent, title: 'Learn' },
+  { path: 'getting_started', component: GettingStartedComponent, title: 'Getting Started' },
+  { path: 'about', component: AboutComponent, title: 'About Us' },
   { path: 'login', component: LoginComponent, title: 'Log In' },
   { path: 'register', component: RegisterComponent, title: 'Register' },
-  { path: 'useredit', component: UsereditComponent, title: 'Edit Profile' },
-  // { path: 'dashboard/:userId', component: DashboardComponent, canActivate: [ loginGuard ] },
-  // { path: 'dashboard', component: DashboardComponent, canActivate: [ loginGuard ] },
+  { path: 'useredit', component: UsereditComponent, title: 'Edit Profile', canActivate: [ loginGuard] },
   { path: 'dashboard/:parsedUsername', component: DashboardComponent, title: 'DashBoard', canActivate: [loginGuard]},
   { path: 'research', component: ResearchComponent, title: 'Research', canActivate: [ loginGuard] },
+  { path: 'ai', component: AiComponent, title: 'AISA', canActivate: [ loginGuard] },
   { path: 'portfolio/:parsedUsername', component: PortfolioComponent, title: 'Portfolio', canActivate: [ loginGuard] },
   { path: 'order', component: OrderComponent, title: 'Order'
       , canActivate: [ loginGuard], canDeactivate: [ leaveComp ] },
@@ -58,9 +58,9 @@ const appRoutes: Routes = [
     MainComponent,
     DashboardComponent, 
     OrderComponent, NavbarComponent, RegisterComponent, 
-    LearnComponent, AboutComponent, TutorialComponent, 
-    ResearchComponent, PortfolioComponent, UsereditComponent, ChartComponent, 
-    CheckoutComponent,
+    LearnComponent, AboutComponent, ResearchComponent, 
+    PortfolioComponent, UsereditComponent, ChartComponent, 
+    CheckoutComponent, GettingStartedComponent, AiComponent,
     
   ],
   imports: [

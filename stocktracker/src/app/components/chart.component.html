@@ -12,6 +12,11 @@
                 <td style="padding-right: 10px;">
                   <input type="number" formControlName="dataPoints">
                 </td>
+                <div>
+                  <span *ngIf="invalidField('dataPoints')" class="invalid-field">
+                    Min. of 1, max of 5000
+                  </span>
+                </div>
                 <td style="padding-left: 10px;">Interval:&nbsp;</td>
                 <td>
                   <select formControlName="interval">

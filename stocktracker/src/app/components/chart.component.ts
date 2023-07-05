@@ -59,8 +59,12 @@ export class ChartComponent {
   private createForm(): FormGroup {
     return this.fb.group({
       interval: this.fb.control<string>(this.loadInterval, [ Validators.required ]),
-      dataPoints: this.fb.control<number>(30, [ Validators.required ])
+      dataPoints: this.fb.control<number>(30, [ Validators.required,  Validators.min(1), Validators.max(5000) ])
     })
+  }
+
+  invalidField(ctrlName:string): boolean{
+    return !!(this.chartForm.get(ctrlName)?.invalid && this.chartForm.get(ctrlName)?.dirty)
   }
 
 

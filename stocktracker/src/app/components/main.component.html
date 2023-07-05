@@ -4,48 +4,6 @@
 </div>
 
 
-<!-- 
-<table class="table-layout">
-    <thead>
-      <tr>
-        <th style="width: 10px;">Company</th>
-        <th style="width: 10px;">Curr</th>
-        <th style="width: 10px;">Exch</th>
-        <th style="width: 10px;">Volume</th>
-        <th style="width: 10px;">Price</th>
-        <th style="width: 10px;">Ask</th>
-        <th style="width: 10px;">Bid</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let stock of webSocketStocks">
-        <td style="width: 10px;">{{ stock.symbol }}</td>
-        <td style="width: 10px;">{{ stock.currency }}</td>
-        <td style="width: 10px;">{{ stock.exchange }}</td>
-        <td style="width: 10px;" [ngClass]="{ 'value-drop': stock.volume < stock.previousVolume, 'value-increase': stock.volume > stock.previousVolume }">
-          <span>{{ (stock.volume !== null ? stock.volume : stock.previousVolume) | number: '1.2-2' }}</span>
-          <span *ngIf="stock.volume < stock.previousVolume">&#9660;</span>
-          <span *ngIf="stock.volume > stock.previousVolume">&#9650;</span>
-        </td>
-        <td style="width: 10px;" [ngClass]="{ 'value-drop': stock.price < stock.previousPrice, 'value-increase': stock.price > stock.previousPrice }">
-          <span>{{ (stock.price !== null ? stock.price : stock.previousPrice) | number: '1.2-2' }}</span>
-          <span *ngIf="stock.price < stock.previousPrice">&#9660;</span>
-          <span *ngIf="stock.price > stock.previousPrice">&#9650;</span>
-        </td>
-        <td style="width: 10px;" [ngClass]="{ 'value-drop': stock.ask < stock.previousAsk, 'value-increase': stock.ask > stock.previousAsk }">
-          <span>{{ (stock.ask !== null ? stock.ask : stock.previousAsk) | number: '1.2-2' }}</span>
-          <span *ngIf="stock.ask < stock.previousAsk">&#9660;</span>
-          <span *ngIf="stock.ask > stock.previousAsk">&#9650;</span>
-        </td>
-        <td style="width: 10px;" [ngClass]="{ 'value-drop': stock.bid < stock.previousBid, 'value-increase': stock.bid > stock.previousBid }">
-          <span>{{ (stock.bid !== null ? stock.bid : stock.previousBid) | number: '1.2-2' }}</span>
-          <span *ngIf="stock.bid < stock.previousBid">&#9660;</span>
-          <span *ngIf="stock.bid > stock.previousBid">&#9650;</span>
-        </td>
-      </tr>
-    </tbody>
-  </table> -->
-
 <div class="background-image">
   
 </div>

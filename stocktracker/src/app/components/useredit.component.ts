@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable, firstValueFrom } from 'rxjs';
 import { AccountService } from '../account.service';
@@ -50,29 +50,17 @@ export class UsereditComponent {
   }
 
   private createForm(): FormGroup {
-    // const userData: UserData = this.accountSvc.getUserData(this.username);
+ 
     this.userData$=this.accountSvc.getUserData(this.username)
     const formGroup = this.fb.group({
-      name: ['', Validators.required],
-      password: ['', Validators.required],
-      // username: ['', Validators.required],
-      address: ['', Validators.required],
-      mobile_no: ['', Validators.required],
+      name: ['', [ Validators.required, Validators.minLength(5)]],
+      password: ['', [Validators.required, Validators.minLength(8), Validators.pattern('^(?=.*[a-zA-Z])(?=.*[@#$%^&+=]).*$')]],
+      address: ['', [ Validators.required, Validators.minLength(8)]],
+      mobile_no: ['', [ Validators.required, Validators.minLength(8)]],
       nationality: ['', Validators.required],
-      date_of_birth: ['', Validators.required],
+      date_of_birth: ['', [Validators.required, this.minimumAgeValidator(18)]],
     });
 
-    // this.userData$.then((userData) => {
-    //   formGroup.patchValue(userData);
-    // });
-
-    // this.userData$.then((userData) => {
-    //   const userDataWithFormattedDate = {
-    //     ...userData,
-    //     date_of_birth: userData.date_of_birth.toISOString().substring(0, 10), // Convert Date to string with format 'YYYY-MM-DD'
-    //   };
-    //   formGroup.patchValue(userDataWithFormattedDate);
-    // });
 
     this.userData$.then((userData) => {
       const date = new Date(userData.date_of_birth);
@@ -88,6 +76,24 @@ export class UsereditComponent {
 
 
     return formGroup;
+  }
+
+  private minimumAgeValidator(minAge: number) {
+    return (control: AbstractControl) => {
+      if (control.value) {
+        const today = new Date();
+        const birthDate = new Date(control.value);
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+          age--;
+        }
+        if (age < minAge) {
+          return { minimumAge: true };
+        }
+      }
+      return null;
+    };
   }
   
   canExit(): boolean {

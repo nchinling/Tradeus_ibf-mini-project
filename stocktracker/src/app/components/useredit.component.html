@@ -25,6 +25,9 @@
                 <td>
                     <input type="text" size="30" formControlName="name" placeholder="Name">
                 </td>
+                <span *ngIf="invalidField('name')" class="invalid-field">
+                  Please enter a valid name (Min. of 5 chars).
+              </span>
             </tr>
             <br>
           
@@ -33,20 +36,20 @@
                 <td>
                     <input type="password" size="30" formControlName="password" placeholder="Password">
                 </td>
+                <span *ngIf="invalidField('password')" class="invalid-field">
+                  Please enter a valid password. Password should have a minimum of 8 characters, including at least 1 special character and 1 letter.
+                </span>
             </tr>
-            <!-- <br>
-          <tr>
-            <td>Email:&nbsp;&nbsp;</td>
-            <td>
-                <input type="email" size="30" formControlName="username" placeholder="Email address (used as username)">
-            </td>
-          </tr> -->
+
           <br>
           <tr>
             <td>Address:&nbsp;&nbsp;</td>
             <td>
                 <input type="text" size="30" formControlName="address" placeholder="Address">
             </td>
+            <span *ngIf="invalidField('address')" class="invalid-field">
+              Please enter a valid address (Min. of 8 chars).
+          </span>
           </tr>
           <br>
           <tr>
@@ -54,6 +57,9 @@
             <td>
                 <input type="text" size="30" formControlName="mobile_no" placeholder="Mobile number">
             </td>
+            <span *ngIf="invalidField('mobile_no')" class="invalid-field">
+              Please enter a valid mobile number beginning with either 9 or 8.
+          </span>
           </tr>
           <br>
           <tr>
@@ -61,6 +67,9 @@
             <td>
                 <input type="text" size="30" formControlName="nationality" placeholder="Nationality">
             </td>
+            <span *ngIf="invalidField('nationality')" class="invalid-field">
+              Please enter your nationality.
+            </span>
           </tr>
           <br>
           <tr>
@@ -68,6 +77,9 @@
             <td>
                 <input type="date" size="30" formControlName="date_of_birth" placeholder="Date of birth">
             </td>
+            <span *ngIf="invalidField('date_of_birth')" class="invalid-field">
+              You need to be at least 18 year old.
+          </span>
           </tr>
           <br>
           <tr>
