@@ -1,6 +1,7 @@
 package sg.edu.nus.iss.stocktrackerbackend.controllers;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ import com.stripe.exception.StripeException;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
 
+import jakarta.servlet.http.HttpServletRequest;
 import sg.edu.nus.iss.stocktrackerbackend.models.CheckoutPayment;
 
 @RestController
@@ -29,18 +31,42 @@ public class StripeController {
 @Value("${stripe.secret.key}")
 private String stripeSecretKey;
 
+@Value("${app.success-url}")
+private String successUrl;
+
+@Value("${app.cancel-url}")
+private String cancelUrl;
+
+
+
+@Autowired
+private HttpServletRequest request;
+
   @PostMapping("/payment")
   public ResponseEntity<String> paymentWithCheckoutPage(@RequestBody CheckoutPayment payment) throws StripeException {
     // Initialize Stripe and create session parameters
     System.out.println(">>>>>I am inside payment");
     
     Stripe.apiKey = stripeSecretKey;
+
+    
+    // String successUrl = "http://www.google.com/";
+    // String cancelUrl = "http://www.ngchinling.com/";
+    // String successUrl = "http://localhost:8080/success.html";
+    // String cancelUrl = "http://localhost:8080/cancel.html";
+
+
+    System.out.println(">>>the successUrl is>>>" + successUrl);
+    
+    System.out.println(">>>the cancelUrl is>>>" + cancelUrl);
     
     SessionCreateParams params = SessionCreateParams.builder()
         .addPaymentMethodType(SessionCreateParams.PaymentMethodType.CARD)
         .setMode(SessionCreateParams.Mode.PAYMENT)
-        .setSuccessUrl(payment.getSuccessUrl())
-        .setCancelUrl(payment.getCancelUrl())
+        // .setSuccessUrl(payment.getSuccessUrl())
+        // .setCancelUrl(payment.getCancelUrl())
+        .setSuccessUrl(successUrl)
+        .setCancelUrl(cancelUrl)
         .addLineItem(SessionCreateParams.LineItem.builder()
             .setQuantity(payment.getQuantity())
             .setPriceData(SessionCreateParams.LineItem.PriceData.builder()
@@ -77,17 +103,21 @@ private String stripeSecretKey;
       // Get the checkout URL from the session
       String checkoutUrl = session.getUrl();
       System.out.println("The checkout Url is >>>>>" + checkoutUrl);
+
+      return ResponseEntity.ok().body(checkoutUrl);
       
       // Redirect to the checkout URL
-      return ResponseEntity.status(HttpStatus.FOUND)
-          .header(HttpHeaders.LOCATION, checkoutUrl)
-          .build();
+      // return ResponseEntity.status(HttpStatus.FOUND)
+      //     .header(HttpHeaders.LOCATION, checkoutUrl)
+      //     .build();
     } catch (StripeException e) {
       // Handle any errors that occur during the retrieval of the session
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
           .body("Error retrieving session");
     }
   }
+
+
     
 
 // @GetMapping("/stripe-success")
@@ -97,20 +127,20 @@ private String stripeSecretKey;
 //     return "Your payment was successful. Thank you."; 
 // }
 
-@GetMapping("/stripe-success")
-public String stripeSuccess() {
-    System.out.println(">> I am inside /stripe-success");
+// @GetMapping("/stripe-success")
+// public String stripeSuccess() {
+//     System.out.println(">> I am inside /stripe-success");
 
-    return "<p>Your payment was successful. Thank you.</p><p>You may close this page.</p>";
-}
+//     return "<p>Your payment was successful. Thank you.</p><p>You may close this page.</p>";
+// }
 
 
-@GetMapping("/stripe-cancelled")
-public String stripeCancelled() {
-    System.out.println(">>I am inside /stripe-cancelled");
+// @GetMapping("/stripe-cancelled")
+// public String stripeCancelled() {
+//     System.out.println(">>I am inside /stripe-cancelled");
 
-    return "<p>You have cancelled the transaction.</p><p>You may close this page</p>";
-}
+//     return "<p>You have cancelled the transaction.</p><p>You may close this page</p>";
+// }
 
 
 

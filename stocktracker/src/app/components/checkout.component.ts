@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, inject } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { loadStripe } from '@stripe/stripe-js';
@@ -32,17 +32,7 @@ export class CheckoutComponent {
       currency: 'sgd',
       amount: amount,
       quantity: '1',
-      // cancelUrl: 'http://localhost:4200/#/cancel',
-      // cancelUrl: `${window.location.origin}/cancel`,
-      // successUrl: `${window.location.origin}/success`,
-
-      // successUrl: 'http://localhost:8080/api/stripe-success',
-      // cancelUrl: 'http://localhost:8080/api/stripe-cancelled',
-
-      //for deployment when single server is used
-      successUrl: `${window.location.origin}/api/stripe-success`,
-      cancelUrl: `${window.location.origin}/api/stripe-cancelled`,
-    
+      
     };
 
     this.username = this.accountSvc.username
@@ -50,35 +40,46 @@ export class CheckoutComponent {
     setTimeout(() => {
       this.router.navigate(['/dashboard', this.username]);
       this.isLoading = false;
-      // this.router.navigate(['/dashboard', this.username]);
-
+  
     }, 3000);
 
     this.http
-    .post(`${environment.serverUrl}/payment`, payment, { responseType: 'text' })
+    // .post(`${environment.serverUrl}/payment`, payment, { responseType: 'text' })
+    .post(`/api/payment`, payment, { responseType: 'text' })
     .subscribe({
       next: (sessionId: string) => {
         console.log('Session ID:', sessionId);
-        // Redirect to the server's endpoint for handling the Stripe checkout
-        // window.location.href = `${environment.serverUrl}/checkout/${sessionId}`;
-        // window.open(`${environment.serverUrl}/checkout/${sessionId}`, '_blank');
-
-        const url = `${environment.serverUrl}/checkout/${sessionId}`;
-        console.log(url);
-        window.open(url, '_blank');
-
-
+  
+        this.http.get(`/api/checkout/${sessionId}`, { responseType: 'text' }).subscribe({
+          next: (checkoutUrl: string) => {
+            console.log('I am here. the Checkout URL is:', checkoutUrl);
+            window.open(checkoutUrl, '_blank', 'noopener');
+          },
+          error: (error: any) => {
+            console.error(error);
+          }
+        });
       },
       error: (error: any) => {
-        // Handle any errors that occur during the payment request
         console.error(error);
       }
     });
-
-
   }
 
+          // window.location.href = `${environment.serverUrl}/checkout/${sessionId}`;
+        // window.open(`${environment.serverUrl}/checkout/${sessionId}`, '_blank');
 
+        // const url = `${environment.serverUrl}/checkout/${sessionId}`;
+        
+        // const url = `${window.location.origin}/api/checkout/${sessionId}`;
+        // const url = `/api/checkout/${sessionId}`;
+
+
+  // const url = `/api/checkout/${sessionId}`;
+  // console.log('the url is ' +url);
+  // window.open(url, '_blank', 'noopener');
+
+  
 
 
   

@@ -42,7 +42,7 @@ const appRoutes: Routes = [
   { path: 'research', component: ResearchComponent, title: 'Research', canActivate: [ loginGuard] },
   { path: 'ai', component: AiComponent, title: 'AISA', canActivate: [ loginGuard] },
   { path: 'portfolio/:parsedUsername', component: PortfolioComponent, title: 'Portfolio', canActivate: [ loginGuard] },
-  { path: 'checkout', component: CheckoutComponent, title: 'Buy me a coffee', canActivate: [loginGuard]},
+  { path: 'checkout', component: CheckoutComponent, title: 'Buy me a coffee'},
   { path: '**', redirectTo: '/', pathMatch: 'full' }
 ]
 
@@ -55,16 +55,16 @@ const appRoutes: Routes = [
     DashboardComponent, NavbarComponent, RegisterComponent, 
     LearnComponent, AboutComponent, ResearchComponent, 
     PortfolioComponent, UsereditComponent, ChartComponent, 
-    CheckoutComponent, GettingStartedComponent, AiComponent,
+    CheckoutComponent, GettingStartedComponent, AiComponent
     
   ],
   imports: [
     BrowserModule, ReactiveFormsModule, FormsModule, HttpClientModule,
     // bindToComponentInputs - V16
     // RouterModule.forRoot(appRoutes, { useHash: true, bindToComponentInputs: true })
-    RouterModule.forRoot(appRoutes, { useHash: true}),
-    // RouterModule.forRoot(appRoutes),
-    // RouterModule.forRoot(appRoutes),
+    // RouterModule.forRoot(appRoutes, { useHash: true}),
+    RouterModule.forRoot(appRoutes),
+   
     NgbNavModule, NgbModule, ServiceWorkerModule.register('ngsw-worker.js', {
   enabled: !isDevMode(),
   // Register the ServiceWorker as soon as the application is stable

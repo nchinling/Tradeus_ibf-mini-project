@@ -116,6 +116,11 @@ Some exciting implementations in Tradeus include charting, creation of watch lis
 - create corporate Gmail
 
 6 Jul (Thu)
+- Sorted single server deployment for sockets and stripe
+
+7 Jul (Fri)
+- fixed single server deployment payment success and payment cancellation
+
+8 Jul (Sat)
 - Provide minimum amount for credit card
 - Start deployment
-
