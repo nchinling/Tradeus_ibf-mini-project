@@ -1,26 +1,12 @@
 package sg.edu.nus.iss.stocktrackerbackend.controllers;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 
-import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.handshake.ServerHandshake;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-
 import org.springframework.web.bind.annotation.RestController;
-
-import sg.edu.nus.iss.stocktrackerbackend.models.Notifications;
 import sg.edu.nus.iss.stocktrackerbackend.services.WebSocketService;
 
 
@@ -34,10 +20,7 @@ public class WebSocketController {
     @Autowired
     private WebSocketService webSocketService;
 
-    // Initialize Notifications
-    // private Notifications notifications = new Notifications(0);
-
-    
+   
     @MessageMapping("/notify")
     // @SendTo("/topic/notification")
     public List<String> getNotification() throws Exception {

@@ -2,7 +2,6 @@
     <canvas  id="MyChart" >{{ chart }}</canvas>
 
 
-    <!-- <p>Initial Symbol: {{ initialChartSymbol }}</p> -->
     <p>Symbol: {{ symbol }}</p>
 
     <form [formGroup]="chartForm" (submit)="processChart()">
@@ -27,7 +26,7 @@
                     <option value="1day">1 day</option>
                   </select>
                 </td>
-                <td><button class="btn btn-success ml-5" type="submit">Submit</button></td>
+                <td><button class="btn btn-success ml-5" type="submit" [disabled]="chartForm.invalid">Submit</button></td>
               </tr><br>
         </table>
       </form>

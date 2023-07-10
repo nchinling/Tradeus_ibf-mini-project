@@ -66,21 +66,5 @@ export class CheckoutComponent {
     });
   }
 
-          // window.location.href = `${environment.serverUrl}/checkout/${sessionId}`;
-        // window.open(`${environment.serverUrl}/checkout/${sessionId}`, '_blank');
-
-        // const url = `${environment.serverUrl}/checkout/${sessionId}`;
-        
-        // const url = `${window.location.origin}/api/checkout/${sessionId}`;
-        // const url = `/api/checkout/${sessionId}`;
-
-
-  // const url = `/api/checkout/${sessionId}`;
-  // console.log('the url is ' +url);
-  // window.open(url, '_blank', 'noopener');
-
-  
-
-
   
 }

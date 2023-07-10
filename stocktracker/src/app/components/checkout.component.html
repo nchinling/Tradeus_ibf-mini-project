@@ -25,7 +25,8 @@
       <button type="button" class="btn btn-primary" (click)="pay(customAmount*100)">
         Buy me a cup for any amount you like
       </button>&nbsp;
-      <input type="number" [(ngModel)]="customAmount" style="height: 35px;" placeholder="Enter amount in SGD">
+      <input type="number" [(ngModel)]="customAmount" style="height: 35px;" placeholder="Enter amount in SGD" min="1">
+      <span *ngIf="customAmount < 1" style="color: #1363DF; font-style: italic;">Minimum of SGD 1.</span>
     </div>
     <br>
     <ul>

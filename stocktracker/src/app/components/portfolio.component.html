@@ -180,7 +180,7 @@
         <span *ngIf="invalidField('date')" class="invalid-field">
           Please provide a valid date.
         </span>
-        <button class="btn btn-primary" type="submit">Submit</button>
+        <button class="btn btn-primary" type="submit" [disabled]="portfolioForm.invalid">Submit</button>
       </div>
     </form>
     

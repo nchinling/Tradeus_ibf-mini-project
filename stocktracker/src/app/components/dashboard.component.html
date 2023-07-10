@@ -66,7 +66,7 @@
   <div class="tab-pane active" id="nav-portfolio" role="tabpanel" aria-labelledby="nav-portfolio-tab">
     <br>
     <div *ngIf="(portfolioData$ | async) as portfolioData">
-    <div *ngIf="portfolioData.length > 0;else noPortfolioMessage">
+    <div *ngIf="portfolioData.length > 0;else noPortfolioMessage" style="overflow-x:auto;">
       <p>Portfolio (Cumulative)</p>
     <table>
         <thead>
@@ -104,8 +104,8 @@
       </div>
 <br>
 
-    <div *ngIf="(annualisedPortfolioData$ | async) as portfolioData">
-      <div *ngIf="portfolioData.length > 0">
+    <div *ngIf="(annualisedPortfolioData$ | async) as portfolioData" style="overflow-x:auto;">
+      <div *ngIf="portfolioData.length > 0" >
         <p>Portfolio (Annualised)</p>
     
         <table >
@@ -148,7 +148,7 @@
 
   <div class="tab-pane fade" id="nav-watchlist" role="tabpanel" aria-labelledby="nav-watchlist-tab">
     <br>
-   <div *ngIf="(watchList$ | async)?.length">
+   <div *ngIf="(watchList$ | async)?.length" style="overflow-x:auto;">
     <table>
       <thead>
         <tr>
@@ -188,7 +188,7 @@
 <div class="tab-pane fade" id="nav-snp500" role="tabpanel" aria-labelledby="nav-snp500-tab">
 <!-- third -->
 <br>    
-<div *ngIf="(indexSnP$ | async)?.length">
+<div *ngIf="(indexSnP$ | async)?.length" style="overflow-x:auto;">
   <table>
     <thead>
       <tr>
@@ -224,7 +224,7 @@
   <div class="tab-pane fade" id="nav-nasdaq" role="tabpanel" aria-labelledby="nav-nasdaq-tab">
 <!-- //fourth -->
 <br>    
-<div *ngIf="(indexNasdaq$ | async)?.length">
+<div *ngIf="(indexNasdaq$ | async)?.length" style="overflow-x:auto;">
   <table>
     <thead>
       <tr>
@@ -260,7 +260,8 @@
 <div class="tab-pane fade" id="nav-live" role="tabpanel" aria-labelledby="nav-live-tab">
   <!-- fifth tab -->
   <br>    
- <div>
+ <div style="overflow-x:auto;">
+  <!-- <table class="table-layout"> -->
   <table class="table-layout">
     <thead>
       <tr>

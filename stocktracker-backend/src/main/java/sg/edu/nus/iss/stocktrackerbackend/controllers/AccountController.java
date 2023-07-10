@@ -17,7 +17,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,11 +32,10 @@ import jakarta.json.JsonObject;
 import sg.edu.nus.iss.stocktrackerbackend.models.Account;
 
 import sg.edu.nus.iss.stocktrackerbackend.models.Trade;
-import sg.edu.nus.iss.stocktrackerbackend.models.Watchlist;
 import sg.edu.nus.iss.stocktrackerbackend.services.AccountException;
 import sg.edu.nus.iss.stocktrackerbackend.services.AccountService;
 import sg.edu.nus.iss.stocktrackerbackend.services.EmailService;
-import sg.edu.nus.iss.stocktrackerbackend.services.WebSocketService;
+// import sg.edu.nus.iss.stocktrackerbackend.services.WebSocketService;
 
 
 @Controller
@@ -48,8 +46,8 @@ public class AccountController {
     @Autowired
     private AccountService accSvc;
 
-    @Autowired
-    private WebSocketService webSocketSvc;
+    // @Autowired
+    // private WebSocketService webSocketSvc;
 
     @Autowired
     private EmailService emailSvc;
@@ -92,10 +90,10 @@ public class AccountController {
          
         System.out.printf(">>>Successfully logged in>>>>>\n");   
 
-        String to = username;
-        String subject = "Tradeus: Login on " + new Date().toString();
-        String body = "Hi " + loggedInAccount.getName() + ", You have logged in to Tradeus on " +new Date().toString() +". Please contact us immediately if it was not made by you.";
-       
+        //Email on login removed to improve log in time. Email feature is implemented in notification on new registration.
+        // String to = username;
+        // String subject = "Tradeus: Login on " + new Date().toString();
+        // String body = "Hi " + loggedInAccount.getName() + ", You have logged in to Tradeus on " +new Date().toString() +". Please contact us immediately if it was not made by you.";
         // emailSvc.sendEmail(to, subject, body);
 
         return ResponseEntity.ok(resp.toString());

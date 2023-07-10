@@ -62,8 +62,8 @@ const appRoutes: Routes = [
     BrowserModule, ReactiveFormsModule, FormsModule, HttpClientModule,
     // bindToComponentInputs - V16
     // RouterModule.forRoot(appRoutes, { useHash: true, bindToComponentInputs: true })
-    // RouterModule.forRoot(appRoutes, { useHash: true}),
-    RouterModule.forRoot(appRoutes),
+    RouterModule.forRoot(appRoutes, { useHash: true}),
+    // RouterModule.forRoot(appRoutes),
    
     NgbNavModule, NgbModule, ServiceWorkerModule.register('ngsw-worker.js', {
   enabled: !isDevMode(),
@@ -74,7 +74,7 @@ const appRoutes: Routes = [
     
   ],
   exports: [RouterModule],
-  providers: [AccountService, StockService, ChartService, WebSocketService, DashboardComponent],
+  providers: [AccountService, StockService, ChartService, WebSocketService, DashboardComponent, ResearchComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

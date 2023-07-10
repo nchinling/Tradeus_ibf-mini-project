@@ -123,4 +123,9 @@ Some exciting implementations in Tradeus include charting, creation of watch lis
 
 8 Jul (Sat)
 - Provide minimum amount for credit card
-- Start deployment
+- Started deployment on Redis
+- purchased domain name
+
+10 Jul (Mon)
+- fixed deployed chart title bug
+

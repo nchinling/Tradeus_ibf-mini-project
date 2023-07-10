@@ -1,4 +1,4 @@
-import { Component, Injectable, Input, OnInit, Output, inject } from '@angular/core';
+import { Component, EventEmitter, Injectable, Input, OnInit, Output, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
@@ -44,6 +44,8 @@ export class ResearchComponent  {
   isFollowed!:boolean 
   isButtonClicked:boolean = false;
 
+  updatedChartData = new EventEmitter<{ symbol: string, stock_name: string }>();
+
 
 
   markets: Market[] = [
@@ -78,8 +80,6 @@ export class ResearchComponent  {
   //for chart
   initialChartSymbol!:string
   
-
- 
 
   ngOnInit(): void {
     // this.loginResponse$ = this.accountSvc.onLoginRequest
@@ -129,14 +129,13 @@ export class ResearchComponent  {
         const name = profile.name
         console.log('The name is ' + name)
         this.stock_name = name
+        this.updatedChartData.emit({ symbol: symbolToLoad, stock_name: this.stock_name });
       });
 
-    
   }
 
   ngAfterViewInit():void{
-    // this.loginResponse$ = this.accountSvc.onLoginRequest
-    // this.registerResponse$ = this.accountSvc.onRegisterRequest
+
   }
 
 
@@ -158,6 +157,7 @@ export class ResearchComponent  {
         const name = profile.name;
         console.log('The name is ' + name);
         this.stock_name = name
+        this.updatedChartData.emit({ symbol: this.symbol, stock_name: this.stock_name });
       });
       this.symbol = symbol
     }
