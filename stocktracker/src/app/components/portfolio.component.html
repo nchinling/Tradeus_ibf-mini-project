@@ -31,7 +31,7 @@
   </p>
 </div>
 
-<div *ngIf="(portfolioData$ | async) as portfolioData">
+<div *ngIf="(portfolioData$ | async) as portfolioData" style="overflow-x:auto;">
 <div *ngIf="portfolioData.length > 0">
 <h3>Portfolio (Cumulative)</h3>
 
@@ -71,7 +71,7 @@
   </div>
 
     <br>
-<div *ngIf="(annualisedPortfolioData$ | async) as portfolioData">
+<div *ngIf="(annualisedPortfolioData$ | async) as portfolioData" style="overflow-x:auto;">
   <div *ngIf="portfolioData.length > 0; else noPortfolioMessage">
     <h3>Portfolio (Annualised)</h3>
 
