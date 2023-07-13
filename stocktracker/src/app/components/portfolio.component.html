@@ -22,7 +22,7 @@
       {{ calculateTotalReturn(portfolioData) | number: '1.2-2' }} {{portfolioData[0].currency}}
     </span></strong>
 
-    &nbsp;&nbsp;&nbsp; <strong>% Return: 
+    &nbsp;&nbsp;&nbsp; <strong>%Return: 
     <span [ngClass]="{ 'red': calculateTotalPercentageReturn(portfolioData) < 0, 'green': calculateTotalPercentageReturn(portfolioData) > 0 }">
       <ng-container *ngIf="calculateTotalPercentageReturn(portfolioData) > 0">&#9650;</ng-container>
       <ng-container *ngIf="calculateTotalPercentageReturn(portfolioData) < 0">&#9660;</ng-container>
@@ -33,7 +33,7 @@
 
 <div *ngIf="(portfolioData$ | async) as portfolioData" style="overflow-x:auto;">
 <div *ngIf="portfolioData.length > 0">
-<h3>Portfolio (Cumulative)</h3>
+<h4>Portfolio (Cumulative)</h4>
 
     <table>
       <thead>
@@ -73,7 +73,7 @@
     <br>
 <div *ngIf="(annualisedPortfolioData$ | async) as portfolioData" style="overflow-x:auto;">
   <div *ngIf="portfolioData.length > 0; else noPortfolioMessage">
-    <h3>Portfolio (Annualised)</h3>
+    <h4>Portfolio (Annualised)</h4>
 
     <table >
       <thead>
@@ -112,9 +112,7 @@
 
   <br>
   
-      <h3>Add to Portfolio</h3>
- 
-    
+    <h4>Add to Portfolio</h4>
     <form [formGroup]="portfolioForm" (submit)="processPortfolio()" class="form-container">
       <div class="form-row">
         <label for="exchange">Exchange:</label>

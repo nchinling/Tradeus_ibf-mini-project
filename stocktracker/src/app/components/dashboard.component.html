@@ -21,8 +21,9 @@
 
 
 
+
   <div class="container-fluid" *ngIf="(portfolioData$ | async) as portfolioData;">
-    <p class="total-return" *ngIf="portfolioData.length > 0">
+    <div class="total-return" *ngIf="portfolioData.length > 0">
       <strong>Total Return: 
       <span [ngClass]="{ 'red': calculateTotalReturn(portfolioData) < 0, 'green': calculateTotalReturn(portfolioData) > 0 }">
         <ng-container *ngIf="calculateTotalReturn(portfolioData) > 0">&#9650;</ng-container>
@@ -30,13 +31,13 @@
         {{ calculateTotalReturn(portfolioData) | number: '1.2-2' }} {{ portfolioData[0].currency }}
       </span></strong>
   
-      &nbsp;&nbsp;&nbsp; <strong>% Return: 
+      &nbsp;&nbsp;&nbsp; <strong>%Return: 
       <span [ngClass]="{ 'red': calculateTotalPercentageReturn(portfolioData) < 0, 'green': calculateTotalPercentageReturn(portfolioData) > 0 }">
         <ng-container *ngIf="calculateTotalPercentageReturn(portfolioData) > 0">&#9650;</ng-container>
         <ng-container *ngIf="calculateTotalPercentageReturn(portfolioData) < 0">&#9660;</ng-container>
         {{ calculateTotalPercentageReturn(portfolioData) | number: '1.2-2' }} %
       </span> </strong>
-    </p>
+    </div>
   </div>
   
   <br>
@@ -260,41 +261,35 @@
 <div class="tab-pane fade" id="nav-live" role="tabpanel" aria-labelledby="nav-live-tab">
   <!-- fifth tab -->
   <br>    
- <div style="overflow-x:auto;">
-  <!-- <table class="table-layout"> -->
-  <table class="table-layout">
+
+  <table class="table-layout" style="overflow-x:auto;">
     <thead>
       <tr>
-        <th style="width: 10px;">Company</th>
-        <th style="width: 10px;">Curr</th>
-        <th style="width: 10px;">Exch</th>
-        <th style="width: 10px;">Volume</th>
-        <th style="width: 10px;">Price</th>
-        <th style="width: 10px;">Ask</th>
-        <th style="width: 10px;">Bid</th>
+        <th>Company</th><th>Curr</th><th>Exch</th><th>Volume</th>
+        <th>Price</th><th>Ask</th><th>Bid</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let stock of webSocketStocks">
-        <td style="width: 10px;">{{ stock.symbol }}</td>
-        <td style="width: 10px;">{{ stock.currency }}</td>
-        <td style="width: 10px;">{{ stock.exchange }}</td>
-        <td style="width: 10px;" [ngClass]="{ 'value-drop': stock.volume < stock.previousVolume, 'value-increase': stock.volume > stock.previousVolume }">
+        <td>{{ stock.symbol }}</td>
+        <td>{{ stock.currency }}</td>
+        <td>{{ stock.exchange }}</td>
+        <td [ngClass]="{ 'value-drop': stock.volume < stock.previousVolume, 'value-increase': stock.volume > stock.previousVolume }">
           <span>{{ (stock.volume !== null ? stock.volume : stock.previousVolume) | number: '1.2-2' }}</span>
           <span *ngIf="stock.volume < stock.previousVolume">&#9660;</span>
           <span *ngIf="stock.volume > stock.previousVolume">&#9650;</span>
         </td>
-        <td style="width: 10px;" [ngClass]="{ 'value-drop': stock.price < stock.previousPrice, 'value-increase': stock.price > stock.previousPrice }">
+        <td [ngClass]="{ 'value-drop': stock.price < stock.previousPrice, 'value-increase': stock.price > stock.previousPrice }">
           <span>{{ (stock.price !== null ? stock.price : stock.previousPrice) | number: '1.2-2' }}</span>
           <span *ngIf="stock.price < stock.previousPrice">&#9660;</span>
           <span *ngIf="stock.price > stock.previousPrice">&#9650;</span>
         </td>
-        <td style="width: 10px;" [ngClass]="{ 'value-drop': stock.ask < stock.previousAsk, 'value-increase': stock.ask > stock.previousAsk }">
+        <td [ngClass]="{ 'value-drop': stock.ask < stock.previousAsk, 'value-increase': stock.ask > stock.previousAsk }">
           <span>{{ (stock.ask !== null ? stock.ask : stock.previousAsk) | number: '1.2-2' }}</span>
           <span *ngIf="stock.ask < stock.previousAsk">&#9660;</span>
           <span *ngIf="stock.ask > stock.previousAsk">&#9650;</span>
         </td>
-        <td style="width: 10px;" [ngClass]="{ 'value-drop': stock.bid < stock.previousBid, 'value-increase': stock.bid > stock.previousBid }">
+        <td [ngClass]="{ 'value-drop': stock.bid < stock.previousBid, 'value-increase': stock.bid > stock.previousBid }">
           <span>{{ (stock.bid !== null ? stock.bid : stock.previousBid) | number: '1.2-2' }}</span>
           <span *ngIf="stock.bid < stock.previousBid">&#9660;</span>
           <span *ngIf="stock.bid > stock.previousBid">&#9650;</span>
@@ -303,8 +298,8 @@
     </tbody>
   </table>
   
-  </div>
-  </div>
+  <!-- </div> -->
+  <!-- </div> -->
 </div>
 
 <br>

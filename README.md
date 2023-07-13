@@ -129,3 +129,5 @@ Some exciting implementations in Tradeus include charting, creation of watch lis
 10 Jul (Mon)
 - fixed deployed chart title bug
 
+13 Jul (Thu)
+- improved responsiveness

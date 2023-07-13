@@ -102,7 +102,15 @@ table {
 }
 
 .total-return {
-  font-size: 30px;
+  font-size: 20px;
+  text-align: center;
+}
+
+
+@media (max-width: 480px) {
+.total-return {
+  display: block;
+}
 }
 
 .container-fluid {
