@@ -94,14 +94,13 @@ public class Chart {
             c.setInterval(meta.getString("interval"));
             int valuesSize = o.getJsonArray("values").size();
 
-        // Initialize arrays with the size of values array
+        
         c.setDateTime(new String[valuesSize]);
         c.setOpen(new Double[valuesSize]);
         c.setClose(new Double[valuesSize]);
         c.setHigh(new Double[valuesSize]);
         c.setLow(new Double[valuesSize]);
 
-        // Parse values array
         JsonArray values = o.getJsonArray("values");
         for (int i = 0; i < valuesSize; i++) {
             JsonObject dataObject = values.getJsonObject(i);

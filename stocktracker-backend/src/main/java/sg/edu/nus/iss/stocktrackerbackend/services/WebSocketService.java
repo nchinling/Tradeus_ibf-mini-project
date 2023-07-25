@@ -35,9 +35,7 @@ public class WebSocketService {
     }
 
     public void getWebSocketData() throws Exception {
-        // List<WebSocketStock> receivedData = new ArrayList<>();
-       
-
+      
         String ENDPOINT = "wss://ws.twelvedata.com/v1/quotes/price?apikey=" + twelveDataWebSocketApiKey;
         System.out.println(">>>The key in getWebSocketData is >>>>>" + twelveDataWebSocketApiKey);
 
@@ -51,8 +49,6 @@ public class WebSocketService {
                     send("{\"action\": \"subscribe\", \"params\":{\"symbols\": \"7203,D05:SGX,INFY:NSE,2603:TWSE,002594,005930,AAPL,QQQ\"}}");
                   
 
-
-            
                 }
 
                 @Override
@@ -60,7 +56,6 @@ public class WebSocketService {
                     JSONParser parser = new JSONParser();
                     try {
                         JSONObject json = (JSONObject) parser.parse(message);
-                        // System.out.println(json);
                         sendReceivedData(json.toString());
                     } catch(ParseException e) {
                         e.printStackTrace();

@@ -1,8 +1,8 @@
-import { Component, EventEmitter, Injectable, Input, OnInit, Output, inject } from '@angular/core';
+import { Component, EventEmitter, Input, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, Subject, combineLatest, first, forkJoin, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { AccountService } from '../account.service';
 import { LoginResponse, RegisterResponse, Stock, Market, MarketIndex, StockInfo, StockProfile } from '../models';
 import { StockService } from '../stock.service';
@@ -46,8 +46,6 @@ export class ResearchComponent  {
 
   updatedChartData = new EventEmitter<{ symbol: string, stock_name: string }>();
 
-
-
   markets: Market[] = [
     { symbol: "SPX", interval: "1day" },
     { symbol: "VIX", interval: "1day" },
@@ -87,11 +85,8 @@ export class ResearchComponent  {
     this.loginResponse$ = this.accountSvc.onLoginRequest
     this.errorMessage$ = this.accountSvc.onErrorMessage
 
-
-        // Access the query parameters
         const queryParams = this.activatedRoute.snapshot.queryParams;
         
-        // Example: Access specific query parameters
         this.status = queryParams['status'];
         this.timestamp = queryParams['timestamp'];
         this.accountId = queryParams['account_id'];
@@ -115,7 +110,6 @@ export class ResearchComponent  {
       this.marketIndex$ = this.stockSvc.getMarketData(this.markets);
       // this.stockList$ = this.stockSvc.getStockList()
 
-      //load get stock data form
       this.stockDataForm = this.createStockDataForm()
       this.stockInfoList$ = this.stockSvc.getStocksList(this.exchange, this.filter, this.limit, this.skip)
       
@@ -183,14 +177,12 @@ export class ResearchComponent  {
 
     setTimeout(() => {
       this.isButtonClicked = false;
-    }, 3000); // Adjust the delay as per your requirements
+    }, 3000); 
 
 
     if (index !== -1) {
-      // Symbol exists in the list, so remove it
       console.info("Already added to watchlist" + symbol)
     } else {
-      // Symbol doesn't exist in the list, so add it
       console.info("Added to watchlist" + symbol)
     }
   
@@ -199,7 +191,6 @@ export class ResearchComponent  {
     console.info('I have sent this to dashboard: ' + symbol)
   }
 
-  
   //for displaying stocks list
   fetchChanges(limit: string) {
     this.limit = +limit

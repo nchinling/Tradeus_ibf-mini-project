@@ -1,7 +1,7 @@
 .row {
     display: flex;
     justify-content: space-between; 
-    /* min-height: 250px */
+   
   }
   
 .box {

@@ -15,7 +15,6 @@ public class WebSocketStock {
     }
 
     
-
     public WebSocketStock(String symbol, String exchange, String currency, Double price, Double ask, Double day_volume,
             Double bid) {
         this.symbol = symbol;
@@ -26,7 +25,6 @@ public class WebSocketStock {
         this.day_volume = day_volume;
         this.bid = bid;
     }
-
 
 
     public String getSymbol() {
@@ -80,11 +78,5 @@ public class WebSocketStock {
                 + price + ", ask=" + ask + ", day_volume=" + day_volume + ", bid=" + bid + "]";
     }
 
-    
-   
-
-    
-
-    
  
 }

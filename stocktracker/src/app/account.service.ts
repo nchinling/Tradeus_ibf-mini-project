@@ -1,9 +1,9 @@
-import { Injectable, OnInit, inject } from "@angular/core";
-import { Observable, Subject, catchError, filter, lastValueFrom, map, of, tap, throwError } from "rxjs";
-import { ErrorResponse, LoginResponse, UserData, RegisterResponse, Stock, TradeData, TradeResponse } from "./models";
+import { Injectable, inject } from "@angular/core";
+import { Observable, Subject, catchError, filter, lastValueFrom, map, tap, throwError } from "rxjs";
+import { ErrorResponse, LoginResponse, UserData, RegisterResponse, TradeData, TradeResponse } from "./models";
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Router } from "@angular/router";
-// import { v4 as uuidv4 } from 'uuid'. need to install package
+
 
 // const URL_API_TRADE_SERVER = 'http://localhost:8080/api'
 const URL_API_TRADE_SERVER = '/api'
@@ -42,20 +42,16 @@ export class AccountService {
 
 
   logout(): void {
-    // Clear the stored credentials from local storage
     localStorage.removeItem(this.KEY);
   }
 
   isAuthenticated(): boolean {
-    // Check if there are stored credentials in local storage
     return localStorage.getItem(this.KEY) !== null;
   }
 
 
 
   registerAccount(data: UserData ): Observable<RegisterResponse> {
-    // Content-Type: application/x-www-form-urlencoded
-    // Accept: application/json
 
     console.info('I am passing to updateAccount name:' + data.username)
     console.info('I am passing to updateAccount name:' + data.password)
@@ -87,7 +83,7 @@ export class AccountService {
         return throwError(() => ({ error: errorMessage }));
       }),
 
-      filter((response) => response !== null), // Filter out null responses
+      filter((response) => response !== null), 
       //the fired onRequest.next is received in dashboard component's ngOnit 
       tap(response => this.onRegisterRequest.next(response))
     );
@@ -97,8 +93,6 @@ export class AccountService {
 
   
   updateAccount(data: UserData ): Observable<RegisterResponse> {
-    // Content-Type: application/x-www-form-urlencoded
-    // Accept: application/json
 
     console.info('I am passing to updateAccount accountId:' + this.account_id)
     console.info('username in updateAccount:' + this.username)
@@ -131,7 +125,7 @@ export class AccountService {
         return throwError(() => ({ error: errorMessage }));
       }),
 
-      filter((response) => response !== null), // Filter out null responses
+      filter((response) => response !== null), 
       //the fired onRequest.next is received in dashboard component's ngOnit 
       tap(response => this.onRegisterRequest.next(response))
     );
@@ -159,8 +153,6 @@ export class AccountService {
 
 
   login(username: string, password: string): Observable<LoginResponse> {
-    // Content-Type: application/x-www-form-urlencoded
-    // Accept: application/json
 
     const form = new HttpParams()
       .set("username", username)
@@ -182,7 +174,7 @@ export class AccountService {
         this.onErrorMessage.next(errorMessage);
         return throwError(() => ({ error: errorMessage }));
       }),
-      filter((response) => response !== null), // Filter out null responses
+      filter((response) => response !== null), 
       //the fired onLoginRequest.next is received in dashboard component's ngOnit 
       tap(response => this.onLoginRequest.next(response))
     );
@@ -190,8 +182,6 @@ export class AccountService {
 
 
   saveToPortfolio(data: TradeData ): Observable<TradeResponse> {
-    // Content-Type: application/x-www-form-urlencoded
-    // Accept: application/json
 
     console.info('I am passing to saveToPortfolio units:' + data.units)
     console.info('I am passing to saveToPortfolio price:' + data.price)
@@ -230,16 +220,12 @@ export class AccountService {
         return throwError(() => ({ error: errorMessage }));
       }),
 
-      filter((response) => response !== null), // Filter out null responses
+      filter((response) => response !== null), 
       //the fired onRequest.next is received in dashboard component's ngOnit 
       tap(response => this.onSavePortfolioRequest.next(response))
     );
     
   }
-
-
-
-
 
 
 }

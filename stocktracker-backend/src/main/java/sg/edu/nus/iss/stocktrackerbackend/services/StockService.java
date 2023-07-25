@@ -279,7 +279,6 @@ public class StockService {
     public List<String> saveWatchlist(String[] symbols, String username){
         System.out.println(">>>>>>>> I am in Service >>> saveWatchList");
         stockRepo.saveWatchlist(username, symbols);
-        // return stockRepo.getUserWatchlist(username);
         List<String> symbolList = Arrays.asList(symbols);
         return symbolList;
     }
@@ -293,7 +292,6 @@ public class StockService {
     public Portfolio getPortfolioData(String accountId, String symbol, String interval) throws IOException {
         System.out.println(">>>>>>>> I am in getPortfolioDataService>>>>>>");
         Optional<Stock> s;
-        // Portfolio p = new Portfolio();
         Optional<Trade> t = accountRepo.getTradeData(accountId, symbol);
         Trade trade = t.get();
 
@@ -316,7 +314,7 @@ public class StockService {
     public List<Portfolio> getAnnualisedPortfolioData(String accountId, String interval) throws IOException {
     System.out.println(">>>>>>>> I am in getPortfolioDataService>>>>>>");
     Optional<Stock> s;
-    // Portfolio p = new Portfolio();
+ 
     List<Trade> trades = accountRepo.getAnnualisedTradeData(accountId);
     
     List<Portfolio> portfolio = new ArrayList<Portfolio>();
@@ -336,7 +334,7 @@ public class StockService {
         portfolio.add(p);
     }
     } else {
-        // Handle the case when no trades are found
+  
         System.out.println("No trades found.");
     }
 
@@ -364,7 +362,6 @@ public class StockService {
         System.out.println("The total return is: " + totalReturn);
 
         LocalDate currentDate = LocalDate.now();
-        // Period period = Period.between(buyDate, currentDate);
         long daysHeld = ChronoUnit.DAYS.between(buyDate, currentDate);
         if (daysHeld == 0){
             daysHeld = 1;

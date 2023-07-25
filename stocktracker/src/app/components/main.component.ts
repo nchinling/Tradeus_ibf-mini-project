@@ -1,9 +1,4 @@
-import { Component, inject } from '@angular/core';
-import { Observable, BehaviorSubject, Subject, filter } from 'rxjs';
-import { WebSocketService } from '../websocket.service';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { WebSocketStock } from '../models';
-import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
+import { Component} from '@angular/core';
 
 @Component({
   selector: 'app-main',

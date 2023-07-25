@@ -1,10 +1,10 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient} from '@angular/common/http';
 import { Component, inject } from '@angular/core';
-import { environment } from 'src/environments/environment';
-import { loadStripe } from '@stripe/stripe-js';
+
+
 import { Router } from '@angular/router';
-import { Observable, concatMap, first, map, tap } from 'rxjs';
-import { WebSocketStock } from '../models';
+
+
 import { WebSocketService } from '../websocket.service';
 import { AccountService } from '../account.service';
 

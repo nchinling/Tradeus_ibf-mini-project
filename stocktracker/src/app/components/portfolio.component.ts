@@ -1,7 +1,7 @@
 import { Component, Input, inject } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Observable, Subject, filter, firstValueFrom, from, mergeMap, of, switchMap } from 'rxjs';
+import { Observable, Subject, firstValueFrom, from, switchMap } from 'rxjs';
 import { AccountService } from '../account.service';
 import { AnnualisedPortfolioData, PortfolioData, RegisterResponse, Stock, StockInfo, TradeData, TradeResponse, UserData } from '../models';
 import { StockService } from '../stock.service';
@@ -94,7 +94,6 @@ export class PortfolioComponent {
   }
 
   canExit(): boolean {
-    //return true if it's clean form
     return !this.portfolioForm.dirty
   }
 
@@ -162,12 +161,8 @@ export class PortfolioComponent {
   }
 
 
-
-  
   filtering(text:string){
     this.searchInput.next(text as string)
-
-    // this.stockInfoList$= this.stockSvc.getStocksList(this.exchange, this.filter, 5, 0)
   }
 
 
@@ -185,18 +180,14 @@ export class PortfolioComponent {
       console.info('>> symbol: ', symbol);
       console.info('>> interval: ', interval);
       this.stock$ = this.stockSvc.getStockData(symbol, interval)
-      // this.stock$.then(stockData => {
-      //   this.currency = stockData.currency;
-        
-      // });
+ 
       this.stockSvc.getStockData(symbol, interval)
         .then(stockData => {
-          // this.patchNameField(stockData.name); 
           this.currency = stockData.currency
           this.patchNameField(`${stockData.name} (${stockData.symbol})`);
         });
     }
-    // this.stockSearch$ = of([])
+  
     this.stockSearch$ = this.searchInput.pipe(
       switchMap((text: string) => {
         return from(this.stockSvc.getStocksList(this.exchange, text, 5, 0));
@@ -242,7 +233,7 @@ export class PortfolioComponent {
       .catch((error) => {
         console.error(error);
       });
-      // this.annualisedPortfolioData$ = this.stockSvc.getAnnualisedPortfolioData(this.accountId);
+     
   }
 
 
@@ -268,11 +259,8 @@ export class PortfolioComponent {
       .catch((error) => {
         console.error(error);
       });
-      // this.annualisedPortfolioData$ = this.stockSvc.getAnnualisedPortfolioData(this.accountId);
+      
   }
-
-
-
 
 
 }

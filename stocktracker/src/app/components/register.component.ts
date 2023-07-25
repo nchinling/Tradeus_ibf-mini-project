@@ -1,9 +1,9 @@
-import { Component, Injectable, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Observable, Subject, firstValueFrom } from 'rxjs';
+import { Observable, firstValueFrom } from 'rxjs';
 import { AccountService } from '../account.service';
-import { LoginResponse, RegisterResponse, UserData } from '../models';
+import { RegisterResponse, UserData } from '../models';
 
 
 @Component({
@@ -67,7 +67,7 @@ export class RegisterComponent {
   }
 
   canExit(): boolean {
-    //return true if it's clean form
+   
     return !this.registerForm.dirty
   }
 
@@ -109,7 +109,7 @@ export class RegisterComponent {
       console.log('account_id:', response.account_id);
       console.log('response:', response);
 
-      // this.accountSvc.account_id = account_id
+     
       const queryParams = {
         // status: response.status,
         // timestamp: response.timestamp,
@@ -119,16 +119,8 @@ export class RegisterComponent {
 
       this.accountSvc.account_id = response.account_id
 
-      // const dashboardUrl = `#/dashboard/${parsedUsername}?account_id=${response.account_id}&username=${response.username}`;
-
-      // // Store the dashboard URL in localStorage
-      // localStorage.setItem('dashboardUrl', dashboardUrl);
 
       this.registerForm.reset
-
-      // setTimeout(() => {
-      //   this.isLoading = false;
-      // }, 2000);
 
       this.router.navigate(['/dashboard', parsedUsername], { queryParams: queryParams })
     }).catch((error)=>{

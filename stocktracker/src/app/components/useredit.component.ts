@@ -19,8 +19,7 @@ export class UsereditComponent {
   username!: string
 
   updateForm!: FormGroup
-  // updateForm: FormGroup = new FormGroup({});
-
+ 
   errorMessage!: string;
   successMessage!: string;
 
@@ -31,15 +30,13 @@ export class UsereditComponent {
   errorMessage$!: Observable<string>
 
  ngOnInit(): void {
-  // async ngOnInit(): Promise<void> {
+  
     this.updateResponse$ = this.accountSvc.onRegisterRequest
-    //get user data first 
+
+    //get user data 
     this.username = this.accountSvc.username
     this.userData$=this.accountSvc.getUserData(this.username)
 
-    // const userData: UserData = this.accountSvc.getUserData(this.username);
-
-    //
     this.updateForm = this.createForm()
     this.errorMessage$ = this.accountSvc.onErrorMessage;
   }
@@ -97,7 +94,6 @@ export class UsereditComponent {
   }
   
   canExit(): boolean {
-    //return true if it's clean form
     return !this.updateForm.dirty
   }
 
@@ -112,18 +108,15 @@ export class UsereditComponent {
     const updatedUserData:UserData = this.updateForm.value
     console.info('>> data: ', updatedUserData)
     const name = this.updateForm.get('name')?.value
-    // const username = this.updateForm.get('username')?.value
     const password = this.updateForm.get('password')?.value
     const mobile_no = this.updateForm.get('mobile_no')?.value
     const nationality = this.updateForm.get('nationality')?.value
     const date_of_birth = this.updateForm.get('date_of_birth')?.value
     const address = this.updateForm.get('address')?.value
 
-    // const parsedUsername = username.split('@')[0];
+ 
 
     const parsedUsername = this.accountSvc.parsedUsername
-    //the username and password are passed to accountSvc for loginGuard
-    // this.accountSvc.username = username
     this.accountSvc.password = password
     console.info('data for update: ', updatedUserData)
 
@@ -138,16 +131,12 @@ export class UsereditComponent {
         this.router.navigate(['/dashboard', parsedUsername]);
       }, 2000); 
 
-      // this.router.navigate(['/dashboard', parsedUsername], { queryParams: queryParams })
     }).catch((error)=>{
   
       this.errorMessage = error.error;
       console.info('this.errorMessage is ' + this.errorMessage)
-
     });
 
-
   }
-
 
 }

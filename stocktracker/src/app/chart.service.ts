@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
-import { Observable, lastValueFrom, tap, map } from "rxjs";
+import { Observable, map } from "rxjs";
 import { ChartData } from "./models";
 
 // const URL_API_TRADE_SERVER = 'http://localhost:8080/api'
@@ -28,10 +28,6 @@ export class ChartService {
         )
     
     }
-
-
-
-
 
 
 }

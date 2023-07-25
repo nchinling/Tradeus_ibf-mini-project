@@ -33,7 +33,7 @@ public class ChartController {
     public ResponseEntity<String> getTimeSeries(@RequestParam(required=true) String symbol,
     @RequestParam(defaultValue = "1min") String interval,
     @RequestParam(required=true) String dataPoints) throws IOException{
-        // Integer num = weatherSvc.getWeather(city);
+        
         System.out.println("I am in getChartData server");
         System.out.println(">>>>>>>>Symbol in controller>>>>>" + symbol);
         System.out.println(">>>>>>>>Interval in controller>>>>>" + interval);
@@ -64,7 +64,7 @@ public class ChartController {
                 return ResponseEntity.ok(resp.toString());
         }
 
-        // Handle the case when the Optional is empty
+
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
         .body("Stock information not available for the provided symbol.");
             

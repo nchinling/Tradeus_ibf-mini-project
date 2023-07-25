@@ -153,7 +153,6 @@ public class Stock {
     }
 
 
-    
     @Override
     public String toString() {
         return "Stock [symbol=" + symbol + ", name=" + name + ", exchange=" + exchange + ", currency=" + currency
@@ -163,7 +162,6 @@ public class Stock {
     }
 
 
-    
     public static Stock createUserObject(String json) throws IOException {
         Stock s = new Stock();
         try(InputStream is = new ByteArrayInputStream(json.getBytes())){
@@ -185,6 +183,7 @@ public class Stock {
         }
         return s;
     }
+
 
     public static Stock createPriceObject(String json) throws IOException {
     Stock s = new Stock();
@@ -238,13 +237,12 @@ public class Stock {
         return s;
     }
 
+    
     public static JsonObject toJSON(String json){
         JsonReader r = Json.createReader(new StringReader(json));
         return r.readObject();
     }
 
-
-    
 
     
 }

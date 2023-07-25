@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { NgbCollapse } from '@ng-bootstrap/ng-bootstrap';
 import { AccountService } from '../account.service';
 import { Observable, Subscription, of } from 'rxjs';
@@ -18,7 +18,7 @@ export class NavbarComponent implements OnInit{
   toggleCollapsed(): void {
     this.collapsed = !this.collapsed;
   }
-  // isLoggedIn = false;
+  
   isLoggedIn$!: Observable<boolean>
 
   //check if can be renamed
@@ -42,7 +42,6 @@ export class NavbarComponent implements OnInit{
     });
     
     this.parsedUsername = this.accountSvc.parsedUsername
-    // this.parsedUsername = 'jim'
     this.queryParams = this.accountSvc.queryParams
     console.info('the parsedUsername is' + this.parsedUsername)
     console.info('the queryParams is' + this.queryParams)
@@ -51,11 +50,11 @@ export class NavbarComponent implements OnInit{
   }
 
   logout(): void {
-    // Clear the stored credentials from local storage
+    // Clear the stored credentials 
     localStorage.removeItem(this.KEY);
     this.isLoggedIn$ = of(false);
     
-    // reset initialised variables 
+    // reset 
     this.accountSvc.username=''
     this.accountSvc.password=''
     this.stockSvc.symbol=''
@@ -66,7 +65,6 @@ export class NavbarComponent implements OnInit{
   ngAfterViewInit(): void{
     this.isLoggedIn$ = this.accountSvc.isLoggedInChanged
     this.parsedUsername = this.accountSvc.parsedUsername
-    // this.parsedUsername = 'jim'
     this.queryParams = this.accountSvc.queryParams
     console.info('the parsedUsername is' + this.parsedUsername)
     console.info('the queryParams is' + this.queryParams)
@@ -76,7 +74,6 @@ export class NavbarComponent implements OnInit{
   ngOnChanges(): void{
     this.isLoggedIn$ = this.accountSvc.isLoggedInChanged
     this.parsedUsername = this.accountSvc.parsedUsername
-    // this.parsedUsername = 'jim'
     this.queryParams = this.accountSvc.queryParams
     console.info('the parsedUsername is' + this.parsedUsername)
     console.info('the queryParams is' + this.queryParams)

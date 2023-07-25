@@ -13,7 +13,6 @@
             <p><span class="triangle" *ngIf="marketIndex[index].change > 0">&#9650; &nbsp;+</span>
               <span class="triangle" *ngIf="marketIndex[index].change < 0">&#9660;</span>
               {{ marketIndex[index].change | number: '1.2-2' }}&nbsp;   {{ marketIndex[index].percentage_change | number: '1.2-2' }} % </p>
-            <!-- <p>{{ marketIndex[index].percentage_change | number: '1.2-2' }} %</p> -->
           </ul>
         </div>
       </div>
@@ -108,7 +107,7 @@
               <td>{{ stock.datetime | date:'dd-MM-yyyy HH:mm:ss' }}</td>
             </tr>
 
-                <!-- <button class="btn btn-primary" (click)="modifyWatchlist(stock.symbol)">Follow</button> -->
+               
             </table>
           </td>
           <td>
@@ -126,7 +125,6 @@
   </div>
   
 
-  
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-3">
@@ -155,15 +153,7 @@
             </div>
           </div>
           <br>
-          <!-- <div style="margin-top: 5px;">
-            <label for="exchange">Exchange:&nbsp;</label>
-            <select (change)="fetchExchange(exchange.value)" #exchange>
-              <option value="nyse">NYSE</option>
-              <option value="nasdaq">NASDAQ</option>
-            </select>
-          </div> -->
-  
-          <!-- <br> -->
+
      
            <div *ngIf="stockInfoList$ | async as stockslist; else blank" class="stock-list-container">
             <div *ngFor="let s of stockslist">
@@ -173,10 +163,7 @@
 
           <br>
   
-          <!-- <div style="margin-top: 10px;">
-            <button type="button" class="btn btn-primary" (click)="page(-1)">Prev</button>&nbsp;
-            <button type="button" class="btn btn-primary" (click)="page(1)">Next</button>
-          </div> -->
+
           <div style="margin-top: 10px;">
             <button type="button" class="btn btn-primary" (click)="page(-1)" [disabled]="!hasPreviousPage()">Prev</button>&nbsp;
             <button type="button" class="btn btn-primary" (click)="page(1)">Next</button>
@@ -185,8 +172,6 @@
           <br>
   
           <ng-template #blank></ng-template> 
-
-
 
         </div>
       </div>
@@ -211,7 +196,6 @@
                 </td>
             
                 <td style="padding-left: 20px; padding-bottom:10px;">
-                  <!-- <img [src]="stockProfile?.logoUrl"  onerror="this.onerror=null; this.src='Default.jpg'" width="100" height="100"> -->
                   <img [src]="stockProfile?.logoUrl" alt="Stock Logo" height="150" >
                 </td>
               </tr>

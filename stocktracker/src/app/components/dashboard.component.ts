@@ -1,13 +1,12 @@
-import { Component, HostListener, Injectable, Input, OnChanges, OnInit, inject } from '@angular/core';
-import { BehaviorSubject, Observable, Subject, Subscription, filter, interval, map } from 'rxjs';
+import { Component, Injectable, OnChanges, OnInit, inject } from '@angular/core';
+import { Observable, Subject} from 'rxjs';
 import { AccountService } from '../account.service';
-import { LoginResponse, MarketIndex, RegisterResponse, Stock, Market, StockInfo, PortfolioData, AnnualisedPortfolioData, WebSocketStock } from '../models';
-import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
+import { LoginResponse, MarketIndex, RegisterResponse, Stock, Market, PortfolioData, AnnualisedPortfolioData, WebSocketStock } from '../models';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { StockService } from '../stock.service';
 import { WebSocketService } from '../websocket.service';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient} from '@angular/common/http';
 
 
 @Injectable()
@@ -107,10 +106,9 @@ export class DashboardComponent implements OnInit, OnChanges{
     this.registerResponse$ = this.accountSvc.onRegisterRequest
     this.errorMessage$ = this.accountSvc.onErrorMessage
 
-        // Access the query parameters
+    
         const queryParams = this.activatedRoute.snapshot.queryParams;
         
-        // Example: Access specific query parameters
         this.status = queryParams['status'];
         this.timestamp = queryParams['timestamp'];
         this.accountId = queryParams['account_id'];
@@ -154,8 +152,6 @@ export class DashboardComponent implements OnInit, OnChanges{
 
       //initialise portfolio (annualised)
 
-      //load market data
-      // this.marketIndex$ = this.stockSvc.getMarketData('SPX', '1day');
       this.marketIndex$ = this.stockSvc.getMarketData(this.markets)
       this.indexSnP$ = this.stockSvc.getStocklistData(this.snp500)
       this.indexNasdaq$ = this.stockSvc.getStocklistData(this.nasdaq)
@@ -166,8 +162,6 @@ export class DashboardComponent implements OnInit, OnChanges{
       console.info('this.symbols in ngOnInit are:' + this.symbols)
       this.symbols$ = this.stockSvc.getWatchlist(this.username)
       console.info('this.symbols$ is' + this.symbols$)
-      // this.watchList$ = this.stockSvc.getWatchlistData(this.symbols);
-      // this.symbols$ = this.stockSvc.getWatchlist(this.username);
 
       this.symbols$.then((symbol: string[]) => {
         console.info('Symbols:', symbol);
@@ -234,65 +228,6 @@ getWebSocketData(): void {
 }
 
 
-
-
-// getWebSocketData(): void {
-//   this.initialiseWebSocketStocks(this.symbolAliases);
-//   let stompClient = this.webSocketService.connect();
-
-//   stompClient.connect({}, () => {
-//     stompClient.send('/app/notify', {}, '');
-//     stompClient.subscribe('/topic/notification', (notifications: any) => {
-//       const data: string[] = JSON.parse(notifications.body);
-//       data.forEach((stockData: string) => {
-//         const stock: WebSocketStock = JSON.parse(stockData);
-
-//         // const index = this.webSocketStocks.findIndex(s => s.symbol === stock.symbol);
-//         const index = this.webSocketStocks.findIndex(s => s.symbol === stock.symbol || s.symbol === this.symbolAliases[stock.symbol]);
-
-//         if (index !== -1) {
-//           const existingStock = this.webSocketStocks[index];
-//           existingStock.exchange = stock.exchange;
-//           existingStock.currency = stock.currency;
-//           existingStock.price = stock.price;
-//           existingStock.ask = stock.ask;
-//           existingStock.bid = stock.bid;
-//           existingStock.volume = stock.volume;
-//           existingStock.volumeChanged = existingStock.volume !== stock.volume;
-//           existingStock.priceChanged = existingStock.price !== stock.price;
-//           existingStock.askChanged = existingStock.ask !== stock.ask;
-//           existingStock.bidChanged = existingStock.bid !== stock.bid;
-//           existingStock.previousVolume = existingStock.volume;
-//           existingStock.previousPrice = existingStock.price;
-//           existingStock.previousAsk = existingStock.ask;
-//           existingStock.previousBid = existingStock.bid;
-//         } else {
-//           const newStock: WebSocketStock = {
-//             symbol: stock.symbol,
-//             exchange: stock.exchange,
-//             currency: stock.currency,
-//             price: stock.price,
-//             ask: stock.ask,
-//             bid: stock.bid,
-//             volume: stock.volume,
-//             volumeChanged: false,
-//             priceChanged: false,
-//             askChanged: false,
-//             bidChanged: false,
-//             previousVolume: 0,
-//             previousPrice: 0,
-//             previousAsk: 0,
-//             previousBid: 0,
-//           };
-//           this.webSocketStocks.push(newStock);
-//         }
-//       });
-//     });
-//   });
-// }
-
-
-
 private initialiseWebSocketStocks(aliases: { [key: string]: string }) {
   this.webSocketStocks = this.webSocketSymbols.map(symbol => ({
     symbol:aliases[symbol] || symbol,
@@ -315,23 +250,6 @@ private initialiseWebSocketStocks(aliases: { [key: string]: string }) {
 }
 
 
-// getNotification(): void {
-//   this.http.get('http://localhost:8080/notify', {responseType: 'text'}).subscribe({
-//     next: (response) => {
-//       console.log('Notification:', response);
-//       // Handle the notification data here
-//     },
-//     error: (error) => {
-//       if (error instanceof HttpErrorResponse) {
-//         console.error('Failed to retrieve notification', error.status, error.statusText);
-//         console.log('Error body:', error.error);
-//       } else {
-//         console.error('An unexpected error occurred:', error);
-//       }
-//     }
-//   });
-// }
-
   ngAfterViewInit():void{
 
   }
@@ -347,12 +265,10 @@ private initialiseWebSocketStocks(aliases: { [key: string]: string }) {
     this.stockSvc.symbol = symbol
     // this.router.navigate(['research']);
 
-    // Create a Promise that resolves when this.stockSvc.symbol has completed
     const symbolPromise = new Promise((resolve) => {
       resolve(this.stockSvc.symbol);
     });
 
-    // Wait for the symbolPromise to resolve before navigating to "research" route
     symbolPromise.then(() => {
       this.router.navigate(['research']);
     });
@@ -394,113 +310,5 @@ private initialiseWebSocketStocks(aliases: { [key: string]: string }) {
     return (totalReturn / totalInvestment) * 100;
   }
 
-  // ngOnDestroy() {
-  //   if (this.loginResponse$) {
-  //     this.loginResponse$.unsubscribe();
-  //   }
-  // }
-
-
-  
-//for websocket using front-end. not good practice
-  // private connectWebSocket(key:string) {
-  //   // this.ENDPOINT= 'wss://ws.twelvedata.com/v1/quotes/price?apikey='+key;
-  //   this.ENDPOINT= 'wss://ws.twelvedata.com/v1/quotes/price?apikey='
-  //   this.socket = new WebSocket(this.ENDPOINT);
-
-  //   this.socket.onopen = (event) => {
-  //     console.log('WebSocket opened!');
-  //     // const symbols = ['AAPL', 'QQQ', 'ABML', 'TRP:TSX'];
-  //     // this.socket.send(JSON.stringify({ action: 'subscribe', params: { symbols: 'AAPL', } }));
-  //     this.socket.send(JSON.stringify({ action: 'subscribe', params: { symbols: this.webSocketSymbols.join(',') } }));
-  //   };
-
-  //   // this.socket.onmessage = (event) => {
-  //   //   const message = JSON.parse(event.data) as WebSocketStock
-  //   //   console.log(message);
-  //   //   this.messages.push(message);
-  //   // };
-
-  //   const symbolAliases:{ [key: string]: string } = {
-  //     'INFY': 'Infosys',
-  //     'INFY:NSE': 'Infosys',
-  //     '7203': 'Toyota',
-  //     '002594': 'BYD',
-  //     '005930': 'Samsung',
-  //     'D05': 'DBS Group',
-  //     'D05:SGX': 'DBS Group',
-  //     'QQQ': 'Invesco',
-  //     '2603:TWSE': 'Evergreen',
-  //     '2603': 'Evergreen',
-  //     'AAPL':'Apple'
-  //   };
-
-  //   this.initialiseWebSocketStocks(symbolAliases);
-
-
-  //   this.socket.onmessage = (event) => {
-  //     const messageString = event.data;
-  //     const message = JSON.parse(messageString);
-
-  //     const symbol = message.symbol;
-  //     const alias = symbolAliases[symbol] || symbol; 
-
-  //     const existingStock = this.webSocketStocks.find(stock => stock.symbol === alias);
-  //     let previousVolume = 0;
-  //     let previousPrice = 0;
-  //     let previousAsk = 0;
-  //     let previousBid = 0;
-    
-  //     if (existingStock) {
-  //       previousVolume = existingStock.volume;
-  //       previousPrice = existingStock.price;
-  //       previousAsk = existingStock.ask;
-  //       previousBid = existingStock.bid;
-  //     }
-    
-  //     const webSocketStock: WebSocketStock = {
-  //       symbol: alias,
-  //       exchange: message.exchange,
-  //       currency: message.currency,
-  //       price: message.price,
-  //       ask: message.ask,
-  //       bid: message.bid,
-  //       volume: message.day_volume,
-  //       volumeChanged: previousVolume !== message.day_volume,
-  //       priceChanged: previousPrice !== message.price,
-  //       askChanged: previousAsk !== message.ask,
-  //       bidChanged: previousBid !== message.bid,
-  //       previousVolume,
-  //       previousPrice,
-  //       previousAsk,
-  //       previousBid
-
-  //     };
-  //     console.log(webSocketStock);
-  //     // this.webSocketStocks.push(webSocketStock);
-  //       // Find the index of the existing stock with the same symbol
-  //       const index = this.webSocketStocks.findIndex(stock => stock.symbol === webSocketStock.symbol);
-
-  //       if (index !== -1) {
-  //         // Replace the existing stock with the new data
-  //         this.webSocketStocks[index] = webSocketStock;
-  //       } else {
-  //         // Add the new stock to the array
-  //         this.webSocketStocks.push(webSocketStock);
-  //       }
-  //     }
-
-
-  //   this.socket.onclose = (event) => {
-  //     console.log('WebSocket closed.');
-  //   };
-
-  //   this.socket.onerror = (error) => {
-  //     console.error('WebSocket error:', error);
-  //   };
-  // }
-
-
-
-  
+ 
 }

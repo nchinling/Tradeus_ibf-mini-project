@@ -40,9 +40,6 @@ public class StockController {
     @Autowired
     private StockService stockSvc;
 
-
-
-
     @GetMapping(path="/quote/stock")
     @ResponseBody
     public ResponseEntity<String> getStockData(@RequestParam(required=true) String symbol,
@@ -109,7 +106,7 @@ public class StockController {
             
             return ResponseEntity.ok(resp.toString());
         } 
-        // Handle the case when the Optional is empty
+
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
         .body("Stock information not available for the provided symbol.");
         
@@ -176,7 +173,7 @@ public class StockController {
             
             return ResponseEntity.ok(resp.toString());
         } 
-        // Handle the case when the Optional is empty
+
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
         .body("Stock Profile not available for the provided symbol.");
         
@@ -188,7 +185,7 @@ public class StockController {
     @ResponseBody
     public ResponseEntity<String> getMarketData(@RequestParam(required=true) String symbol,
     @RequestParam(defaultValue = "1day",required=false) String interval) throws IOException{
-        // Integer num = weatherSvc.getWeather(city);
+      
         System.out.println("I am in getMarketData server");
         System.out.println(">>>>>>>>Symbol in controller>>>>>" + symbol);
         System.out.println(">>>>>>>>Interval in controller>>>>>" + interval);
@@ -246,7 +243,7 @@ public class StockController {
     @ResponseBody
     public ResponseEntity<String> getWatchlistData(@RequestParam(required=true) String symbol,
     @RequestParam(defaultValue = "1day",required=false) String interval) throws IOException{
-        // Integer num = weatherSvc.getWeather(city);
+     
         System.out.println("I am in getStockData server");
         System.out.println(">>>>>>>>Symbol in controller>>>>>" + symbol);
         System.out.println(">>>>>>>>Interval in controller>>>>>" + interval);
@@ -307,7 +304,7 @@ public class StockController {
             
             return ResponseEntity.ok(resp.toString());
         } 
-        // Handle the case when the Optional is empty
+     
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
         .body("Stock information not available for the provided symbol.");
         
@@ -317,7 +314,7 @@ public class StockController {
     @GetMapping(path="/watchlist", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<String> getWatchlist(@RequestParam(required=true) String username) throws IOException{
-        // Integer num = weatherSvc.getWeather(city);
+       
         System.out.println("I am in getWatchlist server");
         System.out.println(">>>>>>>>username in controller>>>>>" + username);
        
@@ -366,7 +363,7 @@ public class StockController {
 
     @PostMapping(path="/watchlist", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    // public ResponseEntity<String> saveWatchlist(@RequestBody String[] symbols) {
+
         public ResponseEntity<String> saveWatchlist(@RequestBody Watchlist request) {
         String[] symbols = request.getSymbols();
         for (String symbol: symbols){
@@ -374,11 +371,8 @@ public class StockController {
         }
 
         String username = request.getUsername();
-        // String [] symbols = watchlist.getSymbols();
+        
         System.out.println(">>>> I am in stock server watchlist >>>>>>>>>>>>");
-        //   System.out.println(payload);
-        // JsonReader reader = Json.createReader(new StringReader(payload));
-        // JsonObject req = reader.readObject();
 
         System.out.println(">>>>>> username is >>>>> " +username);
         
@@ -415,11 +409,6 @@ public class StockController {
 
         String accountId = account_id;
         
-
-        //Obtain data from api and service 
-        // Optional<Portfolio> p = stockSvc.getPortfolioData(accountId, symbol, interval);
-        // if (p.isPresent()) {
-        //     Portfolio portfolio = p.get();
             Portfolio portfolio = stockSvc.getPortfolioData(accountId, symbol, interval);
 
             //save portfolio data in redis/mongo for quick retrieval
@@ -441,7 +430,6 @@ public class StockController {
                 .add("total_current_price", portfolio.getTotalCurrentPrice())
                 .add("total_return", portfolio.getTotalReturn())
                 .add("total_percentage_change", portfolio.getTotalPercentageChange())
-                // .add("annualised_profit", portfolio.getAnnualisedProfit())
                 .add("datetime", portfolio.getDateTime().toString())
                 .build();
                 System.out.println(">>>resp: " + resp);
@@ -449,21 +437,14 @@ public class StockController {
 
             System.out.println(">>>>>Portfolio" + portfolio.getStockName() +"total units is>>>>" + portfolio.getUnits());
             return ResponseEntity.ok(resp.toString());
-        // } 
-        // // Handle the case when the Optional is empty
-        // return ResponseEntity.status(HttpStatus.NOT_FOUND)
-        // .body("Portfolio information not available for the provided symbol.");
-        
-        
+
     }
 
 
-    
     @GetMapping(path="/quote/portfolio/annualised")
     @ResponseBody
     public ResponseEntity<String> getAnnualisedPortfolioData(@RequestParam(defaultValue = "1day",required=false) String interval,
     @RequestParam(required=true) String account_id) throws IOException{
-        // Integer num = weatherSvc.getWeather(city);
         System.out.println("I am in getStockData server");
 
         System.out.println(">>>>>>>>Interval in controller>>>>>" + interval);
@@ -471,12 +452,7 @@ public class StockController {
 
         String accountId = account_id;
         
-
-  
             List<Portfolio> portfolio = stockSvc.getAnnualisedPortfolioData(accountId, interval);
-
-            //save portfolio data in redis/mongo for quick retrieval
-            // stockSvc.saveStockData(stock, interval);
 
             JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
 
@@ -501,14 +477,8 @@ public class StockController {
             JsonArray respArray = arrayBuilder.build();
             System.out.println(">>>sending back jsonarray annualised portfolio data.>>>>>Hooray: " + respArray);
             return ResponseEntity.ok(respArray.toString());
-        // } 
-        // // Handle the case when the Optional is empty
-        // return ResponseEntity.status(HttpStatus.NOT_FOUND)
-        // .body("Portfolio information not available for the provided symbol.");
-        
-        
-    }
 
+    }
 
 
 }

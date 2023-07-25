@@ -201,10 +201,4 @@ public class StockRepository {
     return cookieTime;
   }
 
-
-
-
-
-
-
 }

@@ -126,7 +126,6 @@ export class ChartComponent {
         ];
 
         if (this.chart) {
-          // Destroy the previous chart if it exists
           this.chart.destroy();
         }
   

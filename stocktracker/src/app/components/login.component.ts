@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AccountService } from '../account.service';
-import { Observable, Subject, firstValueFrom } from 'rxjs';
+import { Observable, firstValueFrom } from 'rxjs';
 import { LoginResponse } from '../models';
 
 
@@ -16,7 +16,6 @@ export class LoginComponent implements OnInit {
   login$!: Promise<LoginResponse>
   loginForm!: FormGroup
   errorMessage$!: Observable<string>
-  // isLoggedInChanged = new Subject<boolean>()
   errorMessage!: string;
   KEY = "username"
 
@@ -74,17 +73,13 @@ export class LoginComponent implements OnInit {
       this.accountSvc.account_id = response.account_id
       this.accountSvc.key = response.key
 
-      // setTimeout(() => {
-      //   this.isLoading = false;
-      // }, 2000);
 
       this.router.navigate(['/dashboard', parsedUsername], { queryParams: queryParams })
     }).catch((error)=>{
   
       this.errorMessage = error.error;
       console.info('this.errorMessage is ' + this.errorMessage)
-      // this.errorMessage$ = this.accountSvc.onErrorMessage;
-      // this.registerForm.reset();
+   
     });
 
 

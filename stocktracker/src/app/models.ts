@@ -1,5 +1,3 @@
-import { NgbHighlight } from "@ng-bootstrap/ng-bootstrap"
-
 export interface UserData {
     account_id: string
     name: string
@@ -24,9 +22,8 @@ export interface RegisterResponse {
     username: string
     timestamp: string
     status: string
-    // error?: string; 
-}
 
+}
 
 
 export interface ErrorResponse {
@@ -47,8 +44,6 @@ export interface Stock{
     previous_close: number
     change: number
     percent_change: number
-    //use datePipe for datetime
-    // <p>DateTime: {{ stockData.datetime | date:'yyyy-MM-dd HH:mm:ss' }}</p>
     datetime: Date
 }
 

@@ -36,17 +36,15 @@ private String cancelUrl;
 
   @PostMapping("/payment")
   public ResponseEntity<String> paymentWithCheckoutPage(@RequestBody CheckoutPayment payment) throws StripeException {
-    // Initialize Stripe and create session parameters
+    
     System.out.println(">>>>>I am inside payment");
     
     Stripe.apiKey = stripeSecretKey;
 
-    
     // String successUrl = "http://www.google.com/";
     // String cancelUrl = "http://www.ngchinling.com/";
     // String successUrl = "http://localhost:8080/success.html";
     // String cancelUrl = "http://localhost:8080/cancel.html";
-
 
     System.out.println(">>>the successUrl is>>>" + successUrl);
     
@@ -55,8 +53,7 @@ private String cancelUrl;
     SessionCreateParams params = SessionCreateParams.builder()
         .addPaymentMethodType(SessionCreateParams.PaymentMethodType.CARD)
         .setMode(SessionCreateParams.Mode.PAYMENT)
-        // .setSuccessUrl(payment.getSuccessUrl())
-        // .setCancelUrl(payment.getCancelUrl())
+       
         .setSuccessUrl(successUrl)
         .setCancelUrl(cancelUrl)
         .addLineItem(SessionCreateParams.LineItem.builder()
@@ -84,8 +81,7 @@ private String cancelUrl;
  @GetMapping("/checkout/{sessionId}")
   public ResponseEntity<String> redirectToCheckout(@PathVariable String sessionId) {
 
-    // Stripe.apiKey = stripeSecretKey;
-
+  
     System.out.println(">>>the sessionId in checkout is >>>>" + sessionId);
     System.out.println(">>>I am inside checkout/sessionId");
     try {
@@ -98,18 +94,13 @@ private String cancelUrl;
 
       return ResponseEntity.ok().body(checkoutUrl);
       
-      // Redirect to the checkout URL
-      // return ResponseEntity.status(HttpStatus.FOUND)
-      //     .header(HttpHeaders.LOCATION, checkoutUrl)
-      //     .build();
+   
     } catch (StripeException e) {
-      // Handle any errors that occur during the retrieval of the session
+      // Handle errors 
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
           .body("Error retrieving session");
     }
   }
-
-
 
 
 }

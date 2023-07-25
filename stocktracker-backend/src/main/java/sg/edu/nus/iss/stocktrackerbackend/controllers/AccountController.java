@@ -35,7 +35,7 @@ import sg.edu.nus.iss.stocktrackerbackend.models.Trade;
 import sg.edu.nus.iss.stocktrackerbackend.services.AccountException;
 import sg.edu.nus.iss.stocktrackerbackend.services.AccountService;
 import sg.edu.nus.iss.stocktrackerbackend.services.EmailService;
-// import sg.edu.nus.iss.stocktrackerbackend.services.WebSocketService;
+
 
 
 @Controller
@@ -45,9 +45,6 @@ public class AccountController {
     
     @Autowired
     private AccountService accSvc;
-
-    // @Autowired
-    // private WebSocketService webSocketSvc;
 
     @Autowired
     private EmailService emailSvc;
@@ -65,8 +62,6 @@ public class AccountController {
         System.out.printf(">>> I am inside Controller Login >>>>>\n");
         System.out.printf(">>> The key is >>>>>\n" + twelveDataWebSocketApiKey);
         JsonObject resp = null;
-
-        // webSocketSvc.getWebSocketData();
 
             Account loggedInAccount;
             try {
@@ -118,7 +113,7 @@ public class AccountController {
         String address = form.getFirst("address");
         String dob = form.getFirst("date_of_birth");
 
-         System.out.println(">>> The accountId for update is >>>>>" + accountId);
+        System.out.println(">>> The accountId for update is >>>>>" + accountId);
         System.out.println(">>> The username for update is >>>>>" + username);
         System.out.println(">>> The password for update is >>>>>" + password);
         System.out.println(">>> The date for update is >>>>>" + dob);
@@ -147,7 +142,6 @@ public class AccountController {
 
         } catch (AccountException e) {
             String errorMessage = e.getMessage();
-            //  String errorMessage = "Email has been taken";
              System.out.printf(">>>Account Exception occured>>>>>\n");   
             resp = Json.createObjectBuilder()
             .add("error", errorMessage)
@@ -224,11 +218,6 @@ public class AccountController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
             .body(resp.toString());
             }
-        
-
-        
-
-
 
     }
 
@@ -236,11 +225,9 @@ public class AccountController {
     @GetMapping(path="/getuser")
     @ResponseBody
     public ResponseEntity<String> getUserData(@RequestParam(required=true) String username) throws IOException{
-        // Integer num = weatherSvc.getWeather(city);
+        
         System.out.println("The getuser username is" + username);
         
-
-
         JsonObject resp = null;
 
         try {
@@ -310,17 +297,6 @@ public class AccountController {
         // For creation of new trade
         Trade trade = new Trade(accountId, username, exchange, stockName, symbol, units, price, currency, fee, loggedDate);
  
-        //         this.accountId = accountId;
-        // this.username = username;
-        // this.exchange = exchange;
-        // this.stockName = stockName;
-        // this.symbol = symbol;
-        // this.units = units;
-        // this.price = price;
-        // this.currency = currency;
-        // this.fee = fee;
-        // this.date = date;
-        // this.total = total;
         JsonObject resp = null;
 
         try {
@@ -341,7 +317,6 @@ public class AccountController {
 
         } catch (AccountException e) {
             String errorMessage = e.getMessage();
-            //  String errorMessage = "Email has been taken";
              System.out.printf(">>>Portfolio Exception occured>>>>>\n");   
             resp = Json.createObjectBuilder()
             .add("error", errorMessage)
@@ -383,7 +358,6 @@ public class AccountController {
 
     @DeleteMapping(path="/portfolioList", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    // public ResponseEntity<String> saveWatchlist(@RequestBody String[] symbols) {
         public ResponseEntity<String> deleteFromPortfolio(@RequestParam("symbol") String symbol, 
                                                         @RequestParam("accountId") String accountId) {
 
@@ -401,7 +375,6 @@ public class AccountController {
 
     @DeleteMapping(path="/tradesList", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    // public ResponseEntity<String> saveWatchlist(@RequestBody String[] symbols) {
         public ResponseEntity<String> deleteFromAnnualisedPortfolio(@RequestParam("symbol") String symbol, 
             @RequestParam("date") String stringDate,@RequestParam("accountId") String accountId) {
 
@@ -425,7 +398,6 @@ public class AccountController {
             e.printStackTrace();
         }
 
-            // Handle the case when an exception occurs
         resp = Json.createObjectBuilder()
             .add("error", "An error occurred")
             .build();
@@ -433,7 +405,6 @@ public class AccountController {
         return ResponseEntity.ok(resp.toString());
 
 	}
-
 
 
 }

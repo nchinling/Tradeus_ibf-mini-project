@@ -2,10 +2,7 @@
 <ng-container *ngIf="(isLoggedIn$ | async) as loggedIn; else loggedOut">
 <!-- <ng-container *ngIf="isLoggedIn; else loggedOut"> -->
   <div *ngIf="loggedIn" class="container-fluid">
-
-  <!-- <div class="container-fluid"> -->
     
-  <!-- <nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-between"> -->
     <nav class="navbar navbar-expand-lg navbar-light" style="background-color: white">
 
       <button class="navbar-toggler btn btn-outline-secondary" type="button" data-toggle="collapse" data-target="#navbarLoggedIn" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -15,11 +12,6 @@
     <a class="navbar-brand" [routerLink]="['/dashboard', parsedUsername]">  
       <span class="brand-text-1">Trade</span><span class="brand-text-2">us</span>
     </a>  
-
-<!-- 
-    <button class="navbar-toggler btn btn-outline-secondary" type="button" data-toggle="collapse" data-target="#navbarLoggedIn" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button> -->
 
 
     <div class="collapse navbar-collapse" id="navbarLoggedIn" [ngbCollapse]="isCollapsed">
@@ -55,15 +47,10 @@
 
       </ul>
     </div>
-  
-  
-  
- 
-       <!-- </div> -->
+      
       </nav>
     </div>
-<!-- 
-  </div> -->
+
 
 </ng-container>
 
@@ -73,7 +60,6 @@
 <ng-template #loggedOut>
 
   <div class="container-fluid">
-  <!-- <nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-between"> -->
     <nav class="navbar navbar-expand-lg navbar-light" style="background-color: white">
 
       <button class="navbar-toggler btn btn-outline-secondary" type="button" data-toggle="collapse" data-target="#navbarNotLoggedIn" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,11 +70,6 @@
         <span class="brand-text-1">Trade</span><span class="brand-text-2">us</span>
       </a>  
 
-      <!-- <a class="navbar-brand" href="#">Navbar</a> -->
-      <!-- <button class="navbar-toggler btn btn-outline-secondary" type="button" data-toggle="collapse" data-target="#navbarNotLoggedIn" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button> -->
-  
   
     <div class="collapse navbar-collapse" id="navbarNotLoggedIn" [ngbCollapse]="isCollapsed">
       <ul class="navbar-nav mt-2 mt-lg-0">

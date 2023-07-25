@@ -27,8 +27,6 @@ public class ChartService {
     @Value("${twelve.data.host}")
     private String twelveDataApiHost;
 
-    // @Autowired
-    // private StockRepository stockRepo;
     
     //function to get info from an external server using API.
    public Optional<Chart> getTimeSeries(String symbol, String interval, String dataPoints)
