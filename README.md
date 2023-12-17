@@ -17,6 +17,7 @@ It is built with Angular(frontend), Spring Boot (backend) with SQL, Redis and Mo
 - Stripe E-payment
 
 ### Using Tradeus
+Although the codes are available for your perusal, the app requires the use of environment variables and keys such as from the financial data service provider. Therefore it would be challenging to run the downloaded codes on your localhost. The app is also hosted live at https://tradeus.tech
 
 
 ### Features
