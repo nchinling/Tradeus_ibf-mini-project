@@ -3,11 +3,9 @@
 ## Introduction
 Tradeus is a stock tracker app, with features that distinguishes it from other typical stock tracker apps. 
 
-It is built with Angular(frontend), Spring Boot (backend) with SQL, Redis and MongoDB as databases.
-
 Some exciting implementations in Tradeus include charting, creation of watch list and ability to create personal portfolios which displays real time update of stock profits calculated using both annualised and total profits. 
 
-
+It is built with Angular(frontend), Spring Boot (backend) with SQL, Redis and MongoDB as databases. More details are available at my portfolio project site https://ngchinling.com/projects/stocktracker.html
 
 ### Technology
 - Angular *Typescript*
