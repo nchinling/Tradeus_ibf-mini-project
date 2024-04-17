@@ -4,7 +4,7 @@
 
 
 ## Introduction
-Tradeus is a stock tracker app, with features that distinguishes it from other typical stock tracker apps. It is hosted live on https://tradeus.tech
+Tradeus is a stock tracker app, with features that distinguishes it from other typical stock tracker apps.
 
 Some exciting implementations in Tradeus include charting, creation of watch list and ability to create personal portfolios which displays real time update of stock profits calculated using both annualised and total profits. 
 
