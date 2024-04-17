@@ -28,5 +28,5 @@ Although the codes are available for your perusal, the app requires the use of e
 
 ### Video
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=NDwvP1sPaD0" target="_blank">
- <img src="http://img.youtube.com/vi/NDwvP1sPaD0/mqdefault.jpg" alt="Watch the video" width="480" height="360" border="10" />
+ <img src="http://img.youtube.com/vi/NDwvP1sPaD0/mqdefault.jpg" alt="Watch the video" width="600" height="400" border="10" />
 </a>
